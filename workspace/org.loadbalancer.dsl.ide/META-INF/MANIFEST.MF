@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.loadbalancer.dsl.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: org.loadbalancer.dsl.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.loadbalancer.dsl.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.loadbalancer.dsl,
+ org.loadbalancer.metamodel,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: org.loadbalancer.dsl.ide.contentassist.antlr,
+ org.loadbalancer.dsl.ide.contentassist.antlr.internal

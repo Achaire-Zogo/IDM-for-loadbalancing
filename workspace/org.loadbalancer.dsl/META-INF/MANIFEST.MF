@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.loadbalancer.dsl
+Bundle-ManifestVersion: 2
+Bundle-Name: org.loadbalancer.dsl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.loadbalancer.dsl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.loadbalancer.metamodel,
+ org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.19.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.42.0",
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: org.loadbalancer.dsl.serializer,
+ org.loadbalancer.dsl.services,
+ org.loadbalancer.dsl.loadBalancer.impl,
+ org.loadbalancer.dsl.validation,
+ org.loadbalancer.dsl.scoping,
+ org.loadbalancer.dsl.formatting2,
+ org.loadbalancer.dsl.loadBalancer,
+ org.loadbalancer.dsl.loadBalancer.util,
+ org.loadbalancer.dsl.generator,
+ org.loadbalancer.dsl.parser.antlr.internal,
+ org.loadbalancer.dsl.parser.antlr,
+ org.loadbalancer.dsl
+Import-Package: org.apache.log4j

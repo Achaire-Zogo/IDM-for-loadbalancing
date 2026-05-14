@@ -1,12 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.loadbalancer.metamodel/src-gen" creationIcons="false"
-    editDirectory="/org.loadbalancer.metamodel.edit/src-gen" editorDirectory="/org.loadbalancer.metamodel.editor/src-gen"
-    modelPluginID="org.loadbalancer.metamodel" modelName="Metamodel" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0"
-    copyrightFields="false" operationReflection="true" importOrganizing="true">
-  <foreignModel>metamodel.ecore</foreignModel>
-  <testsDirectory xsi:nil="true"/>
-  <genPackages prefix="Metamodel" basePackage="org.loadbalancer" disposableProviderFactory="true"
-      ecorePackage="metamodel.ecore#/"/>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.loadbalancer.metamodel/src" modelPluginID="org.loadbalancer.metamodel"
+    modelName="Loadbalancer" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>loadbalancer.ecore</foreignModel>
+  <genPackages prefix="Loadbalancer" disposableProviderFactory="true" ecorePackage="loadbalancer.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="loadbalancer.ecore#//Algorithm">
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/ROUND_ROBIN"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/WEIGHTED_RR"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/LEAST_CONN"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/IP_HASH"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/RANDOM"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="loadbalancer.ecore#//Protocol">
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/HTTP"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/HTTPS"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/TCP"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/UDP"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="loadbalancer.ecore#//Metric">
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/CPU_USAGE"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/MEMORY_USAGE"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/REQUEST_COUNT"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/RESPONSE_TIME"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/ACTIVE_CONNECTIONS"/>
+    </genEnums>
+    <genClasses ecoreClass="loadbalancer.ecore#//LoadBalancerSystem">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancerSystem/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancerSystem/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancerSystem/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//LoadBalancerSystem/clusters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//LoadBalancerSystem/listeners"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//LoadBalancerSystem/alerts"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//Cluster">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Cluster/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Cluster/maxConnections"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//Cluster/servers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//Cluster/loadBalancer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//Cluster/healthCheck"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//Cluster/scalingRule"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//Server">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Server/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Server/host"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Server/port"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Server/weight"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Server/maxConnections"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Server/enabled"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//LoadBalancer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancer/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancer/algorithm"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancer/stickySession"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//HealthCheck">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/protocol"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/interval"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/timeout"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/thresholds"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//Listener">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Listener/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Listener/protocol"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Listener/port"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference loadbalancer.ecore#//Listener/targetCluster"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//SessionPersistence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//SessionPersistence/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//SessionPersistence/cookieName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//SessionPersistence/ttl"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//Alert">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/metric"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/threshold"/>
+    </genClasses>
+    <genClasses ecoreClass="loadbalancer.ecore#//ScalingRule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/metric"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/scaleUpDown"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/minInstances"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/maxInstances"/>
+    </genClasses>
+  </genPackages>
 </genmodel:GenModel>

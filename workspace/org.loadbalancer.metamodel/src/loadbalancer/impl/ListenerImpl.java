@@ -1,0 +1,342 @@
+/**
+ */
+package loadbalancer.impl;
+
+import loadbalancer.Cluster;
+import loadbalancer.Listener;
+import loadbalancer.LoadbalancerPackage;
+import loadbalancer.Protocol;
+
+import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Listener</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * </p>
+ * <ul>
+ *   <li>{@link loadbalancer.impl.ListenerImpl#getName <em>Name</em>}</li>
+ *   <li>{@link loadbalancer.impl.ListenerImpl#getProtocol <em>Protocol</em>}</li>
+ *   <li>{@link loadbalancer.impl.ListenerImpl#getPort <em>Port</em>}</li>
+ *   <li>{@link loadbalancer.impl.ListenerImpl#getTargetCluster <em>Target Cluster</em>}</li>
+ * </ul>
+ *
+ * @generated
+ */
+public class ListenerImpl extends MinimalEObjectImpl.Container implements Listener {
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProtocol()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Protocol PROTOCOL_EDEFAULT = Protocol.HTTP;
+
+	/**
+	 * The cached value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProtocol()
+	 * @generated
+	 * @ordered
+	 */
+	protected Protocol protocol = PROTOCOL_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getPort() <em>Port</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPort()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int PORT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getPort() <em>Port</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPort()
+	 * @generated
+	 * @ordered
+	 */
+	protected int port = PORT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getTargetCluster() <em>Target Cluster</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTargetCluster()
+	 * @generated
+	 * @ordered
+	 */
+	protected Cluster targetCluster;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ListenerImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return LoadbalancerPackage.Literals.LISTENER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.LISTENER__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Protocol getProtocol() {
+		return protocol;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setProtocol(Protocol newProtocol) {
+		Protocol oldProtocol = protocol;
+		protocol = newProtocol == null ? PROTOCOL_EDEFAULT : newProtocol;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.LISTENER__PROTOCOL, oldProtocol, protocol));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setPort(int newPort) {
+		int oldPort = port;
+		port = newPort;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.LISTENER__PORT, oldPort, port));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Cluster getTargetCluster() {
+		if (targetCluster != null && targetCluster.eIsProxy()) {
+			InternalEObject oldTargetCluster = (InternalEObject)targetCluster;
+			targetCluster = (Cluster)eResolveProxy(oldTargetCluster);
+			if (targetCluster != oldTargetCluster) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, LoadbalancerPackage.LISTENER__TARGET_CLUSTER, oldTargetCluster, targetCluster));
+			}
+		}
+		return targetCluster;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Cluster basicGetTargetCluster() {
+		return targetCluster;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTargetCluster(Cluster newTargetCluster) {
+		Cluster oldTargetCluster = targetCluster;
+		targetCluster = newTargetCluster;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.LISTENER__TARGET_CLUSTER, oldTargetCluster, targetCluster));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case LoadbalancerPackage.LISTENER__NAME:
+				return getName();
+			case LoadbalancerPackage.LISTENER__PROTOCOL:
+				return getProtocol();
+			case LoadbalancerPackage.LISTENER__PORT:
+				return getPort();
+			case LoadbalancerPackage.LISTENER__TARGET_CLUSTER:
+				if (resolve) return getTargetCluster();
+				return basicGetTargetCluster();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case LoadbalancerPackage.LISTENER__NAME:
+				setName((String)newValue);
+				return;
+			case LoadbalancerPackage.LISTENER__PROTOCOL:
+				setProtocol((Protocol)newValue);
+				return;
+			case LoadbalancerPackage.LISTENER__PORT:
+				setPort((Integer)newValue);
+				return;
+			case LoadbalancerPackage.LISTENER__TARGET_CLUSTER:
+				setTargetCluster((Cluster)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case LoadbalancerPackage.LISTENER__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case LoadbalancerPackage.LISTENER__PROTOCOL:
+				setProtocol(PROTOCOL_EDEFAULT);
+				return;
+			case LoadbalancerPackage.LISTENER__PORT:
+				setPort(PORT_EDEFAULT);
+				return;
+			case LoadbalancerPackage.LISTENER__TARGET_CLUSTER:
+				setTargetCluster((Cluster)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case LoadbalancerPackage.LISTENER__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case LoadbalancerPackage.LISTENER__PROTOCOL:
+				return protocol != PROTOCOL_EDEFAULT;
+			case LoadbalancerPackage.LISTENER__PORT:
+				return port != PORT_EDEFAULT;
+			case LoadbalancerPackage.LISTENER__TARGET_CLUSTER:
+				return targetCluster != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", protocol: ");
+		result.append(protocol);
+		result.append(", port: ");
+		result.append(port);
+		result.append(')');
+		return result.toString();
+	}
+
+} //ListenerImpl

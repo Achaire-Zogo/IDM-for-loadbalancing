@@ -1,114 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage
-  xmi:version="2.0"
-  xmlns:xmi="http://www.omg.org/XMI"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-  name="loadbalancer"
-  nsURI="http://www.example.org/loadbalancer"
-  nsPrefix="lb">
-
-  <!-- 1. LoadBalancerSystem: name, description, version, clusters, listeners, alerts -->
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="loadbalancer" nsURI="http://www.example.org/loadbalancer" nsPrefix="lb">
+  <eAnnotations source="http://www.eclipse.org/OCL/Import">
+    <details key="ecore" value="http://www.eclipse.org/emf/2002/Ecore"/>
+  </eAnnotations>
+  <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+    <details key="invocationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="settingDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="validationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="LoadBalancerSystem">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="atLeastOneListener uniqueListenerPorts"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="atLeastOneListener" value="&#xA;&#x9;&#x9;&#x9;self.listeners->size() >= 1"/>
+      <details key="uniqueListenerPorts" value="&#xA;&#x9;&#x9;&#x9;self.listeners->isUnique(l | l.port)"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="clusters" upperBound="-1" eType="#//Cluster" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="listeners" upperBound="-1" eType="#//Listener" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="alerts" upperBound="-1" eType="#//Alert" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="clusters" upperBound="-1"
+        eType="#//Cluster" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listeners" upperBound="-1"
+        eType="#//Listener" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="alerts" upperBound="-1"
+        eType="#//Alert" containment="true"/>
   </eClassifiers>
-
-  <!-- 2. Cluster: name, maxConnections, servers, loadBalancer, healthCheck, scalingRule -->
   <eClassifiers xsi:type="ecore:EClass" name="Cluster">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="uniqueServerNames nonEmptyCluster atLeastOneEnabledServer weightedRequiresWeights"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="uniqueServerNames" value="&#xA;&#x9;&#x9;&#x9;self.servers->isUnique(s | s.name)"/>
+      <details key="nonEmptyCluster" value="&#xA;&#x9;&#x9;&#x9;self.servers->notEmpty()"/>
+      <details key="atLeastOneEnabledServer" value="&#xA;&#x9;&#x9;&#x9;self.servers->exists(s | s.enabled = true)"/>
+      <details key="weightedRequiresWeights" value="&#xA;&#x9;&#x9;&#x9;self.loadBalancer.algorithm = Algorithm::WEIGHTED_ROUND_ROBIN&#xA;&#x9;&#x9;&#x9;&#x9;implies self.servers->forAll(s | s.weight >= 1)"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxConnections" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="servers" upperBound="-1" eType="#//Server" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="loadBalancer" eType="#//LoadBalancer" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="healthCheck" eType="#//HealthCheck" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scalingRule" eType="#//ScalingRule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxConnections" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="servers" upperBound="-1"
+        eType="#//Server" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loadBalancer" eType="#//LoadBalancer"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="healthCheck" eType="#//HealthCheck"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scalingRule" eType="#//ScalingRule"
+        containment="true"/>
   </eClassifiers>
-
-  <!-- 3. Server: name, host, port, weight, maxConnections, enabled -->
   <eClassifiers xsi:type="ecore:EClass" name="Server">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="validPort positiveWeight"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="validPort" value="&#xA;&#x9;&#x9;&#x9;self.port >= 1 and self.port &lt;= 65535"/>
+      <details key="positiveWeight" value="&#xA;&#x9;&#x9;&#x9;self.weight >= 1"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="weight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxConnections" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="weight" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxConnections" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
   </eClassifiers>
-
-  <!-- 4. LoadBalancer: name, algorithm, stickySession -->
   <eClassifiers xsi:type="ecore:EClass" name="LoadBalancer">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="algorithm" eType="#//Algorithm"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stickySession" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stickySession" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-
-  <!-- 5. Algorithm (enum) -->
   <eClassifiers xsi:type="ecore:EEnum" name="Algorithm">
     <eLiterals name="ROUND_ROBIN"/>
-    <eLiterals name="WEIGHTED_RR" value="1"/>
-    <eLiterals name="LEAST_CONN" value="2"/>
+    <eLiterals name="WEIGHTED_ROUND_ROBIN" value="1"/>
+    <eLiterals name="LEAST_CONNECTIONS" value="2"/>
     <eLiterals name="IP_HASH" value="3"/>
     <eLiterals name="RANDOM" value="4"/>
   </eClassifiers>
-
-  <!-- 6. HealthCheck: protocol, path, interval, timeout, thresholds -->
   <eClassifiers xsi:type="ecore:EClass" name="HealthCheck">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="intervalGreaterThanTimeout"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="intervalGreaterThanTimeout" value="&#xA;&#x9;&#x9;&#x9;self.interval > self.timeout"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="protocol" eType="#//Protocol"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="interval" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="thresholds" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="interval" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeout" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-
-  <!-- 7. Listener: name, protocol, port, targetCluster -->
   <eClassifiers xsi:type="ecore:EClass" name="Listener">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="validListenerPort"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="validListenerPort" value="&#xA;&#x9;&#x9;&#x9;self.port >= 1 and self.port &lt;= 65535"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="protocol" eType="#//Protocol"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetCluster" eType="#//Cluster"/>
   </eClassifiers>
-
-  <!-- 8. Protocol (enum) -->
   <eClassifiers xsi:type="ecore:EEnum" name="Protocol">
     <eLiterals name="HTTP"/>
     <eLiterals name="HTTPS" value="1"/>
     <eLiterals name="TCP" value="2"/>
-    <eLiterals name="UDP" value="3"/>
   </eClassifiers>
-
-  <!-- 9. SessionPersistence: type, cookieName, ttl -->
   <eClassifiers xsi:type="ecore:EClass" name="SessionPersistence">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="cookieRequiresName"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="cookieRequiresName" value="&#xA;&#x9;&#x9;&#x9;self.type = PersistenceType::COOKIE implies&#xA;&#x9;&#x9;&#x9;&#x9;self.cookieName &lt;> '' and self.cookieName &lt;> null"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PersistenceType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cookieName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ttl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ttl" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-
-  <!-- 10. Alert: name, metric, threshold -->
+  <eClassifiers xsi:type="ecore:EEnum" name="PersistenceType">
+    <eLiterals name="COOKIE"/>
+    <eLiterals name="IP" value="1"/>
+    <eLiterals name="HEADER" value="2"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Alert">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metric" eType="#//Metric"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="threshold" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="threshold" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="action" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-
-  <!-- 11. ScalingRule: name, metric, scaleUpDown, minInstances, maxInstances -->
   <eClassifiers xsi:type="ecore:EClass" name="ScalingRule">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="scaleUpGreaterThanDown minLessOrEqualMax"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="scaleUpGreaterThanDown" value="&#xA;&#x9;&#x9;&#x9;self.scaleUpThreshold > self.scaleDownThreshold"/>
+      <details key="minLessOrEqualMax" value="&#xA;&#x9;&#x9;&#x9;self.minInstances &lt;= self.maxInstances"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metric" eType="#//Metric"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scaleUpDown" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minInstances" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxInstances" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scaleUpThreshold" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scaleDownThreshold" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minInstances" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxInstances" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-
-  <!-- 12. Metric (enum) -->
   <eClassifiers xsi:type="ecore:EEnum" name="Metric">
     <eLiterals name="CPU_USAGE"/>
     <eLiterals name="MEMORY_USAGE" value="1"/>
     <eLiterals name="REQUEST_COUNT" value="2"/>
     <eLiterals name="RESPONSE_TIME" value="3"/>
-    <eLiterals name="ACTIVE_CONNECTIONS" value="4"/>
+    <eLiterals name="ERROR_RATE" value="4"/>
   </eClassifiers>
-
 </ecore:EPackage>

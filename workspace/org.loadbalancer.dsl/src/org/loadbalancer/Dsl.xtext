@@ -1,0 +1,156 @@
+grammar org.loadbalancer.dsl.LoadBalancer with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate loadBalancer "http://www.loadbalancer.org/dsl/LoadBalancer"
+
+// ==========================================
+// Racine du modèle
+// ==========================================
+LoadBalancerSystem:
+    'LoadBalancerSystem' name=STRING '{'
+        ('description:' description=STRING)?
+        ('version:' version=STRING)?
+        clusters+=Cluster+
+        listeners+=Listener+
+        (alerts+=Alert)*
+    '}'
+;
+
+// ==========================================
+// Cluster de serveurs
+// ==========================================
+Cluster:
+    'cluster' name=ID '{'
+        loadBalancer=LoadBalancerConfig
+        servers+=Server+
+        (healthCheck=HealthCheck)?
+        (scalingRule=ScalingRule)?
+    '}'
+;
+
+// ==========================================
+// Configuration du répartiteur
+// ==========================================
+LoadBalancerConfig:
+    'loadbalancer' '{'
+        'algorithm:' algorithm=Algorithm
+        'stickySession:' stickySession=BooleanValue
+        (sessionPersistence=SessionPersistence)?
+    '}'
+;
+
+// ==========================================
+// Serveur
+// ==========================================
+Server:
+    'server' name=ID '{'
+        'host:' host=STRING
+        'port:' port=INT
+        ('weight:' weight=INT)?
+        ('maxConnections:' maxConnections=INT)?
+        'enabled:' enabled=BooleanValue
+    '}'
+;
+
+// ==========================================
+// Health Check
+// ==========================================
+HealthCheck:
+    'healthCheck' '{'
+        'protocol:' protocol=Protocol
+        'path:' path=STRING
+        'interval:' interval=INT
+        'timeout:' timeout=INT
+        ('healthyThreshold:' healthyThreshold=INT)?
+        ('unhealthyThreshold:' unhealthyThreshold=INT)?
+    '}'
+;
+
+// ==========================================
+// Persistance de session
+// ==========================================
+SessionPersistence:
+    'sessionPersistence' '{'
+        'type:' type=PersistenceType
+        ('cookieName:' cookieName=STRING)?
+        ('ttl:' ttl=INT)?
+    '}'
+;
+
+// ==========================================
+// Règle de mise à l’échelle
+// ==========================================
+ScalingRule:
+    'scalingRule' name=ID '{'
+        'metric:' metric=Metric
+        'scaleUpThreshold:' scaleUpThreshold=DOUBLE
+        'scaleDownThreshold:' scaleDownThreshold=DOUBLE
+        'minInstances:' minInstances=INT
+        'maxInstances:' maxInstances=INT
+    '}'
+;
+
+// ==========================================
+// Listener (point d'entrée)
+// ==========================================
+Listener:
+    'listener' name=ID '{'
+        'protocol:' protocol=Protocol
+        'port:' port=INT
+        'targetCluster:' targetCluster=[Cluster]
+    '}'
+;
+
+// ==========================================
+// Alerte
+// ==========================================
+Alert:
+    'alert' name=ID '{'
+        'metric:' metric=Metric
+        'threshold:' threshold=DOUBLE
+        'action:' action=STRING
+    '}'
+;
+
+// ==========================================
+// Enumerations
+// ==========================================
+enum Algorithm:
+    ROUND_ROBIN='ROUND_ROBIN' |
+    WEIGHTED_ROUND_ROBIN='WEIGHTED_ROUND_ROBIN' |
+    LEAST_CONNECTIONS='LEAST_CONNECTIONS' |
+    IP_HASH='IP_HASH' |
+    RANDOM='RANDOM'
+;
+
+enum Protocol:
+    HTTP='HTTP' |
+    HTTPS='HTTPS' |
+    TCP='TCP'
+;
+
+enum Metric:
+    CPU_USAGE='CPU_USAGE' |
+    MEMORY_USAGE='MEMORY_USAGE' |
+    RESPONSE_TIME='RESPONSE_TIME' |
+    REQUEST_COUNT='REQUEST_COUNT' |
+    ERROR_RATE='ERROR_RATE'
+;
+
+enum PersistenceType:
+    COOKIE='COOKIE' |
+    IP='IP' |
+    HEADER='HEADER'
+;
+
+// ==========================================
+// Types terminaux
+// ==========================================
+BooleanValue:
+    value=('true' | 'false')
+;
+
+terminal DOUBLE returns ecore::EDouble:
+    INT '.' INT
+;
