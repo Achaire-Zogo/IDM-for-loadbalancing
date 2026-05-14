@@ -1,0 +1,884 @@
+\documentclass[aspectratio=169,12pt]{beamer}
+
+% ============================================================
+% THEME ET COULEURS
+% ============================================================
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Palette personnalisée bleu foncé / doré
+\definecolor{PrimaryBlue}{RGB}{0,51,102}
+\definecolor{AccentGold}{RGB}{204,153,0}
+\definecolor{LightBg}{RGB}{240,244,248}
+\definecolor{DarkText}{RGB}{30,30,30}
+\definecolor{GreenOK}{RGB}{39,174,96}
+\definecolor{RedAlert}{RGB}{231,76,60}
+\definecolor{CodeBg}{RGB}{39,40,34}
+\definecolor{CodeFg}{RGB}{248,248,242}
+
+\setbeamercolor{structure}{fg=PrimaryBlue}
+\setbeamercolor{palette primary}{bg=PrimaryBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=PrimaryBlue!80,fg=white}
+\setbeamercolor{palette tertiary}{bg=PrimaryBlue!60,fg=white}
+\setbeamercolor{palette quaternary}{bg=PrimaryBlue,fg=white}
+\setbeamercolor{frametitle}{bg=PrimaryBlue,fg=white}
+\setbeamercolor{title}{fg=PrimaryBlue}
+\setbeamercolor{subtitle}{fg=AccentGold}
+\setbeamercolor{block title}{bg=PrimaryBlue,fg=white}
+\setbeamercolor{block body}{bg=LightBg,fg=DarkText}
+\setbeamercolor{block title alerted}{bg=RedAlert,fg=white}
+\setbeamercolor{block body alerted}{bg=RedAlert!10,fg=DarkText}
+\setbeamercolor{block title example}{bg=GreenOK,fg=white}
+\setbeamercolor{block body example}{bg=GreenOK!10,fg=DarkText}
+\setbeamercolor{item}{fg=AccentGold}
+\setbeamercolor{itemize item}{fg=AccentGold}
+\setbeamercolor{itemize subitem}{fg=PrimaryBlue}
+\setbeamercolor{enumerate item}{fg=AccentGold}
+
+\setbeamertemplate{itemize item}{\scriptsize\raise1.25pt\hbox{\domark}}
+\newcommand*{\domark}{\tikz\draw[fill=AccentGold,draw=AccentGold] (0,0) circle (0.12);} 
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1ex,center]{palette primary}%
+      \usebeamerfont{author in head/foot}\insertshortauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.40\paperwidth,ht=2.5ex,dp=1ex,center]{palette secondary}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.5ex,dp=1ex,right]{palette tertiary}%
+      \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}%
+  }%
+}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows.meta,positioning,fit,calc,shadows,decorations.markings}
+\usepackage{listings}
+\usepackage{fontawesome5}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{textcomp}
+
+% Listings style
+\lstset{
+  basicstyle=\ttfamily\scriptsize\color{CodeFg},
+  backgroundcolor=\color{CodeBg},
+  frame=single,
+  rulecolor=\color{PrimaryBlue!30},
+  breaklines=true,
+  showstringspaces=false,
+  keywordstyle=\color{cyan}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{yellow!80!orange},
+  numbers=none,
+  tabsize=2,
+  xleftmargin=3pt,
+  xrightmargin=3pt,
+  aboveskip=5pt,
+  belowskip=5pt
+}
+
+\lstdefinelanguage{DSL}{
+  keywords={LoadBalancerSystem, cluster, server, loadbalancer, healthCheck, scalingRule, listener, alert, sessionPersistence},
+  keywordstyle=\color{cyan}\bfseries,
+  morecomment=[l]{//},
+  morestring=[b]",
+  sensitive=true
+}
+
+% ============================================================
+% METADONNEES
+% ============================================================
+\title[IDM -- Load Balancing DSL]{Modélisation et génération d'un mécanisme\\de répartition de charge par DSL\\pour un système distribué}
+\subtitle{Projet INF5039 -- Ingénierie Dirigée par les Modèles}
+\author[Zogo \& Nkolo]{
+  ZOGO ABOUMA Zozime Achaire -- 18N2824 \\
+  NKOLO Stéphane Roylex -- 21T2588
+}
+\institute[UY1]{
+  Université de Yaoundé 1 -- Faculté des Sciences\\
+  Département d'Informatique -- Master 2\\[0.5em]
+  \textbf{Encadreur :} Dr MONTHE Valérie
+}
+\date{Année académique 2025--2026}
+
+\begin{document}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+{
+\setbeamertemplate{footline}{}
+\begin{frame}
+\titlepage
+\end{frame}
+}
+
+% ============================================================
+% PLAN
+% ============================================================
+\begin{frame}{Plan de la présentation}
+\tableofcontents
+\end{frame}
+
+% ############################################################
+% SECTION 1 : DOMAINE
+% ############################################################
+\section{Domaine}
+
+\begin{frame}{Le domaine : la répartition de charge}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{block}{Définition}
+La \textbf{répartition de charge} (\textit{load balancing}) distribue le trafic réseau entre plusieurs serveurs pour :
+\end{block}
+\vspace{0.3em}
+\begin{itemize}
+  \item \textbf{Maximiser} le débit global
+  \item \textbf{Minimiser} le temps de réponse
+  \item \textbf{Éviter} la surcharge d'un seul nœud
+  \item \textbf{Assurer} la haute disponibilité
+  \item \textbf{Permettre} la scalabilité horizontale
+\end{itemize}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{tikzpicture}[scale=0.65, every node/.style={scale=0.65},
+  client/.style={rectangle, rounded corners, draw=PrimaryBlue, fill=PrimaryBlue!10, minimum width=2cm, minimum height=0.7cm, font=\small\bfseries},
+  lb/.style={rectangle, rounded corners, draw=AccentGold, fill=AccentGold!20, minimum width=2.5cm, minimum height=1cm, font=\small\bfseries, drop shadow},
+  srv/.style={rectangle, rounded corners, draw=GreenOK, fill=GreenOK!15, minimum width=2cm, minimum height=0.7cm, font=\small}
+]
+  \node[client] (c1) at (0,5) {\faUser\ Client 1};
+  \node[client] (c2) at (3,5) {\faUser\ Client 2};
+  \node[client] (c3) at (6,5) {\faUser\ Client 3};
+  
+  \node[lb] (lb) at (3,3) {\faBalanceScale\ Load Balancer};
+  
+  \node[srv] (s1) at (0,0.8) {\faServer\ Serveur 1};
+  \node[srv] (s2) at (3,0.8) {\faServer\ Serveur 2};
+  \node[srv] (s3) at (6,0.8) {\faServer\ Serveur 3};
+  
+  \draw[-{Stealth}, thick, PrimaryBlue] (c1) -- (lb);
+  \draw[-{Stealth}, thick, PrimaryBlue] (c2) -- (lb);
+  \draw[-{Stealth}, thick, PrimaryBlue] (c3) -- (lb);
+  \draw[-{Stealth}, thick, GreenOK] (lb) -- (s1);
+  \draw[-{Stealth}, thick, GreenOK] (lb) -- (s2);
+  \draw[-{Stealth}, thick, GreenOK] (lb) -- (s3);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Algorithmes de répartition}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{>{\bfseries\color{PrimaryBlue}}l p{5.5cm} p{3.5cm}}
+\toprule
+\textbf{Algorithme} & \textbf{Principe} & \textbf{Usage} \\
+\midrule
+Round Robin & Tour à tour, distribution cyclique & Serveurs homogènes \\
+\rowcolor{LightBg}
+Weighted RR & Round Robin avec poids par serveur & Capacités différentes \\
+Least Connections & Vers le serveur le moins chargé & Requêtes longues \\
+\rowcolor{LightBg}
+IP Hash & Hash de l'IP client & Affinité de session \\
+Random & Choix aléatoire & Tests, cas simples \\
+\bottomrule
+\end{tabular}
+\end{table}
+\vspace{0.5em}
+\begin{center}
+\tikz{\node[rounded corners, fill=AccentGold!15, draw=AccentGold, inner sep=8pt, font=\small]{
+  \faLightbulb\ \ Notre DSL supporte \textbf{tous ces algorithmes} de manière déclarative
+};}
+\end{center}
+\end{frame}
+
+% ############################################################
+% SECTION 2 : CONTEXTE ET PROBLEME
+% ############################################################
+\section{Contexte et problématique}
+
+\begin{frame}{Le problème actuel}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{\faExclamationTriangle\ \ Limites de l'approche manuelle}
+\begin{itemize}
+  \item Configuration \textbf{spécifique} à chaque outil
+  \item Syntaxes \textbf{différentes} (nginx.conf $\neq$ haproxy.cfg)
+  \item \textbf{Vendor lock-in}
+  \item Erreurs de syntaxe \textbf{difficiles à détecter}
+  \item \textbf{Pas de validation} avant déploiement
+  \item \textbf{Non portable}
+\end{itemize}
+\end{alertblock}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{\faCheckCircle\ \ Notre solution IDM}
+\begin{itemize}
+  \item Un DSL \textbf{unique}, indépendant
+  \item Validation \textbf{formelle} (OCL)
+  \item Génération \textbf{automatique} multi-cible
+  \item \textbf{Portabilité} totale
+  \item \textbf{Abstraction} du domaine
+  \item \textbf{Réutilisabilité} des modèles
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\end{columns}
+
+\vspace{0.5em}
+\begin{center}
+\begin{tikzpicture}
+  \node[rounded corners, fill=RedAlert!10, draw=RedAlert, inner sep=6pt, font=\small] (before) {Écrire manuellement chaque config};
+  \node[rounded corners, fill=GreenOK!10, draw=GreenOK, inner sep=6pt, font=\small, right=1.5cm of before] (after) {Modéliser une fois $\rightarrow$ Générer partout};
+  \draw[-{Stealth}, ultra thick, AccentGold] (before) -- (after);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ############################################################
+% SECTION 3 : OBJECTIFS
+% ############################################################
+\section{Objectifs visés}
+
+\begin{frame}[fragile]{Nos objectifs}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{\faBullseye\ \ Objectif principal}
+\textbf{Concevoir un DSL} pour modéliser la répartition de charge et \textbf{générer automatiquement} le code d'infrastructure via une approche MDA.
+\end{block}
+
+\vspace{0.5em}
+\begin{block}{\faCogs\ \ Objectifs spécifiques}
+\begin{enumerate}
+  \item Définir le \textbf{métamodèle} du domaine
+  \item Formaliser les \textbf{contraintes} (OCL)
+  \item Créer la \textbf{syntaxe concrète} (Xtext)
+  \item Implémenter les \textbf{transformations}
+  \item \textbf{Valider} avec un cas réel
+\end{enumerate}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{tikzpicture}[scale=0.7, every node/.style={scale=0.7},
+  goal/.style={rectangle, rounded corners=8pt, draw=PrimaryBlue, fill=PrimaryBlue!8, minimum width=5cm, minimum height=0.9cm, font=\small, align=center}
+]
+  \node[goal] (g1) at (0,6) {\faDatabase\ \ Métamodèle Ecore};
+  \node[goal] (g2) at (0,4.5) {\faIcon{shield-alt}\ \ Contraintes OCL (12 règles)};
+  \node[goal] (g3) at (0,3) {\faKeyboard\ \ DSL textuel (Xtext)};
+  \node[goal] (g4) at (0,1.5) {\faIcon{exchange-alt}\ \ Transformations ATL/Acceleo};
+  \node[goal, draw=GreenOK, fill=GreenOK!10] (g5) at (0,0) {\faRocket\ \ Déploiement Docker + Nginx};
+  
+  \draw[-{Stealth}, thick, AccentGold] (g1) -- (g2);
+  \draw[-{Stealth}, thick, AccentGold] (g2) -- (g3);
+  \draw[-{Stealth}, thick, AccentGold] (g3) -- (g4);
+  \draw[-{Stealth}, thick, AccentGold] (g4) -- (g5);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ############################################################
+% SECTION 4 : SOLUTION PROPOSEE
+% ############################################################
+\section{Solution proposée}
+
+\begin{frame}[fragile]{Architecture MDA de notre approche}
+\begin{center}
+\begin{tikzpicture}[scale=0.68, every node/.style={scale=0.68}]
+  % CIM
+  \node[rectangle, rounded corners=6pt, minimum width=14cm, minimum height=1.8cm, draw=blue!70, fill=blue!5] (cim) at (0,8) {};
+  \node[font=\bfseries\large, blue!70] at (-5.8,8.5) {CIM};
+  \node[rectangle, rounded corners=4pt, draw=blue!70, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] at (0,8) {Description domaine + Concepts + Règles};
+
+  % PIM
+  \node[rectangle, rounded corners=6pt, minimum width=14cm, minimum height=1.8cm, draw=PrimaryBlue, fill=PrimaryBlue!8] (pim) at (0,5.2) {};
+  \node[font=\bfseries\large, PrimaryBlue] at (-5.8,6) {PIM};
+  \node[rectangle, rounded corners=4pt, draw=PrimaryBlue, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (ecore) at (-4,5.2) {Ecore (.ecore)};
+  \node[rectangle, rounded corners=4pt, draw=PrimaryBlue, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (ocl) at (-0.5,5.2) {OCL (.ocl)};
+  \node[rectangle, rounded corners=4pt, draw=PrimaryBlue, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (xtext) at (3,5.8) {Xtext (.xtext)};
+  \node[rectangle, rounded corners=4pt, draw=AccentGold, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (model) at (3,4.6) {Modèle (.lb)};
+
+  % PSM
+  \node[rectangle, rounded corners=6pt, minimum width=14cm, minimum height=1.8cm, draw=orange!70, fill=orange!5] (psm) at (0,2.4) {};
+  \node[font=\bfseries\large, orange!70] at (-5.8,2.9) {PSM};
+  \node[rectangle, rounded corners=4pt, draw=orange!70, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (nginx_m) at (-2,2.4) {Modèle Nginx};
+  \node[rectangle, rounded corners=4pt, draw=orange!70, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (haproxy_m) at (2.5,2.4) {Modèle HAProxy};
+
+  % Code
+  \node[rectangle, rounded corners=6pt, minimum width=14cm, minimum height=1.8cm, draw=GreenOK, fill=GreenOK!5] (code) at (0,-0.3) {};
+  \node[font=\bfseries\large, GreenOK] at (-5.8,0.2) {Code};
+  \node[rectangle, rounded corners=4pt, draw=GreenOK, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (nginxconf) at (-3.5,-0.3) {nginx.conf};
+  \node[rectangle, rounded corners=4pt, draw=GreenOK, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (docker) at (0.5,-0.3) {docker-compose.yml};
+  \node[rectangle, rounded corners=4pt, draw=GreenOK, fill=white, minimum width=2.8cm, minimum height=0.7cm, font=\small\bfseries] (haproxy) at (4.5,-0.3) {haproxy.cfg};
+
+  % Flèches
+  \draw[-{Stealth}, thick, blue!70] (0,7) -- node[right, font=\small\itshape, black] {Analyse} (0,6.2);
+  \draw[-{Stealth}, thick, PrimaryBlue] (model.south) -- node[right, font=\small\itshape, black] {ATL (M2M)} (1,3.4);
+  \draw[-{Stealth}, thick, orange!70] (nginx_m.south) -- node[left, font=\small\itshape, black] {Acceleo} (-2,0.6);
+  \draw[-{Stealth}, thick, orange!70] (haproxy_m.south) -- node[right, font=\small\itshape, black] {Acceleo} (2.5,0.6);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Le métamodèle (vue globale)}
+\begin{center}
+\begin{tikzpicture}[scale=0.6, every node/.style={scale=0.6},
+  classnode/.style={rectangle, rounded corners=3pt, draw=PrimaryBlue, fill=PrimaryBlue!5, minimum width=3.2cm, minimum height=1cm, font=\small\bfseries, align=center},
+  enumnode/.style={rectangle, rounded corners=3pt, draw=AccentGold, fill=AccentGold!10, minimum width=2.5cm, minimum height=0.8cm, font=\small, align=center},
+  rel/.style={-{Stealth}, thick, PrimaryBlue!70}
+]
+  \node[classnode, fill=AccentGold!15, draw=AccentGold] (sys) at (0,0) {LoadBalancer\\System};
+  \node[classnode] (cluster) at (-4.5,-2.5) {Cluster};
+  \node[classnode] (listener) at (4.5,-2.5) {Listener};
+  \node[classnode] (server) at (-7,-5.5) {Server};
+  \node[classnode] (lb) at (-2,-5.5) {LoadBalancer};
+  \node[classnode] (hc) at (-7,-8) {HealthCheck};
+  \node[classnode] (sr) at (-2,-8) {ScalingRule};
+  \node[classnode] (sp) at (3,-5.5) {Session\\Persistence};
+  \node[classnode] (alert) at (4.5,-5.5) {Alert};
+  
+  \node[enumnode] (algo) at (3,-8) {\textit{<<enum>>}\\Algorithm};
+  \node[enumnode] (proto) at (7,-5.5) {\textit{<<enum>>}\\Protocol};
+  \node[enumnode] (metric) at (-5,-10.5) {\textit{<<enum>>}\\Metric};
+
+  \draw[rel] (sys) -- node[left, font=\scriptsize, black] {1..*} (cluster);
+  \draw[rel] (sys) -- node[right, font=\scriptsize, black] {1..*} (listener);
+  \draw[rel] (sys) -- node[right, font=\scriptsize, black] {0..*} (alert);
+  \draw[rel] (cluster) -- node[left, font=\scriptsize, black] {1..*} (server);
+  \draw[rel] (cluster) -- node[right, font=\scriptsize, black] {1} (lb);
+  \draw[rel] (cluster) -- node[left, font=\scriptsize, black] {0..1} (hc);
+  \draw[rel] (cluster) -- node[right, font=\scriptsize, black] {0..1} (sr);
+  \draw[rel] (lb) -- node[above, font=\scriptsize, black] {0..1} (sp);
+  \draw[-{Stealth}, thick, dashed, red!60] (listener) -- node[above, font=\scriptsize, black] {target} (cluster);
+  \draw[-{Stealth}, dotted, AccentGold] (lb) -- (algo);
+  \draw[-{Stealth}, dotted, AccentGold] (listener) -- (proto);
+  \draw[-{Stealth}, dotted, AccentGold] (sr) -- (metric);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{12 concepts -- 12 contraintes OCL}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{\faThList\ \ Concepts identifiés (12)}
+\footnotesize
+\begin{tabular}{cl}
+\faCircle[regular] & LoadBalancerSystem \\
+\faCircle[regular] & Cluster \\
+\faCircle[regular] & Server \\
+\faCircle[regular] & LoadBalancer \\
+\faCircle[regular] & Algorithm \textit{(enum)} \\
+\faCircle[regular] & HealthCheck \\
+\faCircle[regular] & Listener \\
+\faCircle[regular] & Protocol \textit{(enum)} \\
+\faCircle[regular] & SessionPersistence \\
+\faCircle[regular] & Alert \\
+\faCircle[regular] & ScalingRule \\
+\faCircle[regular] & Metric \textit{(enum)} \\
+\end{tabular}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{\faIcon{shield-alt}\ \ Contraintes OCL (12)}
+\footnotesize
+\begin{tabular}{cl}
+\textcolor{GreenOK}{\faCheck} & Noms de serveurs uniques \\
+\textcolor{GreenOK}{\faCheck} & Port entre 1 et 65535 \\
+\textcolor{GreenOK}{\faCheck} & Poids $\geq$ 1 \\
+\textcolor{GreenOK}{\faCheck} & Cluster non vide \\
+\textcolor{GreenOK}{\faCheck} & Interval $>$ timeout \\
+\textcolor{GreenOK}{\faCheck} & ScaleUp $>$ scaleDown \\
+\textcolor{GreenOK}{\faCheck} & Min $\leq$ max instances \\
+\textcolor{GreenOK}{\faCheck} & Ports listeners uniques \\
+\textcolor{GreenOK}{\faCheck} & Weighted $\Rightarrow$ poids requis \\
+\textcolor{GreenOK}{\faCheck} & Cookie $\Rightarrow$ nom requis \\
+\textcolor{GreenOK}{\faCheck} & Au moins 1 listener \\
+\textcolor{GreenOK}{\faCheck} & Au moins 1 serveur actif \\
+\end{tabular}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Technologies utilisées}
+\begin{center}
+\begin{tikzpicture}[scale=0.75, every node/.style={scale=0.75},
+  toolnode/.style={rectangle, rounded corners=8pt, draw=PrimaryBlue, fill=white, minimum width=3cm, minimum height=1.4cm, font=\small, align=center},
+  lblnode/.style={font=\scriptsize\color{gray}, align=center}
+]
+  \node[toolnode] (ecore) at (0,3) {\textbf{\large EMF/Ecore}\\Métamodèle};
+  \node[toolnode] (ocl) at (4,3) {\textbf{\large OCL}\\Contraintes};
+  \node[toolnode] (xtext) at (8,3) {\textbf{\large Xtext}\\Syntaxe DSL};
+  \node[toolnode] (atl) at (2,0) {\textbf{\large ATL}\\Transfo M2M};
+  \node[toolnode] (acceleo) at (6,0) {\textbf{\large Acceleo}\\Transfo M2T};
+  
+  \node[toolnode, draw=GreenOK, fill=GreenOK!5] (docker) at (0,-3) {\textbf{\large Docker}\\Conteneurs};
+  \node[toolnode, draw=GreenOK, fill=GreenOK!5] (nginx) at (4,-3) {\textbf{\large Nginx}\\Load Balancer};
+  \node[toolnode, draw=GreenOK, fill=GreenOK!5] (node) at (8,-3) {\textbf{\large Node.js}\\Serveurs test};
+
+  \draw[-{Stealth}, thick, PrimaryBlue!50] (ecore) -- (ocl);
+  \draw[-{Stealth}, thick, PrimaryBlue!50] (ocl) -- (xtext);
+  \draw[-{Stealth}, thick, AccentGold] (xtext) -- (atl);
+  \draw[-{Stealth}, thick, AccentGold] (atl) -- (acceleo);
+  \draw[-{Stealth}, thick, GreenOK] (acceleo) -- (nginx);
+  \draw[-{Stealth}, thick, GreenOK] (acceleo) -- (docker);
+  
+  \node[lblnode] at (0,1.8) {Syntaxe abstraite};
+  \node[lblnode] at (4,1.8) {Validation};
+  \node[lblnode] at (8,1.8) {Éditeur DSL};
+  \node[lblnode] at (2,-1.2) {PIM $\rightarrow$ PSM};
+  \node[lblnode] at (6,-1.2) {PSM $\rightarrow$ Code};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ############################################################
+% SECTION 5 : REALISATIONS
+% ############################################################
+\section{Réalisations concrètes}
+
+\begin{frame}[fragile]{La syntaxe DSL -- Exemple concret}
+\begin{lstlisting}[language=DSL]
+LoadBalancerSystem "ECommerceSystem" {
+  description: "Systeme de repartition pour e-commerce"
+  version: "1.0"
+
+  cluster WebFrontend {
+    loadbalancer {
+      algorithm: ROUND_ROBIN
+      stickySession: true
+      sessionPersistence { type: COOKIE  cookieName: "SESSIONID"  ttl: 3600 }
+    }
+    server web1 { host: "web1"  port: 8080  weight: 3  enabled: true }
+    server web2 { host: "web2"  port: 8080  weight: 2  enabled: true }
+    server web3 { host: "web3"  port: 8080  weight: 1  enabled: true }
+    healthCheck { protocol: HTTP  path: "/health"  interval: 30  timeout: 10 }
+  }
+
+  cluster APIBackend {
+    loadbalancer { algorithm: LEAST_CONNECTIONS  stickySession: false }
+    server api1 { host: "api1"  port: 3000  weight: 1  enabled: true }
+    server api2 { host: "api2"  port: 3000  weight: 1  enabled: true }
+    healthCheck { protocol: HTTP  path: "/api/health"  interval: 15  timeout: 5 }
+  }
+
+  listener httpListener  { protocol: HTTP  port: 80    targetCluster: WebFrontend }
+  listener apiListener   { protocol: HTTP  port: 3000  targetCluster: APIBackend  }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Code généré -- nginx.conf}
+\begin{lstlisting}[language={},morekeywords={worker_processes,events,worker_connections,http,upstream,server,listen,location,proxy_pass,least_conn,weight}]
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream WebFrontend {
+        server web1:8080 weight=3;
+        server web2:8080 weight=2;
+        server web3:8080 weight=1;
+    }
+
+    upstream APIBackend {
+        least_conn;
+        server api1:3000 weight=1;
+        server api2:3000 weight=1;
+    }
+
+    server {
+        listen 80;
+        location / { proxy_pass http://WebFrontend; }
+    }
+    server {
+        listen 3000;
+        location / { proxy_pass http://APIBackend; }
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Code généré -- docker-compose.yml}
+\begin{lstlisting}[language={},morekeywords={services,build,container_name,environment,healthcheck,test,interval,timeout,ports,depends_on,image,volumes,networks}]
+services:
+  web1:
+    build: ./servers/web
+    environment: [ SERVER_NAME=web1, SERVER_PORT=8080, SERVER_WEIGHT=3 ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+  web2:
+    build: ./servers/web
+    environment: [ SERVER_NAME=web2, SERVER_PORT=8080, SERVER_WEIGHT=2 ]
+  web3:
+    build: ./servers/web
+    environment: [ SERVER_NAME=web3, SERVER_PORT=8080, SERVER_WEIGHT=1 ]
+  api1:
+    build: ./servers/api
+    environment: [ SERVER_NAME=api1, SERVER_PORT=3000 ]
+  api2:
+    build: ./servers/api
+    environment: [ SERVER_NAME=api2, SERVER_PORT=3000 ]
+
+  loadbalancer:
+    image: nginx:alpine
+    volumes: [ ./nginx.conf:/etc/nginx/nginx.conf:ro ]
+    ports: [ "80:80", "3000:3000" ]
+    depends_on: [ web1, web2, web3, api1, api2 ]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Chaîne de transformations}
+\begin{center}
+\begin{tikzpicture}[scale=0.72, every node/.style={scale=0.72}]
+  \node[rectangle, rounded corners=8pt, draw=PrimaryBlue, fill=PrimaryBlue!10, minimum width=3.5cm, minimum height=1.3cm, font=\small\bfseries, align=center] (dsl) at (0,0) {\faEdit\ \ Modèle DSL\\(.lb)};
+  \node[rectangle, rounded corners=8pt, draw=blue!60, fill=blue!10, minimum width=3.5cm, minimum height=1.3cm, font=\small\bfseries, align=center] (valid) at (4.5,0) {\faIcon{shield-alt}\ \ Validation\\OCL (12 règles)};
+  \node[rectangle, rounded corners=8pt, draw=orange!70, fill=orange!10, minimum width=3.5cm, minimum height=1.3cm, font=\small\bfseries, align=center] (atl) at (9,0) {\faIcon{exchange-alt}\ \ ATL\\M2M};
+  \node[rectangle, rounded corners=8pt, draw=AccentGold, fill=AccentGold!10, minimum width=3.5cm, minimum height=1.3cm, font=\small\bfseries, align=center] (acceleo) at (0,-3.5) {\faFileCode\ \ Acceleo\\M2T};
+  \node[rectangle, rounded corners=8pt, draw=GreenOK, fill=GreenOK!10, minimum width=3.5cm, minimum height=1.3cm, font=\small\bfseries, align=center] (nginx) at (4.5,-3.5) {\faServer\ \ nginx.conf\\généré};
+  \node[rectangle, rounded corners=8pt, draw=GreenOK, fill=GreenOK!10, minimum width=3.5cm, minimum height=1.3cm, font=\small\bfseries, align=center] (docker) at (9,-3.5) {\faDocker\ \ docker-compose\\généré};
+
+  \draw[-{Stealth[length=6pt]}, ultra thick, PrimaryBlue] (dsl) -- (valid);
+  \draw[-{Stealth[length=6pt]}, ultra thick, blue!60] (valid) -- node[above, font=\scriptsize, black] {conforme} (atl);
+  \draw[-{Stealth[length=6pt]}, ultra thick, orange!70] (atl) -- (acceleo);
+  \draw[-{Stealth[length=6pt]}, ultra thick, AccentGold] (acceleo) -- (nginx);
+  \draw[-{Stealth[length=6pt]}, ultra thick, AccentGold] (acceleo) -- (docker);
+  
+  \node[font=\scriptsize\itshape, gray] at (2.25,0.5) {Étape 1};
+  \node[font=\scriptsize\itshape, gray] at (6.75,0.5) {Étape 2};
+  \node[font=\scriptsize\itshape, gray] at (0,-2.6) {Étape 3};
+  \node[font=\scriptsize\itshape, gray] at (4.5,-2.6) {Résultat};
+  \node[font=\scriptsize\itshape, gray] at (9,-2.6) {Résultat};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5em}
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\begin{block}{\footnotesize T1 : PIM $\rightarrow$ PSM}
+\footnotesize ATL : LoadBalancer $\rightarrow$ Nginx Model
+\end{block}
+\end{column}
+\begin{column}{0.3\textwidth}
+\begin{block}{\footnotesize T3 : PSM $\rightarrow$ Code}
+\footnotesize Acceleo : Nginx $\rightarrow$ nginx.conf
+\end{block}
+\end{column}
+\begin{column}{0.3\textwidth}
+\begin{block}{\footnotesize T5 : PIM $\rightarrow$ Docker}
+\footnotesize Acceleo : Model $\rightarrow$ docker-compose
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ############################################################
+% SECTION 6 : DEMO
+% ############################################################
+\section{Démonstration}
+
+\begin{frame}[fragile]{Architecture de la démo}
+\begin{center}
+\begin{tikzpicture}[scale=0.65, every node/.style={scale=0.65}]
+  % Load Balancer
+  \node[rectangle, rounded corners=6pt, draw=AccentGold, fill=AccentGold!8, minimum width=10cm, minimum height=1.2cm, font=\small\bfseries, align=center] (lb) at (4,4) {\faBalanceScale\ \ NGINX Load Balancer\\Port 80 \& 3000};
+  
+  % Web cluster
+  \node[rectangle, rounded corners=6pt, draw=PrimaryBlue, fill=PrimaryBlue!8, minimum width=2.2cm, minimum height=1.2cm, font=\small\bfseries, align=center] (w1) at (0,1) {\faGlobe\ web1\\w=3};
+  \node[rectangle, rounded corners=6pt, draw=PrimaryBlue, fill=PrimaryBlue!8, minimum width=2.2cm, minimum height=1.2cm, font=\small\bfseries, align=center] (w2) at (3,1) {\faGlobe\ web2\\w=2};
+  \node[rectangle, rounded corners=6pt, draw=PrimaryBlue, fill=PrimaryBlue!8, minimum width=2.2cm, minimum height=1.2cm, font=\small\bfseries, align=center] (w3) at (6,1) {\faGlobe\ web3\\w=1};
+  
+  % API cluster
+  \node[rectangle, rounded corners=6pt, draw=GreenOK, fill=GreenOK!8, minimum width=2.2cm, minimum height=1.2cm, font=\small\bfseries, align=center] (a1) at (1.5,-2) {\faCog\ api1};
+  \node[rectangle, rounded corners=6pt, draw=GreenOK, fill=GreenOK!8, minimum width=2.2cm, minimum height=1.2cm, font=\small\bfseries, align=center] (a2) at (6.5,-2) {\faCog\ api2};
+  
+  % Groups
+  \node[rectangle, rounded corners=10pt, draw=PrimaryBlue, dashed, thick, inner sep=12pt, fit=(w1)(w2)(w3), label={[font=\small\bfseries\color{PrimaryBlue}]above left:WebFrontend (Round Robin)}] {};
+  \node[rectangle, rounded corners=10pt, draw=GreenOK, dashed, thick, inner sep=12pt, fit=(a1)(a2), label={[font=\small\bfseries\color{GreenOK}]above left:APIBackend (Least Connections)}] {};
+  
+  % Arrows
+  \draw[-{Stealth}, thick, PrimaryBlue] (lb) -- (w1);
+  \draw[-{Stealth}, thick, PrimaryBlue] (lb) -- (w2);
+  \draw[-{Stealth}, thick, PrimaryBlue] (lb) -- (w3);
+  \draw[-{Stealth}, thick, GreenOK] (lb) -- (a1);
+  \draw[-{Stealth}, thick, GreenOK] (lb) -- (a2);
+  
+  % Client
+  \node[font=\Large] at (4,6) {\faUser\ \faUser\ \faUser};
+  \node[font=\small\bfseries] at (4,5.4) {Clients};
+  \draw[-{Stealth}, ultra thick, AccentGold] (4,5.2) -- (lb);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Démo -- Lancement}
+\begin{block}{\faTerminal\ \ Commandes de déploiement}
+\begin{lstlisting}[language=bash]
+# 1. Se placer dans le dossier du cas d'etude
+cd case-study/
+
+# 2. Construire et demarrer tous les services
+docker compose up --build -d
+
+# 3. Verifier que tout est actif (6 conteneurs)
+docker compose ps
+\end{lstlisting}
+\end{block}
+
+\vspace{0.3em}
+\begin{exampleblock}{\faCheckCircle\ \ Résultat attendu}
+\footnotesize
+\begin{tabular}{lll}
+\texttt{web1} & \textcolor{GreenOK}{healthy} & Serveur frontend (weight=3) \\
+\texttt{web2} & \textcolor{GreenOK}{healthy} & Serveur frontend (weight=2) \\
+\texttt{web3} & \textcolor{GreenOK}{healthy} & Serveur frontend (weight=1) \\
+\texttt{api1} & \textcolor{GreenOK}{healthy} & Serveur API \\
+\texttt{api2} & \textcolor{GreenOK}{healthy} & Serveur API \\
+\texttt{loadbalancer} & \textcolor{GreenOK}{running} & Nginx LB \\
+\end{tabular}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Démo -- Test Round Robin}
+\begin{block}{\faTerminal\ \ Test de la répartition (12 requêtes)}
+\begin{lstlisting}[language=bash]
+for i in $(seq 1 12); do
+  curl -s http://localhost:80/ | python3 -c \
+    "import sys,json; d=json.load(sys.stdin); \
+     print(f'Req {$i}: {d[\"serverName\"]} (weight={d[\"weight\"]})')"
+done
+\end{lstlisting}
+\end{block}
+
+\vspace{0.3em}
+\begin{exampleblock}{\faChartBar\ \ Distribution attendue (poids 3:2:1)}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  % Bars
+  \fill[PrimaryBlue] (0,0) rectangle (3,1.5);
+  \fill[PrimaryBlue!70] (3.5,0) rectangle (5.5,1.5);
+  \fill[PrimaryBlue!40] (6,0) rectangle (7,1.5);
+  
+  \node[white, font=\bfseries] at (1.5,0.75) {web1: 50\%};
+  \node[white, font=\bfseries] at (4.5,0.75) {web2: 33\%};
+  \node[white, font=\bfseries\small] at (6.5,0.75) {web3: 17\%};
+  
+  \node[font=\scriptsize, below] at (1.5,0) {~6 requêtes};
+  \node[font=\scriptsize, below] at (4.5,0) {~4 requêtes};
+  \node[font=\scriptsize, below] at (6.5,0) {~2 requêtes};
+\end{tikzpicture}
+\end{center}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Démo -- Test Failover}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{alertblock}{\faExclamationTriangle\ \ Simuler une panne}
+\begin{lstlisting}[language=bash]
+# Arreter web3
+docker compose stop web3
+
+# Les requetes continuent
+for i in $(seq 1 6); do
+  curl -s localhost:80/ \
+  | python3 -c "import sys,json;\
+  print(json.load(sys.stdin)\
+  ['serverName'])"
+done
+
+# Redemarrer
+docker compose start web3
+\end{lstlisting}
+\end{alertblock}
+\end{column}
+\begin{column}{0.48\textwidth}
+\vspace{1em}
+\begin{tikzpicture}[scale=0.7, every node/.style={scale=0.7},
+  srv/.style={rectangle, rounded corners, minimum width=2.5cm, minimum height=0.8cm, font=\small\bfseries}
+]
+  \node[font=\bfseries\large, PrimaryBlue] at (2,4.5) {Avant};
+  \node[srv, draw=GreenOK, fill=GreenOK!15] at (2,3.5) {web1 \faCheck};
+  \node[srv, draw=GreenOK, fill=GreenOK!15] at (2,2.5) {web2 \faCheck};
+  \node[srv, draw=GreenOK, fill=GreenOK!15] at (2,1.5) {web3 \faCheck};
+  
+  \draw[-{Stealth}, ultra thick, AccentGold] (3.5,2.5) -- (5,2.5);
+  
+  \node[font=\bfseries\large, RedAlert] at (7,4.5) {Après};
+  \node[srv, draw=GreenOK, fill=GreenOK!15] at (7,3.5) {web1 \faCheck};
+  \node[srv, draw=GreenOK, fill=GreenOK!15] at (7,2.5) {web2 \faCheck};
+  \node[srv, draw=RedAlert, fill=RedAlert!15] at (7,1.5) {web3 \faTimes};
+  
+  \node[font=\small, align=center] at (7,0.3) {\textcolor{GreenOK}{Le trafic est}\\
+  \textcolor{GreenOK}{redistribué}\\
+  \textcolor{GreenOK}{automatiquement !}};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Démo -- Test de charge}
+\begin{block}{\faTerminal\ \ Benchmark avec Apache Bench}
+\begin{lstlisting}[language=bash]
+# 1000 requetes, 50 en parallele
+ab -n 1000 -c 50 http://localhost:80/
+
+# Ou avec wrk (plus performant)
+wrk -t4 -c100 -d30s http://localhost:80/
+\end{lstlisting}
+\end{block}
+
+\vspace{0.5em}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\begin{exampleblock}{\faCheckCircle\ \ Métriques vérifiées}
+\begin{itemize}
+  \item[\faCheck] Aucune requête perdue
+  \item[\faCheck] Distribution conforme aux poids
+  \item[\faCheck] Temps de réponse $<$ 50ms
+  \item[\faCheck] Failover transparent
+\end{itemize}
+\end{exampleblock}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{\faLink\ \ URLs de test}
+\footnotesize
+\begin{tabular}{ll}
+\textbf{Frontend} & \texttt{localhost:80} \\
+\textbf{API} & \texttt{localhost:3000/api/products} \\
+\textbf{Health} & \texttt{localhost:80/health} \\
+\textbf{Metrics} & \texttt{localhost:80/metrics} \\
+\end{tabular}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ############################################################
+% SECTION 7 : PERSPECTIVES
+% ############################################################
+\section{Perspectives}
+
+\begin{frame}{Ce qui resterait à faire}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{\faRoad\ \ Court terme}
+\begin{itemize}
+  \item Support complet \textbf{HAProxy}
+  \item Éditeur graphique avec \textbf{Eclipse Sirius}
+  \item Génération de \textbf{manifestes Kubernetes}
+  \item Support du \textbf{HTTPS/TLS}
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{\faRocket\ \ Long terme}
+\begin{itemize}
+  \item Intégration \textbf{Prometheus + Grafana}
+  \item Support \textbf{multi-cloud} (AWS, GCP, Azure)
+  \item Load balancing \textbf{DNS}
+  \item Interface \textbf{web} pour non-développeurs
+  \item Validation par \textbf{simulation} de charge
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.8em}
+\begin{center}
+\begin{tikzpicture}
+\node[rectangle, rounded corners=10pt, fill=PrimaryBlue!10, draw=PrimaryBlue, inner sep=12pt] {
+  \begin{minipage}{0.8\textwidth}
+  \centering
+  \textbf{\color{PrimaryBlue}L'approche IDM est extensible :} chaque nouvelle plateforme cible\\
+  ne nécessite qu'une \textbf{nouvelle transformation}, pas de refonte du DSL.
+  \end{minipage}
+};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ############################################################
+% CONCLUSION
+% ############################################################
+\section*{Conclusion}
+
+\begin{frame}{Conclusion}
+\begin{block}{\faFlagCheckered\ \ Bilan du projet}
+\begin{itemize}
+  \item \textbf{DSL complet} pour la répartition de charge (12 concepts, grammaire Xtext)
+  \item \textbf{12 contraintes OCL} formalisées et implémentées
+  \item Architecture \textbf{MDA 4 niveaux} (CIM $\rightarrow$ PIM $\rightarrow$ PSM $\rightarrow$ Code)
+  \item \textbf{Transformations} ATL (M2M) + Acceleo (M2T)
+  \item \textbf{Cas d'étude réel} déployé avec Docker + Nginx
+\end{itemize}
+\end{block}
+
+\vspace{0.5em}
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle, rounded corners=12pt, fill=GreenOK!10, draw=GreenOK, thick, inner sep=12pt, drop shadow={opacity=0.15}] {
+    \begin{minipage}{0.75\textwidth}
+    \centering
+    \Large\bfseries\color{PrimaryBlue}
+    Modéliser une fois\\[4pt]
+    \Large\color{AccentGold}
+    $\Longrightarrow$ Générer partout\\[4pt]
+    \large\color{GreenOK}
+    $\Longrightarrow$ Déployer automatiquement
+    \end{minipage}
+  };
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ============================================================
+% MERCI
+% ============================================================
+{
+\setbeamertemplate{footline}{}
+\begin{frame}
+\begin{center}
+\vspace{1cm}
+{\Huge\bfseries\color{PrimaryBlue} Merci pour votre attention !}
+
+\vspace{1.5cm}
+
+{\Large\color{AccentGold}\faQuestionCircle\ \ Questions ?}
+
+\vspace{1.5cm}
+
+{\small
+\begin{tabular}{rl}
+\faUser & ZOGO ABOUMA Zozime Achaire -- 18N2824 \\
+\faUser & NKOLO Stéphane Roylex -- 21T2588 \\
+\faChalkboardTeacher & Dr MONTHE Valérie \\
+\faUniversity & Université de Yaoundé 1 \\
+\faGithub & \url{github.com/Achaire-Zogo/IDM-for-loadbalancing} \\
+\end{tabular}
+}
+\end{center}
+\end{frame}
+}
+
+\end{document}
