@@ -1074,6 +1074,132 @@ Scope Provider & Résolution des références croisées (ex: \texttt{targetClust
 \end{tabular}
 \end{table}
 
+\section{Métamodèle PSM Nginx (nginx.ecore)}
+
+Le métamodèle PSM Nginx représente la structure d'une configuration Nginx. Il est la cible de la transformation ATL (T1) et la source du template Acceleo (T3).
+
+\begin{lstlisting}[language=XML, caption={Métamodèle PSM Nginx (nginx.ecore)}]
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="nginx"
+    nsURI="http://www.example.org/nginx"
+    nsPrefix="nginx">
+
+  <!-- Racine : configuration globale Nginx -->
+  <eClassifiers xsi:type="ecore:EClass" name="NginxConfig">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="workerProcesses" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="auto"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="workerConnections" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1024"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="upstreams" upperBound="-1"
+        eType="#//Upstream" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="servers" upperBound="-1"
+        eType="#//ServerBlock" containment="true"/>
+  </eClassifiers>
+
+  <!-- Bloc upstream (groupe de backends) -->
+  <eClassifiers xsi:type="ecore:EClass" name="Upstream">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="name" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="algorithm" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="servers" upperBound="-1"
+        eType="#//UpstreamServer" containment="true"/>
+  </eClassifiers>
+
+  <!-- Serveur dans un upstream -->
+  <eClassifiers xsi:type="ecore:EClass" name="UpstreamServer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="address" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="weight" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="maxFails" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="failTimeout" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="30s"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="backup" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+
+  <!-- Bloc server (point d'entree) -->
+  <eClassifiers xsi:type="ecore:EClass" name="ServerBlock">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="listenPort" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="serverName" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="_"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="proxyPass" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="locations" upperBound="-1"
+        eType="#//Location" containment="true"/>
+  </eClassifiers>
+
+  <!-- Bloc location -->
+  <eClassifiers xsi:type="ecore:EClass" name="Location">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="path" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="/"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="proxyPass" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="proxySetHeaders" upperBound="-1"
+        eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+
+</ecore:EPackage>
+\end{lstlisting}
+
+\subsection{Diagramme du métamodèle PSM Nginx}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  class/.style={rectangle, draw, fill=white, minimum width=3.8cm, minimum height=1.4cm, align=center, font=\small},
+  arrow/.style={-{Stealth}, thick},
+  comp/.style={-{Diamond[open]}, thick}
+]
+  \node[class] (config) at (0,0) {\textbf{NginxConfig}\\workerProcesses, workerConnections};
+  \node[class] (upstream) at (-4,-3) {\textbf{Upstream}\\name, algorithm};
+  \node[class] (server) at (4,-3) {\textbf{ServerBlock}\\listenPort, serverName, proxyPass};
+  \node[class] (us) at (-4,-6) {\textbf{UpstreamServer}\\address, weight, maxFails, backup};
+  \node[class] (loc) at (4,-6) {\textbf{Location}\\path, proxyPass, proxySetHeaders};
+
+  \draw[comp] (config) -- node[left, font=\scriptsize] {0..*} (upstream);
+  \draw[comp] (config) -- node[right, font=\scriptsize] {0..*} (server);
+  \draw[comp] (upstream) -- node[left, font=\scriptsize] {0..*} (us);
+  \draw[comp] (server) -- node[right, font=\scriptsize] {0..*} (loc);
+\end{tikzpicture}
+\caption{Diagramme de classes du métamodèle PSM Nginx}
+\end{figure}
+
 \section{Transformation T1 : PIM $\rightarrow$ PSM Nginx (ATL)}
 
 \begin{lstlisting}[language=ATL, caption={Transformation ATL PIM vers Nginx}]
@@ -1735,11 +1861,205 @@ docker compose start web3
 
 \section{Étape 6 : Génération de code (Acceleo)}
 
+\subsection{Création du projet Acceleo}
+
 \begin{enumerate}
-  \item \texttt{File $\rightarrow$ New $\rightarrow$ Acceleo Project} : \texttt{org.loadbalancer.generators}
-  \item Créer les templates \texttt{.mtl} (voir chapitre 8)
-  \item Configurer le launch configuration
+  \item \texttt{File $\rightarrow$ New $\rightarrow$ Project $\rightarrow$ Acceleo $\rightarrow$ Acceleo Project}
+  \item Nommer le projet : \texttt{org.loadbalancer.generators}
+  \item Sélectionner le métamodèle source :
+    \begin{itemize}
+      \item Pour T3 (nginx.conf) : \texttt{http://www.example.org/nginx}
+      \item Pour T5 (docker-compose) : \texttt{http://www.example.org/loadbalancer}
+    \end{itemize}
+  \item Cliquer sur \texttt{Finish}
 \end{enumerate}
+
+La structure du projet générée est la suivante :
+
+\begin{lstlisting}
+org.loadbalancer.generators/
+  src/
+    org.loadbalancer.generators/
+      files/
+        generateNginx.mtl          # Template nginx.conf
+        generateDockerCompose.mtl  # Template docker-compose.yml
+  META-INF/
+    MANIFEST.MF
+  build.properties
+\end{lstlisting}
+
+\subsection{Création des templates .mtl}
+
+\paragraph{Template T3 : generateNginx.mtl}
+
+Créer le fichier \texttt{src/org.loadbalancer.generators/files/generateNginx.mtl} avec le contenu suivant :
+
+\begin{lstlisting}[caption={Template Acceleo generateNginx.mtl}]
+[comment encoding = UTF-8 /]
+[module generateNginx('http://www.example.org/nginx')]
+
+[template public generateNginxConf(config : NginxConfig)]
+[comment @main /]
+[file ('nginx.conf', false, 'UTF-8')]
+worker_processes [config.workerProcesses/];
+
+events {
+    worker_connections [config.workerConnections/];
+}
+
+http {
+[for (upstream : Upstream | config.upstreams)]
+    upstream [upstream.name/] {
+[if (upstream.algorithm = 'least_conn')]
+        least_conn;
+[elseif (upstream.algorithm = 'ip_hash')]
+        ip_hash;
+[/if]
+[for (server : UpstreamServer | upstream.servers)]
+        server [server.address/] weight=[server.weight/]
+            max_fails=[server.maxFails/]
+            fail_timeout=[server.failTimeout/][if (server.backup)]
+            backup[/if];
+[/for]
+    }
+
+[/for]
+[for (server : ServerBlock | config.servers)]
+    server {
+        listen [server.listenPort/];
+        server_name [server.serverName/];
+[for (loc : Location | server.locations)]
+        location [loc.path/] {
+            proxy_pass [loc.proxyPass/];
+[for (header : String | loc.proxySetHeaders)]
+            proxy_set_header [header/];
+[/for]
+            proxy_connect_timeout 5s;
+            proxy_read_timeout 10s;
+        }
+[/for]
+    }
+[/for]
+}
+[/file]
+[/template]
+\end{lstlisting}
+
+\paragraph{Template T5 : generateDockerCompose.mtl}
+
+Créer le fichier \texttt{src/org.loadbalancer.generators/files/generateDockerCompose.mtl} avec le contenu suivant :
+
+\begin{lstlisting}[caption={Template Acceleo generateDockerCompose.mtl}]
+[comment encoding = UTF-8 /]
+[module generateDockerCompose(
+  'http://www.example.org/loadbalancer')]
+
+[template public generateCompose(
+  sys : LoadBalancerSystem)]
+[comment @main /]
+[file ('docker-compose.yml', false, 'UTF-8')]
+version: '3.8'
+services:
+[for (cluster : Cluster | sys.clusters)]
+[for (server : Server | cluster.servers)]
+  [server.name/]:
+    build: ./servers/[if (cluster.name = 'WebFrontend')]
+web[else]api[/if]
+    environment:
+      - SERVER_NAME=[server.name/]
+      - SERVER_PORT=[server.port/]
+    healthcheck:
+[if (cluster.healthCheck <> null)]
+      test: ['['"CMD"'/]', '['"curl"'/]', '['"
+        -f"'/]', '['"[cluster.healthCheck.protocol
+        .toString().toLower()/]://localhost:
+        [server.port/][cluster.healthCheck.path/]
+        "'/]']
+      interval: [cluster.healthCheck.interval/]s
+      timeout: [cluster.healthCheck.timeout/]s
+[/if]
+    networks:
+      - lb-network
+
+[/for]
+[/for]
+  loadbalancer:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+[for (listener : Listener | sys.listeners)]
+      - "[listener.port/]:[listener.port/]"
+[/for]
+    depends_on:
+[for (cluster : Cluster | sys.clusters)]
+[for (server : Server | cluster.servers)]
+      [server.name/]:
+        condition: service_healthy
+[/for]
+[/for]
+    networks:
+      - lb-network
+
+networks:
+  lb-network:
+    driver: bridge
+[/file]
+[/template]
+\end{lstlisting}
+
+\subsection{Configuration du Launch Configuration}
+
+Pour exécuter les templates Acceleo, il faut créer une configuration de lancement :
+
+\begin{enumerate}
+  \item \texttt{Run $\rightarrow$ Run Configurations...}
+  \item Clic droit sur \texttt{Acceleo Application} $\rightarrow$ \texttt{New Configuration}
+  \item Configurer les champs suivants :
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Configuration du Launch Configuration Acceleo}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Champ} & \textbf{Valeur} \\
+\hline
+\texttt{Project} & \texttt{org.loadbalancer.generators} \\
+\hline
+\texttt{Main class} & \texttt{org.loadbalancer.generators.files.GenerateNginx} \\
+\hline
+\texttt{Model} & Chemin vers le modèle source, par exemple : \texttt{/org.loadbalancer.examples/models/ecommerce.nginx} (pour T3) ou \texttt{/org.loadbalancer.examples/models/ecommerce.lb} (pour T5) \\
+\hline
+\texttt{Target} & Répertoire de sortie des fichiers générés, par exemple : \texttt{/org.loadbalancer.examples/generated/} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item Cliquer sur \texttt{Apply} puis \texttt{Run}
+  \item Les fichiers générés apparaissent dans le répertoire cible :
+    \begin{itemize}
+      \item \texttt{generated/nginx.conf} -- configuration Nginx
+      \item \texttt{generated/docker-compose.yml} -- orchestration Docker
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Vérification des fichiers générés}
+
+Après exécution, vérifier que les fichiers générés sont corrects :
+
+\begin{lstlisting}[language=bash, caption={Vérification des fichiers générés}]
+# Verifier la syntaxe nginx
+nginx -t -c $(pwd)/generated/nginx.conf
+
+# Verifier la syntaxe docker-compose
+docker compose -f generated/docker-compose.yml config
+
+# Si les deux commandes passent sans erreur,
+# les fichiers generes sont valides
+\end{lstlisting}
 
 \section{Étape 7 : Test de bout en bout}
 
