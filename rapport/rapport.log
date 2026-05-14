@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.3.12)  14 MAY 2026 17:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.3.12)  14 MAY 2026 18:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1004,7 +1004,7 @@ rt.tocpdfTeX warning (ext4): destination with the same identifier (name{page.1}
 ) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.35 ...text (syntaxe concrÃ¨te)}{18}{section.9.2}
+l.36 ...line {9.1}Vue d'ensemble}{21}{section.9.1}
                                                   % [1])
 \tf@toc=\write5
 \openout5 = `rapport.toc'.
@@ -1301,6 +1301,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [14]
+Overfull \hbox (121.14586pt too wide) in paragraph at lines 579--579
+|[]\T1/cmr/bx/n/17.28 Implémentation Java du validateur (LoadBalancerValidator.
+java)| 
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1310,56 +1318,99 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [15]
+Overfull \hbox (26.853pt too wide) in paragraph at lines 653--654
+[][][][][][][][][][][][][]  
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[16]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[17]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 732.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\leftrightarrow' on input line 732.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 732.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[18]
 Chapitre 8.
 
-Underfull \hbox (badness 10000) in paragraph at lines 593--593
+Underfull \hbox (badness 10000) in paragraph at lines 782--782
 []|\T1/cmr/m/n/12 Modèle indépendant de
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 593--594
+Underfull \hbox (badness 10000) in paragraph at lines 782--783
 []|\T1/cmr/m/n/12 Description du domaine,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 597--597
+Underfull \hbox (badness 10000) in paragraph at lines 786--786
 []|\T1/cmr/m/n/12 Modèle spécifique
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 597--598
+Underfull \hbox (badness 10000) in paragraph at lines 786--787
 []|\T1/cmr/m/n/12 Modèle intermédiaire
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 597--598
+Underfull \hbox (badness 10000) in paragraph at lines 786--787
 \T1/cmr/m/n/12 Nginx/HAProxy (transfo
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 599--600
+Underfull \hbox (badness 10000) in paragraph at lines 788--789
 []|\T1/cmr/m/n/12 nginx.conf, docker-
  []
 
-[16
+[19
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 660--661
+Underfull \hbox (badness 10000) in paragraph at lines 849--850
 []|\T1/cmr/m/n/12 Standard pour la méta-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 664--665
+Underfull \hbox (badness 10000) in paragraph at lines 853--854
 []|\T1/cmr/m/n/12 Framework mature, éditeur
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 666--667
+Underfull \hbox (badness 10000) in paragraph at lines 855--856
 []|\T1/cmr/m/n/12 Langage hybride
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 668--669
+Underfull \hbox (badness 10000) in paragraph at lines 857--858
 []|\T1/cmr/m/n/12 Génération basée templates,
  []
 
@@ -1371,69 +1422,69 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[17]
+[20]
 Chapitre 9.
 
-Underfull \hbox (badness 10000) in paragraph at lines 687--687
+Underfull \hbox (badness 10000) in paragraph at lines 876--876
 []|\T1/cmr/m/n/12 T1 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 687--687
+Underfull \hbox (badness 10000) in paragraph at lines 876--876
 \T1/cmr/m/n/12 PIM$\OMS/cmsy/m/n/12 !$\T1/cmr/m/n/12 PSM
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 689--689
+Underfull \hbox (badness 10000) in paragraph at lines 878--878
 []|\T1/cmr/m/n/12 T2 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 689--689
+Underfull \hbox (badness 10000) in paragraph at lines 878--878
 \T1/cmr/m/n/12 PIM$\OMS/cmsy/m/n/12 !$\T1/cmr/m/n/12 PSM
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 689--689
+Underfull \hbox (badness 10000) in paragraph at lines 878--878
 []|\T1/cmr/m/n/12 Modèle
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 691--691
+Underfull \hbox (badness 10000) in paragraph at lines 880--880
 []|\T1/cmr/m/n/12 T3 : PSM
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 693--693
+Underfull \hbox (badness 10000) in paragraph at lines 882--882
 []|\T1/cmr/m/n/12 T4 : PSM
  []
 
 
-Overfull \hbox (15.41936pt too wide) in paragraph at lines 693--693
+Overfull \hbox (15.41936pt too wide) in paragraph at lines 882--882
 \T1/cmr/m/n/12 HAProxy$\OMS/cmsy/m/n/12 !$\T1/cmr/m/n/12 Code| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 693--693
+Underfull \hbox (badness 10000) in paragraph at lines 882--882
 []|\T1/cmr/m/n/12 Modèle
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 695--695
+Underfull \hbox (badness 10000) in paragraph at lines 884--884
 []|\T1/cmr/m/n/12 T5 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 695--695
+Underfull \hbox (badness 10000) in paragraph at lines 884--884
 []|\T1/cmr/m/n/12 docker-
  []
 
 
-Overfull \hbox (5.03268pt too wide) in paragraph at lines 700--700
+Overfull \hbox (5.03268pt too wide) in paragraph at lines 889--889
 |[]\T1/cmr/bx/n/17.28 Définition de la grammaire Xtext (syntaxe concrète)| 
  []
 
-[18
+[21
 
 ]
 
@@ -1444,7 +1495,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[19]
+[22]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1453,30 +1504,30 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[20]
-Overfull \hbox (11.16264pt too wide) in paragraph at lines 853--854
+[23]
+Overfull \hbox (11.16264pt too wide) in paragraph at lines 1042--1043
 []\T1/cmr/bx/n/12 Cluster \T1/cmr/m/n/12 : regroupe un ensemble de serveurs ave
 c une stratégie de répartition commune.
  []
 
 
-Overfull \hbox (2.25198pt too wide) in paragraph at lines 854--855
+Overfull \hbox (2.25198pt too wide) in paragraph at lines 1043--1044
 []\T1/cmr/bx/n/12 Server \T1/cmr/m/n/12 : représente un serveur backend avec so
 n hôte, port, poids et état d'activation. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 875--876
+Underfull \hbox (badness 10000) in paragraph at lines 1064--1065
 []|\T1/cmr/m/n/12 Coloration syntaxique, auto-complétion,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 879--880
+Underfull \hbox (badness 10000) in paragraph at lines 1068--1069
 []|\T1/cmr/m/n/12 Classe \T1/cmtt/m/n/12 LoadBalancerValidator.xtend
  []
 
 
-Underfull \hbox (badness 2698) in paragraph at lines 883--884
+Underfull \hbox (badness 2698) in paragraph at lines 1072--1073
 []|\T1/cmr/m/n/12 Résolution des références croisées (ex :
  []
 
@@ -1488,18 +1539,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[21]
+[24]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 888.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\rightarrow' on input line 888.
+(hyperref)                removing `math shift' on input line 1077.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 888.
+(hyperref)                removing `\rightarrow' on input line 1077.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1077.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1509,18 +1560,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[22]
+[25]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 940.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\rightarrow' on input line 940.
+(hyperref)                removing `math shift' on input line 1129.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 940.
+(hyperref)                removing `\rightarrow' on input line 1129.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1129.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1530,23 +1581,23 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[23]
-Overfull \hbox (31.22215pt too wide) in paragraph at lines 982--982
+[26]
+Overfull \hbox (31.22215pt too wide) in paragraph at lines 1171--1171
 |[]\T1/cmr/bx/n/17.28 Transformation T5 : PIM $\OMS/cmsy/m/n/17.28 !$ \T1/cmr/b
 x/n/17.28 Docker Compose (Acceleo)| 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 982.
+(hyperref)                removing `math shift' on input line 1171.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\rightarrow' on input line 982.
+(hyperref)                removing `\rightarrow' on input line 1171.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 982.
+(hyperref)                removing `math shift' on input line 1171.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1556,22 +1607,22 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[24]
+[27]
 Chapitre 10.
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
-) [25
+) [28
 
 ]
-Overfull \hbox (155.4946pt too wide) in paragraph at lines 1096--1097
+Overfull \hbox (155.4946pt too wide) in paragraph at lines 1285--1286
 [][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (21.156pt too wide) in paragraph at lines 1102--1102
+Overfull \hbox (21.156pt too wide) in paragraph at lines 1291--1291
 |[]\T1/cmr/bx/n/17.28 Installation de Nginx (pour tests locaux sans Docker)| 
  []
 
@@ -1583,29 +1634,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[26]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[27]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[28]
-Chapitre 11.
-[29
-
-]
+[29]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1624,15 +1653,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [31]
+Chapitre 11.
+[32
 
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[32]
+]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1660,16 +1684,43 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [35]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[36]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[37]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[38]
 Chapitre 12.
 
-Overfull \hbox (10.20232pt too wide) in paragraph at lines 1504--1505
+Overfull \hbox (10.20232pt too wide) in paragraph at lines 1693--1694
 []\T1/cmr/m/n/12 Dans Eclipse : \T1/cmtt/m/n/12 File $\OMS/cmsy/m/n/12 !$ \T1/c
 mtt/m/n/12 New $\OMS/cmsy/m/n/12 !$ \T1/cmtt/m/n/12 Other $\OMS/cmsy/m/n/12 !$ 
 \T1/cmtt/m/n/12 Eclipse Modeling Framework $\OMS/cmsy/m/n/12 !$ \T1/cmtt/m/n/12
  Ecore
  []
 
-[36
+[39
 
 ]
 
@@ -1680,30 +1731,30 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[37]
+[40]
 Chapitre 13.
-[38
+[41
 
-] [39
+] [42
 
 ]
-Overfull \hbox (7.64114pt too wide) in paragraph at lines 1615--1616
+Overfull \hbox (7.64114pt too wide) in paragraph at lines 1805--1806
 []\T1/cmr/m/n/12 Eclipse Foundation, ^^S Eclipse Modeling Framework (EMF) ^^T, 
 [][]$\T1/cmtt/m/n/12 https : / / www . eclipse .
  []
 
-[40
+[43
 
 ] (./rapport.aux)
 Package rerunfilecheck Info: File `rapport.out' has not changed.
-(rerunfilecheck)             Checksum: 6B2153C62BC9F7499C9F4D596D271FE2;15442.
+(rerunfilecheck)             Checksum: 685A00422E305A4F0712988D680A5793;16023.
  ) 
 Here is how much of TeX's memory you used:
- 30602 strings out of 480247
- 578249 string characters out of 5896151
- 1148414 words of memory out of 5000000
- 47118 multiletter control sequences out of 15000+600000
- 487945 words of font info for 65 fonts, out of 8000000 for 9000
+ 30857 strings out of 480247
+ 582458 string characters out of 5896151
+ 1163793 words of memory out of 5000000
+ 47217 multiletter control sequences out of 15000+600000
+ 489309 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,12n,80p,486b,2029s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texmf/
@@ -1723,10 +1774,10 @@ onts/type1/public/cm-super/sfrm1095.pfb></usr/share/texmf/fonts/type1/public/cm
 </usr/share/texmf/fonts/type1/public/cm-super/sfti1095.pfb></usr/share/texmf/fo
 nts/type1/public/cm-super/sfti1200.pfb></usr/share/texmf/fonts/type1/public/cm-
 super/sftt1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on rapport.pdf (41 pages, 571310 bytes).
+Output written on rapport.pdf (44 pages, 595405 bytes).
 PDF statistics:
- 1678 PDF objects out of 1728 (max. 8388607)
- 1578 compressed objects within 16 object streams
- 940 named destinations out of 1000 (max. 500000)
- 573 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1883 PDF objects out of 2073 (max. 8388607)
+ 1778 compressed objects within 18 object streams
+ 1094 named destinations out of 1200 (max. 500000)
+ 589 words of extra memory for PDF output out of 10000 (max. 10000000)
 

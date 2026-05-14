@@ -576,6 +576,195 @@ inv atLeastOneEnabledServer:
   self.servers->exists(s | s.enabled = true)
 \end{lstlisting}
 
+\section{Implémentation Java du validateur (LoadBalancerValidator.java)}
+
+Les contraintes OCL sont implémentées dans le validateur généré par Xtext. Chaque méthode annotée \texttt{@Check} correspond à une règle de gestion :
+
+\begin{lstlisting}[language=Java, caption={LoadBalancerValidator.java -- Méthodes de validation}]
+package org.loadbalancer.dsl.validation;
+
+import org.eclipse.xtext.validation.Check;
+import org.loadbalancer.dsl.loadBalancer.*;
+
+public class LoadBalancerValidator
+    extends AbstractLoadBalancerValidator {
+
+  // RG01 - Unicite des noms de serveurs dans un cluster
+  @Check
+  public void checkUniqueServerNames(Cluster cluster) {
+    Set<String> names = new HashSet<>();
+    for (Server s : cluster.getServers()) {
+      if (!names.add(s.getName())) {
+        error("Nom de serveur duplique: " + s.getName(),
+          LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+      }
+    }
+  }
+
+  // RG02 - Port valide (1-65535)
+  @Check
+  public void checkValidPort(Server server) {
+    if (server.getPort() < 1 || server.getPort() > 65535) {
+      error("Le port doit etre entre 1 et 65535",
+        LoadBalancerPackage.Literals.SERVER__PORT);
+    }
+  }
+
+  @Check
+  public void checkValidListenerPort(Listener listener) {
+    if (listener.getPort() < 1 || listener.getPort() > 65535) {
+      error("Le port du listener doit etre entre 1 et 65535",
+        LoadBalancerPackage.Literals.LISTENER__PORT);
+    }
+  }
+
+  // RG03 - Poids positif
+  @Check
+  public void checkPositiveWeight(Server server) {
+    if (server.getWeight() < 1) {
+      error("Le poids doit etre >= 1",
+        LoadBalancerPackage.Literals.SERVER__WEIGHT);
+    }
+  }
+
+  // RG04 - Cluster non vide
+  @Check
+  public void checkNonEmptyCluster(Cluster cluster) {
+    if (cluster.getServers().isEmpty()) {
+      error("Un cluster doit contenir au moins un serveur",
+        LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+    }
+  }
+
+  // RG05 - Health check : interval > timeout
+  @Check
+  public void checkHealthCheckCoherence(HealthCheck hc) {
+    if (hc.getInterval() <= hc.getTimeout()) {
+      error("L'interval doit etre superieur au timeout",
+        LoadBalancerPackage.Literals.HEALTH_CHECK__INTERVAL);
+    }
+  }
+
+  // RG06 - Seuils de scaling coherents
+  @Check
+  public void checkScalingThresholds(ScalingRule rule) {
+    if (rule.getScaleUpThreshold() <= rule.getScaleDownThreshold()) {
+      error("scaleUpThreshold doit etre > scaleDownThreshold",
+        LoadBalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD);
+    }
+  }
+
+  // RG07 - Instances min <= max
+  @Check
+  public void checkMinMaxInstances(ScalingRule rule) {
+    if (rule.getMinInstances() > rule.getMaxInstances()) {
+      error("minInstances doit etre <= maxInstances",
+        LoadBalancerPackage.Literals.SCALING_RULE__MIN_INSTANCES);
+    }
+  }
+
+  // RG08 - Ports de listeners uniques
+  @Check
+  public void checkUniqueListenerPorts(LoadBalancerSystem system) {
+    Set<Integer> ports = new HashSet<>();
+    for (Listener l : system.getListeners()) {
+      if (!ports.add(l.getPort())) {
+        error("Port de listener duplique: " + l.getPort(),
+          LoadBalancerPackage.Literals
+            .LOAD_BALANCER_SYSTEM__LISTENERS);
+      }
+    }
+  }
+
+  // RG09 - Weighted Round Robin requiert des poids
+  @Check
+  public void checkWeightedRequiresWeights(Cluster cluster) {
+    if (cluster.getLoadBalancer().getAlgorithm()
+        == Algorithm.WEIGHTED_ROUND_ROBIN) {
+      for (Server s : cluster.getServers()) {
+        if (s.getWeight() < 1) {
+          error("Algorithme WEIGHTED_ROUND_ROBIN requiert "
+            + "un poids >= 1 pour chaque serveur",
+            LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+        }
+      }
+    }
+  }
+
+  // RG10 - Cookie persistence requiert un nom
+  @Check
+  public void checkCookieRequiresName(SessionPersistence sp) {
+    if (sp.getType() == PersistenceType.COOKIE) {
+      if (sp.getCookieName() == null
+          || sp.getCookieName().isEmpty()) {
+        error("Le type COOKIE requiert un cookieName",
+          LoadBalancerPackage.Literals
+            .SESSION_PERSISTENCE__COOKIE_NAME);
+      }
+    }
+  }
+
+  // RG11 - Au moins un listener
+  @Check
+  public void checkAtLeastOneListener(LoadBalancerSystem system) {
+    if (system.getListeners().isEmpty()) {
+      error("Le systeme doit avoir au moins un listener",
+        LoadBalancerPackage.Literals
+          .LOAD_BALANCER_SYSTEM__LISTENERS);
+    }
+  }
+
+  // RG12 - Au moins un serveur actif par cluster
+  @Check
+  public void checkAtLeastOneEnabledServer(Cluster cluster) {
+    boolean hasEnabled = false;
+    for (Server s : cluster.getServers()) {
+      if (s.isEnabled()) { hasEnabled = true; break; }
+    }
+    if (!hasEnabled) {
+      error("Le cluster doit avoir au moins un serveur actif",
+        LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+    }
+  }
+}
+\end{lstlisting}
+
+\subsection{Correspondance OCL $\leftrightarrow$ Java}
+
+\begin{table}[H]
+\centering
+\caption{Correspondance entre contraintes OCL et méthodes Java}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Règle} & \textbf{Invariant OCL} & \textbf{Méthode Java} \\
+\hline
+RG01 & \texttt{uniqueServerNames} & \texttt{checkUniqueServerNames()} \\
+\hline
+RG02 & \texttt{validPort} & \texttt{checkValidPort()} \\
+\hline
+RG03 & \texttt{positiveWeight} & \texttt{checkPositiveWeight()} \\
+\hline
+RG04 & \texttt{nonEmptyCluster} & \texttt{checkNonEmptyCluster()} \\
+\hline
+RG05 & \texttt{intervalGreaterThanTimeout} & \texttt{checkHealthCheckCoherence()} \\
+\hline
+RG06 & \texttt{scaleUpGreaterThanDown} & \texttt{checkScalingThresholds()} \\
+\hline
+RG07 & \texttt{minLessOrEqualMax} & \texttt{checkMinMaxInstances()} \\
+\hline
+RG08 & \texttt{uniqueListenerPorts} & \texttt{checkUniqueListenerPorts()} \\
+\hline
+RG09 & \texttt{weightedRequiresWeights} & \texttt{checkWeightedRequiresWeights()} \\
+\hline
+RG10 & \texttt{cookieRequiresName} & \texttt{checkCookieRequiresName()} \\
+\hline
+RG11 & \texttt{atLeastOneListener} & \texttt{checkAtLeastOneListener()} \\
+\hline
+RG12 & \texttt{atLeastOneEnabledServer} & \texttt{checkAtLeastOneEnabledServer()} \\
+\hline
+\end{tabular}
+\end{table}
+
 % ============================================================
 % CHAPITRE 7 : NIVEAUX MDA
 % ============================================================
@@ -1522,15 +1711,16 @@ docker compose start web3
   \item \texttt{File $\rightarrow$ New $\rightarrow$ Project $\rightarrow$ Xtext $\rightarrow$ Xtext Project}
   \item Nommer : \texttt{org.loadbalancer.dsl}, extension : \texttt{.lb}
   \item Définir la grammaire (voir chapitre 8, section Xtext)
-  \item Exécuter : Clic droit $\rightarrow$ \texttt{Run As $\rightarrow$ Generate Xtext Artifacts}
+  \item Exécuter : Clic droit Dsl.xtext $\rightarrow$ \texttt{Run As $\rightarrow$ Generate Xtext Artifacts}
   \item Tester dans une Eclipse Application
 \end{enumerate}
 
 \section{Étape 4 : Implémentation des contraintes}
 
 \begin{enumerate}
-  \item Ouvrir le fichier \texttt{LoadBalancerValidator.xtend} généré par Xtext
-  \item Ajouter les méthodes de validation (voir chapitre 6)
+  \item ajouter les constraints OCL dans le fichier ecore (voir chapitre 7)
+  \item Ouvrir le fichier \texttt{LoadBalancerValidator.java} généré par Xtext
+  \item Ajouter les méthodes de validation (voir chapitre 7)
   \item Chaque méthode annotée \texttt{@Check} implémente une règle OCL
 \end{enumerate}
 
