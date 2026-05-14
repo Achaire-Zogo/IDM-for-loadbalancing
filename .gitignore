@@ -7,3 +7,12 @@
 *.vrb
 *.fls
 *.fdb_latexmk
+rapport/rapport.aux
+rapport/rapport.log
+rapport/rapport.out
+rapport/rapport.toc
+rapport/rapport.nav
+rapport/rapport.snm
+rapport/rapport.vrb
+rapport/rapport.fls
+rapport/rapport.fdb_latexmk

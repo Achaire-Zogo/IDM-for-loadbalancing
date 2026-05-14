@@ -18,7 +18,7 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{tikz}
-\usetikzlibrary{shapes,arrows,positioning,fit,calc}
+\usetikzlibrary{shapes,arrows,arrows.meta,positioning,fit,calc}
 
 \geometry{margin=2.5cm}
 
@@ -354,10 +354,10 @@ transformations.m2t & Transfo M2T & Fichiers .mtl \\
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-  class/.style={rectangle, draw, fill=white, minimum width=4cm, minimum height=1.5cm, text centered, font=\small},
-  enum/.style={rectangle, draw, fill=gray!10, minimum width=3cm, minimum height=1.2cm, text centered, font=\small},
-  arrow/.style={->, >=stealth, thick},
-  comp/.style={->, >=diamond, thick}
+  class/.style={rectangle, draw, fill=white, minimum width=4cm, minimum height=1.5cm, align=center, font=\small},
+  enum/.style={rectangle, draw, fill=gray!10, minimum width=3cm, minimum height=1.2cm, align=center, font=\small},
+  arrow/.style={-{Stealth}, thick},
+  comp/.style={-{Diamond[open]}, thick}
 ]
 
 % Classes principales
@@ -693,6 +693,194 @@ T3: PSM Nginx$\rightarrow$Code & M2T & Modèle Nginx & nginx.conf & Acceleo \\
 T4: PSM HAProxy$\rightarrow$Code & M2T & Modèle HAProxy & haproxy.cfg & Acceleo \\
 \hline
 T5: PIM$\rightarrow$Docker & M2T & Modèle .lb & docker-compose.yml & Acceleo \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Définition de la grammaire Xtext (syntaxe concrète)}
+
+La grammaire Xtext définit la syntaxe concrète textuelle de notre DSL. Elle permet de créer un éditeur avec coloration syntaxique, auto-complétion et validation intégrée dans Eclipse. Le fichier de grammaire est \texttt{LoadBalancer.xtext} :
+
+\begin{lstlisting}[language=Xtext, caption={Grammaire Xtext complète du DSL de répartition de charge}]
+grammar org.loadbalancer.dsl.LoadBalancer
+  with org.eclipse.xtext.common.Terminals
+
+generate loadBalancer "http://www.loadbalancer.org/dsl/LoadBalancer"
+
+// ==========================================
+// Racine du modele
+// ==========================================
+LoadBalancerSystem:
+  'LoadBalancerSystem' name=STRING '{'
+    ('description:' description=STRING)?
+    ('version:' version=STRING)?
+    clusters+=Cluster+
+    listeners+=Listener+
+    (alerts+=Alert)*
+  '}';
+
+// ==========================================
+// Cluster de serveurs
+// ==========================================
+Cluster:
+  'cluster' name=ID '{'
+    loadBalancer=LoadBalancerConfig
+    servers+=Server+
+    (healthCheck=HealthCheck)?
+    (scalingRule=ScalingRule)?
+  '}';
+
+// ==========================================
+// Configuration du repartiteur
+// ==========================================
+LoadBalancerConfig:
+  'loadbalancer' '{'
+    'algorithm:' algorithm=Algorithm
+    'stickySession:' stickySession=BooleanValue
+    (sessionPersistence=SessionPersistence)?
+  '}';
+
+// ==========================================
+// Serveur
+// ==========================================
+Server:
+  'server' name=ID '{'
+    'host:' host=STRING
+    'port:' port=INT
+    ('weight:' weight=INT)?
+    ('maxConnections:' maxConnections=INT)?
+    'enabled:' enabled=BooleanValue
+  '}';
+
+// ==========================================
+// Health Check
+// ==========================================
+HealthCheck:
+  'healthCheck' '{'
+    'protocol:' protocol=Protocol
+    'path:' path=STRING
+    'interval:' interval=INT
+    'timeout:' timeout=INT
+    ('healthyThreshold:' healthyThreshold=INT)?
+    ('unhealthyThreshold:' unhealthyThreshold=INT)?
+  '}';
+
+// ==========================================
+// Persistence de session
+// ==========================================
+SessionPersistence:
+  'sessionPersistence' '{'
+    'type:' type=PersistenceType
+    ('cookieName:' cookieName=STRING)?
+    ('ttl:' ttl=INT)?
+  '}';
+
+// ==========================================
+// Regle de mise a l'echelle
+// ==========================================
+ScalingRule:
+  'scalingRule' name=ID '{'
+    'metric:' metric=Metric
+    'scaleUpThreshold:' scaleUpThreshold=DOUBLE
+    'scaleDownThreshold:' scaleDownThreshold=DOUBLE
+    'minInstances:' minInstances=INT
+    'maxInstances:' maxInstances=INT
+  '}';
+
+// ==========================================
+// Listener (point d'entree)
+// ==========================================
+Listener:
+  'listener' name=ID '{'
+    'protocol:' protocol=Protocol
+    'port:' port=INT
+    'targetCluster:' targetCluster=[Cluster]
+  '}';
+
+// ==========================================
+// Alerte
+// ==========================================
+Alert:
+  'alert' name=ID '{'
+    'metric:' metric=Metric
+    'threshold:' threshold=DOUBLE
+    'action:' action=STRING
+  '}';
+
+// ==========================================
+// Enumerations
+// ==========================================
+enum Algorithm:
+  ROUND_ROBIN = 'ROUND_ROBIN' |
+  WEIGHTED_ROUND_ROBIN = 'WEIGHTED_ROUND_ROBIN' |
+  LEAST_CONNECTIONS = 'LEAST_CONNECTIONS' |
+  IP_HASH = 'IP_HASH' |
+  RANDOM = 'RANDOM';
+
+enum Protocol:
+  HTTP = 'HTTP' |
+  HTTPS = 'HTTPS' |
+  TCP = 'TCP';
+
+enum Metric:
+  CPU_USAGE = 'CPU_USAGE' |
+  MEMORY_USAGE = 'MEMORY_USAGE' |
+  RESPONSE_TIME = 'RESPONSE_TIME' |
+  REQUEST_COUNT = 'REQUEST_COUNT' |
+  ERROR_RATE = 'ERROR_RATE';
+
+enum PersistenceType:
+  COOKIE = 'COOKIE' |
+  IP = 'IP' |
+  HEADER = 'HEADER';
+
+// ==========================================
+// Types terminaux
+// ==========================================
+BooleanValue:
+  value=('true' | 'false');
+
+terminal DOUBLE returns ecore::EDouble:
+  INT '.' INT;
+\end{lstlisting}
+
+\subsection{Explication de la grammaire}
+
+La grammaire ci-dessus définit la syntaxe concrète complète du DSL. Voici les éléments clés :
+
+\begin{itemize}
+  \item \textbf{LoadBalancerSystem} : élément racine, contient les clusters, listeners et alertes.
+  \item \textbf{Cluster} : regroupe un ensemble de serveurs avec une stratégie de répartition commune. Chaque cluster possède une configuration de \texttt{LoadBalancerConfig}, au moins un \texttt{Server}, et optionnellement un \texttt{HealthCheck} et un \texttt{ScalingRule}.
+  \item \textbf{Server} : représente un serveur backend avec son hôte, port, poids et état d'activation.
+  \item \textbf{Listener} : définit un point d'écoute (port d'entrée) et le cluster cible via une \textbf{référence croisée} (\texttt{[Cluster]}).
+  \item \textbf{Énumérations} : \texttt{Algorithm}, \texttt{Protocol}, \texttt{Metric} et \texttt{PersistenceType} contraignent les valeurs acceptées.
+  \item \textbf{Terminal DOUBLE} : terminal personnalisé pour les valeurs décimales (seuils de scaling et alertes).
+\end{itemize}
+
+\subsection{Artefacts générés par Xtext}
+
+L'exécution de \texttt{Generate Xtext Artifacts} produit automatiquement :
+
+\begin{table}[H]
+\centering
+\caption{Artefacts générés par le workflow Xtext}
+\begin{tabular}{|p{5cm}|p{8cm}|}
+\hline
+\textbf{Artefact} & \textbf{Description} \\
+\hline
+Parseur ANTLR & Analyse syntaxique des fichiers \texttt{.lb} \\
+\hline
+Modèle EMF (EPackage) & Syntaxe abstraite dérivée de la grammaire \\
+\hline
+Éditeur Eclipse & Coloration syntaxique, auto-complétion, outline \\
+\hline
+Sérialiseur & Conversion modèle $\leftrightarrow$ texte \\
+\hline
+Validateur & Classe \texttt{LoadBalancerValidator.xtend} pour les contraintes \\
+\hline
+Formateur & Indentation et formatage du code DSL \\
+\hline
+Scope Provider & Résolution des références croisées (ex: \texttt{targetCluster}) \\
 \hline
 \end{tabular}
 \end{table}
