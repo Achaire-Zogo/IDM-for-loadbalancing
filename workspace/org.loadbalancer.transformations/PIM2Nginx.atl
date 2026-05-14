@@ -1,0 +1,59 @@
+-- @path NginxModel=/org.loadbalancer.transformations/nginx.ecore
+-- @path LoadBalancerModel=/org.loadbalancer.metamodel/model/loadbalancer.ecore
+
+module PIM2Nginx;
+create OUT : NginxModel from IN : LoadBalancerModel;
+
+rule System2NginxConfig {
+    from
+        s : LoadBalancerModel!LoadBalancerSystem
+    to
+        c : NginxModel!NginxConfig (
+            workerProcesses   <- 'auto',
+            workerConnections <- 1024,
+            upstreams         <- s.clusters->collect(cl | thisModule.Cluster2Upstream(cl)),
+            servers           <- s.listeners->collect(l | thisModule.Listener2ServerBlock(l))
+        )
+}
+
+lazy rule Cluster2Upstream {
+    from
+        cl : LoadBalancerModel!Cluster
+    to
+        u : NginxModel!Upstream (
+            name      <- cl.name,
+            algorithm <- cl.loadBalancer.algorithm.mapNginxAlgo(),
+            servers   <- cl.servers->select(s | s.enabled)->collect(s | thisModule.Server2UpstreamServer(s))
+        )
+}
+
+lazy rule Server2UpstreamServer {
+    from
+        s : LoadBalancerModel!Server
+    to
+        us : NginxModel!UpstreamServer (
+            address <- s.host + ':' + s.port.toString(),
+            weight  <- s.weight
+        )
+}
+
+lazy rule Listener2ServerBlock {
+    from
+        l : LoadBalancerModel!Listener
+    to
+        sb : NginxModel!ServerBlock (
+            listenPort <- l.port,
+            proxyPass  <- 'http://' + l.targetCluster.name
+        )
+}
+
+helper context LoadBalancerModel!Algorithm
+    def: mapNginxAlgo() : String =
+        if self = #LEAST_CONNECTIONS then
+            'least_conn'
+        else if self = #IP_HASH then
+            'ip_hash'
+        else
+            ''
+        endif endif
+;
