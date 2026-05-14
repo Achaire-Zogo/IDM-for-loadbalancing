@@ -1,0 +1,2132 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,arrows.meta,positioning,fit,calc}
+
+\geometry{margin=2.5cm}
+
+% Couleurs pour listings
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{keyword}{RGB}{0,0,150}
+\definecolor{comment}{RGB}{0,128,0}
+\definecolor{string}{RGB}{163,21,21}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{codeframe},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  keywordstyle=\color{keyword}\bfseries,
+  commentstyle=\color{comment}\itshape,
+  stringstyle=\color{string},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  captionpos=b
+}
+
+\lstdefinelanguage{DSL}{
+  keywords={LoadBalancerSystem, cluster, server, loadbalancer, healthCheck, scalingRule, listener, alert, sessionPersistence},
+  keywordstyle=\color{keyword}\bfseries,
+  morecomment=[l]{//},
+  morestring=[b]",
+  sensitive=true
+}
+
+\lstdefinelanguage{OCL}{
+  keywords={context, inv, self, implies, forAll, exists, select, collect, notEmpty, isUnique, size, and, or, not},
+  keywordstyle=\color{keyword}\bfseries,
+  morecomment=[l]{--},
+  sensitive=true
+}
+
+\lstdefinelanguage{ATL}{
+  keywords={module, create, from, rule, to, lazy, helper, context, def, if, then, else, endif, let, in},
+  keywordstyle=\color{keyword}\bfseries,
+  morecomment=[l]{--},
+  morestring=[b]',
+  sensitive=true
+}
+
+\lstdefinelanguage{Xtext}{
+  keywords={grammar, with, generate, enum, terminal, returns, import},
+  keywordstyle=\color{keyword}\bfseries,
+  morecomment=[l]{//},
+  morestring=[b]",
+  sensitive=true
+}
+
+% En-têtes
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small INF5039 -- Projet IDM}
+\fancyhead[R]{\small Répartition de charge par DSL}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black
+}
+
+\begin{document}
+
+% ============================================================
+% PAGE DE GARDE
+% ============================================================
+\begin{titlepage}
+\centering
+\vspace*{1cm}
+
+{\Large\bfseries UNIVERSITÉ DE YAOUNDÉ 1}\\[0.3cm]
+{\large Faculté des Sciences}\\[0.2cm]
+{\large Département d'Informatique}\\[0.2cm]
+{\large Master 2 -- INF5039 : Ingénierie Dirigée par les Modèles}\\[2cm]
+
+\rule{\textwidth}{1pt}\\[0.5cm]
+{\LARGE\bfseries PROJET}\\[0.5cm]
+{\Large\bfseries Modélisation et génération d'un mécanisme\\de répartition de charge par DSL\\pour un système distribué}\\[0.5cm]
+\rule{\textwidth}{1pt}\\[2.5cm]
+
+{\large\bfseries Réalisé par :}\\[0.3cm]
+{\large ZOGO ABOUMA Zozime Achaire -- 18N2824}\\[0.2cm]
+{\large NKOLO Stéphane Roylex -- 21T2588}\\[2cm]
+
+{\large\bfseries Encadreur :}\\[0.3cm]
+{\large Dr MONTHE Valérie}\\[0.2cm]
+{\large Université de Yaoundé 1}\\[2.5cm]
+
+{\large\bfseries Année académique 2025 -- 2026}
+
+\end{titlepage}
+
+% ============================================================
+% TABLE DES MATIERES
+% ============================================================
+\tableofcontents
+\newpage
+
+% ============================================================
+% INTRODUCTION
+% ============================================================
+\chapter{Introduction}
+
+Dans le contexte actuel des systèmes informatiques, la montée en charge des applications distribuées impose des mécanismes efficaces de répartition de charge (\textit{load balancing}). Ces mécanismes permettent de distribuer équitablement les requêtes entre plusieurs serveurs afin d'optimiser les performances, d'assurer la haute disponibilité et de prévenir la surcharge de nœuds individuels.
+
+L'Ingénierie Dirigée par les Modèles (IDM/MDE) offre une approche systématique pour modéliser, transformer et générer des artefacts logiciels à partir de modèles abstraits. En combinant IDM et la définition d'un langage dédié (DSL -- \textit{Domain Specific Language}), il devient possible de spécifier de manière déclarative les politiques de répartition de charge et de générer automatiquement le code d'infrastructure correspondant.
+
+Ce projet a pour objectif de concevoir un DSL permettant de modéliser un mécanisme de répartition de charge pour un système distribué, puis de mettre en œuvre une chaîne de transformations MDA (\textit{Model Driven Architecture}) allant du modèle abstrait jusqu'au code exécutable.
+
+% ============================================================
+% CHAPITRE 1 : DESCRIPTION DU DOMAINE
+% ============================================================
+\chapter{Description du domaine traité}
+
+\section{Qu'est-ce que la répartition de charge ?}
+
+La répartition de charge (\textit{load balancing}) est une technique utilisée dans les systèmes distribués pour distribuer le trafic réseau ou les tâches de calcul entre plusieurs serveurs ou ressources. L'objectif est de :
+
+\begin{itemize}
+  \item Maximiser le débit (\textit{throughput}) du système global
+  \item Minimiser le temps de réponse pour chaque requête
+  \item Éviter la surcharge d'un seul nœud
+  \item Assurer la tolérance aux pannes (\textit{failover})
+  \item Permettre la scalabilité horizontale
+\end{itemize}
+
+\section{Composants d'un système de répartition de charge}
+
+Un système de répartition de charge typique comprend les éléments suivants :
+
+\begin{itemize}
+  \item \textbf{Load Balancer} (répartiteur) : point d'entrée qui reçoit les requêtes et les redirige
+  \item \textbf{Backend Servers} (serveurs backend) : ensemble de serveurs qui traitent les requêtes
+  \item \textbf{Health Check} (vérification de santé) : mécanisme pour vérifier la disponibilité des serveurs
+  \item \textbf{Algorithme de répartition} : stratégie utilisée pour choisir le serveur cible
+  \item \textbf{Session Persistence} (affinité de session) : mécanisme pour diriger un même client vers le même serveur
+  \item \textbf{Cluster} : regroupement logique de serveurs backend
+  \item \textbf{Listeners} : points d'écoute sur des ports/protocoles spécifiques
+\end{itemize}
+
+\section{Algorithmes de répartition courants}
+
+\begin{table}[H]
+\centering
+\caption{Algorithmes de répartition de charge}
+\begin{tabular}{|p{4cm}|p{5.5cm}|p{4.5cm}|}
+\hline
+\textbf{Algorithme} & \textbf{Description} & \textbf{Cas d'usage} \\
+\hline
+Round Robin & Distribution séquentielle cyclique entre les serveurs & Serveurs homogènes \\
+\hline
+Weighted Round Robin & Round Robin avec poids assignés & Serveurs hétérogènes \\
+\hline
+Least Connections & Envoie au serveur ayant le moins de connexions actives & Requêtes de durée variable \\
+\hline
+IP Hash & Hash de l'IP source pour déterminer le serveur & Affinité de session \\
+\hline
+Random & Choix aléatoire & Cas simples, tests \\
+\hline
+Weighted Least Conn. & Least Connections pondéré par la capacité & Serveurs hétérogènes, charge variable \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Contexte et problématique}
+
+Traditionnellement, la configuration d'un load balancer se fait manuellement via des fichiers de configuration (nginx.conf, haproxy.cfg, etc.) qui sont :
+
+\begin{itemize}
+  \item Spécifiques à une technologie (\textit{vendor lock-in})
+  \item Sujets à des erreurs de syntaxe
+  \item Difficiles à valider avant déploiement
+  \item Non portables d'une plateforme à l'autre
+\end{itemize}
+
+Notre approche IDM propose de résoudre ces problèmes en définissant un DSL indépendant de toute technologie qui capture l'essence de la répartition de charge, et en utilisant des transformations de modèles pour générer automatiquement les configurations ou le code cible.
+
+% ============================================================
+% CHAPITRE 2 : CONCEPTS
+% ============================================================
+\chapter{Tableau des concepts identifiés}
+
+Le tableau suivant recense les concepts clés du domaine de la répartition de charge qui seront modélisés dans notre métamodèle :
+
+\begin{longtable}{|c|p{3.5cm}|p{5cm}|p{4.5cm}|}
+\hline
+\textbf{N°} & \textbf{Concept} & \textbf{Description} & \textbf{Attributs} \\
+\hline
+\endhead
+1 & LoadBalancerSystem & Système global, élément racine & name, description, version \\
+\hline
+2 & Cluster & Groupe logique de serveurs backend & name, maxConnections \\
+\hline
+3 & Server & Serveur backend individuel & name, host, port, weight, maxConnections, enabled \\
+\hline
+4 & LoadBalancer & Composant répartiteur & name, algorithm, stickySession \\
+\hline
+5 & Algorithm & Énumération des algorithmes & ROUND\_ROBIN, WEIGHTED\_RR, LEAST\_CONN, IP\_HASH, RANDOM \\
+\hline
+6 & HealthCheck & Vérification de disponibilité & protocol, path, interval, timeout, thresholds \\
+\hline
+7 & Listener & Point d'écoute réseau & name, protocol, port, targetCluster \\
+\hline
+8 & Protocol & Protocoles supportés & HTTP, HTTPS, TCP, UDP \\
+\hline
+9 & SessionPersistence & Affinité de session & type, cookieName, ttl \\
+\hline
+10 & Alert & Règle d'alerte & name, metric, threshold, action \\
+\hline
+11 & ScalingRule & Mise à l'échelle auto & name, metric, scaleUp/Down, min/maxInstances \\
+\hline
+12 & Metric & Métriques surveillées & CPU, MEMORY, REQUESTS, RESPONSE\_TIME, CONNECTIONS \\
+\hline
+\end{longtable}
+
+% ============================================================
+% CHAPITRE 3 : REGLES DE GESTION
+% ============================================================
+\chapter{Règles de gestion et exigences}
+
+Les règles suivantes doivent être respectées dans tout modèle conforme à notre métamodèle :
+
+\begin{longtable}{|c|p{4cm}|p{8.5cm}|}
+\hline
+\textbf{Code} & \textbf{Règle} & \textbf{Description} \\
+\hline
+\endhead
+RG01 & Unicité des noms de serveurs & Tous les serveurs d'un même cluster doivent avoir des noms uniques \\
+\hline
+RG02 & Port valide & Le port doit être compris entre 1 et 65535 \\
+\hline
+RG03 & Poids positif & Le poids d'un serveur doit être $\geq 1$ \\
+\hline
+RG04 & Cluster non vide & Un cluster doit contenir au moins un serveur \\
+\hline
+RG05 & Health check cohérent & L'intervalle doit être supérieur au timeout \\
+\hline
+RG06 & Seuils de scaling cohérents & Le seuil de scale-up $>$ seuil de scale-down \\
+\hline
+RG07 & Instances min/max & minInstances $\leq$ maxInstances \\
+\hline
+RG08 & Listener unique par port & Deux listeners ne peuvent pas écouter sur le même port \\
+\hline
+RG09 & Weighted requiert des poids & Si algorithme = Weighted RR, tous les serveurs doivent avoir un poids $\geq 1$ \\
+\hline
+RG10 & Cookie name requis & Si persistence = COOKIE, cookieName doit être renseigné \\
+\hline
+RG11 & Au moins un listener & Le système doit avoir au moins un listener \\
+\hline
+RG12 & Serveur actif requis & Un cluster doit avoir au moins un serveur enabled = true \\
+\hline
+\end{longtable}
+
+% ============================================================
+% CHAPITRE 4 : DECOMPOSITION EN MODULES
+% ============================================================
+\chapter{Décomposition en modules}
+
+\section{Architecture des packages}
+
+Notre système est organisé en modules pour une meilleure séparation des préoccupations :
+
+\begin{lstlisting}[language={},caption={Structure en packages du projet}]
+loadbalancer.dsl/
+  metamodel/                    # Metamodele
+    core/                       # Concepts fondamentaux
+      LoadBalancerSystem, Cluster, Server
+    balancing/                  # Repartition
+      LoadBalancer, Algorithm, SessionPersistence
+    networking/                 # Reseau
+      Listener, Protocol
+    monitoring/                 # Surveillance
+      HealthCheck, Alert, Metric
+    scaling/                    # Mise a l'echelle
+      ScalingRule
+  constraints/                  # Contraintes OCL
+  concrete.syntax/              # Syntaxe concrete (Xtext)
+  transformations/
+    m2m/                        # Modele-a-modele (ATL)
+    m2t/                        # Modele-a-texte (Acceleo)
+  examples/                     # Etudes de cas
+\end{lstlisting}
+
+\section{Description des modules}
+
+\begin{table}[H]
+\centering
+\caption{Description des modules du système}
+\begin{tabular}{|p{3.5cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Module} & \textbf{Rôle} & \textbf{Contenu} \\
+\hline
+metamodel.core & Concepts fondamentaux & LoadBalancerSystem, Cluster, Server \\
+\hline
+metamodel.balancing & Logique de répartition & LoadBalancer, Algorithm, SessionPersistence \\
+\hline
+metamodel.networking & Aspects réseau & Listener, Protocol \\
+\hline
+metamodel.monitoring & Surveillance et alertes & HealthCheck, Alert, Metric \\
+\hline
+metamodel.scaling & Mise à l'échelle & ScalingRule \\
+\hline
+constraints & Contraintes OCL & Fichiers .ocl \\
+\hline
+concrete.syntax & Grammaire Xtext & Fichier .xtext \\
+\hline
+transformations.m2m & Transfo M2M & Fichiers .atl \\
+\hline
+transformations.m2t & Transfo M2T & Fichiers .mtl \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================
+% CHAPITRE 5 : METAMODELE
+% ============================================================
+\chapter{Schéma du métamodèle}
+
+\section{Diagramme global du métamodèle}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  class/.style={rectangle, draw, fill=white, minimum width=4cm, minimum height=1.5cm, align=center, font=\small},
+  enum/.style={rectangle, draw, fill=gray!10, minimum width=3cm, minimum height=1.2cm, align=center, font=\small},
+  arrow/.style={-{Stealth}, thick},
+  comp/.style={-{Diamond[open]}, thick}
+]
+
+% Classes principales
+\node[class] (system) at (0,0) {\textbf{LoadBalancerSystem}\\name, description, version};
+\node[class] (cluster) at (-4,-3) {\textbf{Cluster}\\name, maxConnections};
+\node[class] (listener) at (4,-3) {\textbf{Listener}\\name, protocol, port};
+\node[class] (server) at (-6,-6) {\textbf{Server}\\name, host, port, weight, enabled};
+\node[class] (lb) at (-1,-6) {\textbf{LoadBalancer}\\algorithm, stickySession};
+\node[class] (hc) at (-6,-9) {\textbf{HealthCheck}\\protocol, path, interval, timeout};
+\node[class] (scaling) at (-1,-9) {\textbf{ScalingRule}\\metric, thresholds, min/max};
+\node[class] (alert) at (4,-6) {\textbf{Alert}\\name, metric, threshold, action};
+\node[class] (sp) at (4,-9) {\textbf{SessionPersistence}\\type, cookieName, ttl};
+
+% Enums
+\node[enum] (algo) at (-1,-11.5) {\textbf{<<enum>> Algorithm}};
+\node[enum] (proto) at (4,-11.5) {\textbf{<<enum>> Protocol}};
+\node[enum] (metric) at (-6,-11.5) {\textbf{<<enum>> Metric}};
+
+% Relations
+\draw[comp] (system) -- node[left, font=\scriptsize] {1..*} (cluster);
+\draw[comp] (system) -- node[right, font=\scriptsize] {1..*} (listener);
+\draw[comp] (system) -| node[right, font=\scriptsize] {0..*} (alert);
+\draw[comp] (cluster) -- node[left, font=\scriptsize] {1..*} (server);
+\draw[comp] (cluster) -- node[right, font=\scriptsize] {1} (lb);
+\draw[comp] (cluster) -- node[left, font=\scriptsize] {0..1} (hc);
+\draw[comp] (cluster) -- node[right, font=\scriptsize] {0..1} (scaling);
+\draw[comp] (lb) -- node[right, font=\scriptsize] {0..1} (sp);
+\draw[arrow, dashed] (listener) -- node[above, font=\scriptsize] {targetCluster} (cluster);
+
+% Enum links
+\draw[arrow, dotted] (lb) -- (algo);
+\draw[arrow, dotted] (listener) -- (proto);
+\draw[arrow, dotted] (scaling) -- (metric);
+
+\end{tikzpicture}
+\caption{Diagramme de classes du métamodèle global}
+\end{figure}
+
+\section{Module Core -- Détail}
+
+\begin{lstlisting}[language=XML, caption={Extrait du métamodèle Ecore (loadbalancer.ecore)}]
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="loadbalancer"
+    nsURI="http://www.example.org/loadbalancer"
+    nsPrefix="lb">
+
+  <eClassifiers xsi:type="ecore:EClass" name="LoadBalancerSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="clusters"
+        upperBound="-1" eType="#//Cluster" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listeners"
+        upperBound="-1" eType="#//Listener" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="alerts"
+        upperBound="-1" eType="#//Alert" containment="true"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Cluster">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="servers"
+        upperBound="-1" eType="#//Server" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loadBalancer"
+        eType="#//LoadBalancer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="healthCheck"
+        eType="#//HealthCheck" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scalingRule"
+        eType="#//ScalingRule" containment="true"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Server">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="weight"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxConnections"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="Algorithm">
+    <eLiterals name="ROUND_ROBIN"/>
+    <eLiterals name="WEIGHTED_ROUND_ROBIN" value="1"/>
+    <eLiterals name="LEAST_CONNECTIONS" value="2"/>
+    <eLiterals name="IP_HASH" value="3"/>
+    <eLiterals name="RANDOM" value="4"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="Protocol">
+    <eLiterals name="HTTP"/>
+    <eLiterals name="HTTPS" value="1"/>
+    <eLiterals name="TCP" value="2"/>
+    <eLiterals name="UDP" value="3"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="Metric">
+    <eLiterals name="CPU_USAGE"/>
+    <eLiterals name="MEMORY_USAGE" value="1"/>
+    <eLiterals name="REQUEST_COUNT" value="2"/>
+    <eLiterals name="RESPONSE_TIME" value="3"/>
+    <eLiterals name="ACTIVE_CONNECTIONS" value="4"/>
+  </eClassifiers>
+
+</ecore:EPackage>
+\end{lstlisting}
+
+% ============================================================
+% CHAPITRE 6 : CONTRAINTES OCL
+% ============================================================
+\chapter{Contraintes OCL}
+
+Chaque règle de gestion est formalisée en OCL (\textit{Object Constraint Language}) :
+
+\section{RG01 -- Unicité des noms de serveurs}
+\begin{lstlisting}[language=OCL]
+context Cluster
+inv uniqueServerNames:
+  self.servers->isUnique(s | s.name)
+\end{lstlisting}
+
+\section{RG02 -- Port valide}
+\begin{lstlisting}[language=OCL]
+context Server
+inv validPort:
+  self.port >= 1 and self.port <= 65535
+
+context Listener
+inv validListenerPort:
+  self.port >= 1 and self.port <= 65535
+\end{lstlisting}
+
+\section{RG03 -- Poids positif}
+\begin{lstlisting}[language=OCL]
+context Server
+inv positiveWeight:
+  self.weight >= 1
+\end{lstlisting}
+
+\section{RG04 -- Cluster non vide}
+\begin{lstlisting}[language=OCL]
+context Cluster
+inv nonEmptyCluster:
+  self.servers->notEmpty()
+\end{lstlisting}
+
+\section{RG05 -- Health check cohérent}
+\begin{lstlisting}[language=OCL]
+context HealthCheck
+inv intervalGreaterThanTimeout:
+  self.interval > self.timeout
+\end{lstlisting}
+
+\section{RG06 -- Seuils de scaling cohérents}
+\begin{lstlisting}[language=OCL]
+context ScalingRule
+inv scaleUpGreaterThanDown:
+  self.scaleUpThreshold > self.scaleDownThreshold
+\end{lstlisting}
+
+\section{RG07 -- Instances min/max cohérentes}
+\begin{lstlisting}[language=OCL]
+context ScalingRule
+inv minLessOrEqualMax:
+  self.minInstances <= self.maxInstances
+\end{lstlisting}
+
+\section{RG08 -- Listener unique par port}
+\begin{lstlisting}[language=OCL]
+context LoadBalancerSystem
+inv uniqueListenerPorts:
+  self.listeners->isUnique(l | l.port)
+\end{lstlisting}
+
+\section{RG09 -- Algorithme Weighted requiert des poids}
+\begin{lstlisting}[language=OCL]
+context Cluster
+inv weightedRequiresWeights:
+  self.loadBalancer.algorithm = Algorithm::WEIGHTED_ROUND_ROBIN
+  implies self.servers->forAll(s | s.weight >= 1)
+\end{lstlisting}
+
+\section{RG10 -- Session Persistence cookie}
+\begin{lstlisting}[language=OCL]
+context SessionPersistence
+inv cookieRequiresName:
+  self.type = PersistenceType::COOKIE
+  implies self.cookieName <> '' and self.cookieName <> null
+\end{lstlisting}
+
+\section{RG11 -- Au moins un listener}
+\begin{lstlisting}[language=OCL]
+context LoadBalancerSystem
+inv atLeastOneListener:
+  self.listeners->size() >= 1
+\end{lstlisting}
+
+\section{RG12 -- Serveur actif dans le cluster}
+\begin{lstlisting}[language=OCL]
+context Cluster
+inv atLeastOneEnabledServer:
+  self.servers->exists(s | s.enabled = true)
+\end{lstlisting}
+
+\section{Implémentation Java du validateur (LoadBalancerValidator.java)}
+
+Les contraintes OCL sont implémentées dans le validateur généré par Xtext. Chaque méthode annotée \texttt{@Check} correspond à une règle de gestion :
+
+\begin{lstlisting}[language=Java, caption={LoadBalancerValidator.java -- Méthodes de validation}]
+package org.loadbalancer.dsl.validation;
+
+import org.eclipse.xtext.validation.Check;
+import org.loadbalancer.dsl.loadBalancer.*;
+
+public class LoadBalancerValidator
+    extends AbstractLoadBalancerValidator {
+
+  // RG01 - Unicite des noms de serveurs dans un cluster
+  @Check
+  public void checkUniqueServerNames(Cluster cluster) {
+    Set<String> names = new HashSet<>();
+    for (Server s : cluster.getServers()) {
+      if (!names.add(s.getName())) {
+        error("Nom de serveur duplique: " + s.getName(),
+          LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+      }
+    }
+  }
+
+  // RG02 - Port valide (1-65535)
+  @Check
+  public void checkValidPort(Server server) {
+    if (server.getPort() < 1 || server.getPort() > 65535) {
+      error("Le port doit etre entre 1 et 65535",
+        LoadBalancerPackage.Literals.SERVER__PORT);
+    }
+  }
+
+  @Check
+  public void checkValidListenerPort(Listener listener) {
+    if (listener.getPort() < 1 || listener.getPort() > 65535) {
+      error("Le port du listener doit etre entre 1 et 65535",
+        LoadBalancerPackage.Literals.LISTENER__PORT);
+    }
+  }
+
+  // RG03 - Poids positif
+  @Check
+  public void checkPositiveWeight(Server server) {
+    if (server.getWeight() < 1) {
+      error("Le poids doit etre >= 1",
+        LoadBalancerPackage.Literals.SERVER__WEIGHT);
+    }
+  }
+
+  // RG04 - Cluster non vide
+  @Check
+  public void checkNonEmptyCluster(Cluster cluster) {
+    if (cluster.getServers().isEmpty()) {
+      error("Un cluster doit contenir au moins un serveur",
+        LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+    }
+  }
+
+  // RG05 - Health check : interval > timeout
+  @Check
+  public void checkHealthCheckCoherence(HealthCheck hc) {
+    if (hc.getInterval() <= hc.getTimeout()) {
+      error("L'interval doit etre superieur au timeout",
+        LoadBalancerPackage.Literals.HEALTH_CHECK__INTERVAL);
+    }
+  }
+
+  // RG06 - Seuils de scaling coherents
+  @Check
+  public void checkScalingThresholds(ScalingRule rule) {
+    if (rule.getScaleUpThreshold() <= rule.getScaleDownThreshold()) {
+      error("scaleUpThreshold doit etre > scaleDownThreshold",
+        LoadBalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD);
+    }
+  }
+
+  // RG07 - Instances min <= max
+  @Check
+  public void checkMinMaxInstances(ScalingRule rule) {
+    if (rule.getMinInstances() > rule.getMaxInstances()) {
+      error("minInstances doit etre <= maxInstances",
+        LoadBalancerPackage.Literals.SCALING_RULE__MIN_INSTANCES);
+    }
+  }
+
+  // RG08 - Ports de listeners uniques
+  @Check
+  public void checkUniqueListenerPorts(LoadBalancerSystem system) {
+    Set<Integer> ports = new HashSet<>();
+    for (Listener l : system.getListeners()) {
+      if (!ports.add(l.getPort())) {
+        error("Port de listener duplique: " + l.getPort(),
+          LoadBalancerPackage.Literals
+            .LOAD_BALANCER_SYSTEM__LISTENERS);
+      }
+    }
+  }
+
+  // RG09 - Weighted Round Robin requiert des poids
+  @Check
+  public void checkWeightedRequiresWeights(Cluster cluster) {
+    if (cluster.getLoadBalancer().getAlgorithm()
+        == Algorithm.WEIGHTED_ROUND_ROBIN) {
+      for (Server s : cluster.getServers()) {
+        if (s.getWeight() < 1) {
+          error("Algorithme WEIGHTED_ROUND_ROBIN requiert "
+            + "un poids >= 1 pour chaque serveur",
+            LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+        }
+      }
+    }
+  }
+
+  // RG10 - Cookie persistence requiert un nom
+  @Check
+  public void checkCookieRequiresName(SessionPersistence sp) {
+    if (sp.getType() == PersistenceType.COOKIE) {
+      if (sp.getCookieName() == null
+          || sp.getCookieName().isEmpty()) {
+        error("Le type COOKIE requiert un cookieName",
+          LoadBalancerPackage.Literals
+            .SESSION_PERSISTENCE__COOKIE_NAME);
+      }
+    }
+  }
+
+  // RG11 - Au moins un listener
+  @Check
+  public void checkAtLeastOneListener(LoadBalancerSystem system) {
+    if (system.getListeners().isEmpty()) {
+      error("Le systeme doit avoir au moins un listener",
+        LoadBalancerPackage.Literals
+          .LOAD_BALANCER_SYSTEM__LISTENERS);
+    }
+  }
+
+  // RG12 - Au moins un serveur actif par cluster
+  @Check
+  public void checkAtLeastOneEnabledServer(Cluster cluster) {
+    boolean hasEnabled = false;
+    for (Server s : cluster.getServers()) {
+      if (s.isEnabled()) { hasEnabled = true; break; }
+    }
+    if (!hasEnabled) {
+      error("Le cluster doit avoir au moins un serveur actif",
+        LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+    }
+  }
+}
+\end{lstlisting}
+
+\subsection{Correspondance OCL $\leftrightarrow$ Java}
+
+\begin{table}[H]
+\centering
+\caption{Correspondance entre contraintes OCL et méthodes Java}
+\begin{tabular}{|c|l|l|}
+\hline
+\textbf{Règle} & \textbf{Invariant OCL} & \textbf{Méthode Java} \\
+\hline
+RG01 & \texttt{uniqueServerNames} & \texttt{checkUniqueServerNames()} \\
+\hline
+RG02 & \texttt{validPort} & \texttt{checkValidPort()} \\
+\hline
+RG03 & \texttt{positiveWeight} & \texttt{checkPositiveWeight()} \\
+\hline
+RG04 & \texttt{nonEmptyCluster} & \texttt{checkNonEmptyCluster()} \\
+\hline
+RG05 & \texttt{intervalGreaterThanTimeout} & \texttt{checkHealthCheckCoherence()} \\
+\hline
+RG06 & \texttt{scaleUpGreaterThanDown} & \texttt{checkScalingThresholds()} \\
+\hline
+RG07 & \texttt{minLessOrEqualMax} & \texttt{checkMinMaxInstances()} \\
+\hline
+RG08 & \texttt{uniqueListenerPorts} & \texttt{checkUniqueListenerPorts()} \\
+\hline
+RG09 & \texttt{weightedRequiresWeights} & \texttt{checkWeightedRequiresWeights()} \\
+\hline
+RG10 & \texttt{cookieRequiresName} & \texttt{checkCookieRequiresName()} \\
+\hline
+RG11 & \texttt{atLeastOneListener} & \texttt{checkAtLeastOneListener()} \\
+\hline
+RG12 & \texttt{atLeastOneEnabledServer} & \texttt{checkAtLeastOneEnabledServer()} \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================
+% CHAPITRE 7 : NIVEAUX MDA
+% ============================================================
+\chapter{Niveaux MDA et architecture de l'approche}
+
+\section{Les niveaux MDA pris en compte}
+
+\begin{table}[H]
+\centering
+\caption{Niveaux MDA et artefacts produits}
+\begin{tabular}{|p{2.5cm}|p{5cm}|p{5.5cm}|}
+\hline
+\textbf{Niveau} & \textbf{Description} & \textbf{Artefact produit} \\
+\hline
+CIM & Modèle indépendant de l'informatique & Description du domaine, concepts, règles \\
+\hline
+PIM & Modèle indépendant de la plateforme & Métamodèle Ecore, contraintes OCL, modèles DSL (.lb) \\
+\hline
+PSM & Modèle spécifique plateforme & Modèle intermédiaire Nginx/HAProxy (transfo ATL) \\
+\hline
+Code & Code exécutable généré & nginx.conf, docker-compose.yml (transfo Acceleo) \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Schéma d'architecture de l'approche}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  level/.style={rectangle, draw, thick, minimum width=14cm, minimum height=2cm, text centered},
+  artifact/.style={rectangle, draw, fill=gray!10, minimum width=3cm, minimum height=0.8cm, text centered, font=\small},
+  transfo/.style={->, >=stealth, thick, red!70!black},
+  node distance=0.8cm
+]
+
+% CIM
+\node[level, fill=blue!5] (cim) at (0,0) {};
+\node[font=\bfseries] at (-5.5,0.6) {CIM};
+\node[artifact] at (0,0) {Description domaine + Concepts + Règles};
+
+% PIM
+\node[level, fill=green!5] (pim) at (0,-3.5) {};
+\node[font=\bfseries] at (-5.5,-2.5) {PIM};
+\node[artifact] (ecore) at (-4,-3.5) {Ecore (.ecore)};
+\node[artifact] (ocl) at (-0.5,-3.5) {OCL (.ocl)};
+\node[artifact] (xtext) at (3,-3.5) {Xtext (.xtext)};
+\node[artifact] (model) at (3,-4.5) {Modèle (.lb)};
+
+% PSM
+\node[level, fill=orange!5] (psm) at (0,-7) {};
+\node[font=\bfseries] at (-5.5,-6.5) {PSM};
+\node[artifact] (nginx_m) at (-2,-7) {Modèle Nginx};
+\node[artifact] (haproxy_m) at (2.5,-7) {Modèle HAProxy};
+
+% Code
+\node[level, fill=red!5] (code) at (0,-10) {};
+\node[font=\bfseries] at (-5.5,-9.5) {Code};
+\node[artifact] (nginxconf) at (-4,-10) {nginx.conf};
+\node[artifact] (docker) at (0,-10) {docker-compose.yml};
+\node[artifact] (haproxyconf) at (4,-10) {haproxy.cfg};
+
+% Transformations
+\draw[transfo] (0,-1) -- node[right, font=\small\itshape] {Analyse} (0,-2.2);
+\draw[transfo] (model.south) -- node[right, font=\small\itshape] {ATL (M2M)} (0,-5.8);
+\draw[transfo] (nginx_m.south) -- node[left, font=\small\itshape] {Acceleo (M2T)} (-2,-8.8);
+\draw[transfo] (haproxy_m.south) -- node[right, font=\small\itshape] {Acceleo (M2T)} (2.5,-8.8);
+
+\end{tikzpicture}
+\caption{Architecture MDA de l'approche}
+\end{figure}
+
+\section{Justification des choix technologiques}
+
+\begin{table}[H]
+\centering
+\caption{Outils et technologies utilisés}
+\begin{tabular}{|p{3cm}|p{4cm}|p{6cm}|}
+\hline
+\textbf{Outil} & \textbf{Rôle} & \textbf{Justification} \\
+\hline
+EMF / Ecore & Métamodèle (syntaxe abstraite) & Standard pour la méta-modélisation Eclipse \\
+\hline
+OCL & Contraintes & Langage standardisé OMG pour contraintes \\
+\hline
+Xtext & Syntaxe concrète DSL & Framework mature, éditeur intégré Eclipse \\
+\hline
+ATL & Transformations M2M & Langage hybride déclaratif/impératif \\
+\hline
+Acceleo & Transformations M2T & Génération basée templates, compatible EMF \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================
+% CHAPITRE 8 : TRANSFORMATIONS
+% ============================================================
+\chapter{Spécification des transformations}
+
+\section{Vue d'ensemble}
+
+\begin{table}[H]
+\centering
+\caption{Transformations définies}
+\begin{tabular}{|p{2.5cm}|p{2cm}|p{3cm}|p{3cm}|p{1.5cm}|}
+\hline
+\textbf{Transfo} & \textbf{Type} & \textbf{Source} & \textbf{Cible} & \textbf{Outil} \\
+\hline
+T1: PIM$\rightarrow$PSM Nginx & M2M & Modèle .lb & Modèle Nginx & ATL \\
+\hline
+T2: PIM$\rightarrow$PSM HAProxy & M2M & Modèle .lb & Modèle HAProxy & ATL \\
+\hline
+T3: PSM Nginx$\rightarrow$Code & M2T & Modèle Nginx & nginx.conf & Acceleo \\
+\hline
+T4: PSM HAProxy$\rightarrow$Code & M2T & Modèle HAProxy & haproxy.cfg & Acceleo \\
+\hline
+T5: PIM$\rightarrow$Docker & M2T & Modèle .lb & docker-compose.yml & Acceleo \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Définition de la grammaire Xtext (syntaxe concrète)}
+
+La grammaire Xtext définit la syntaxe concrète textuelle de notre DSL. Elle permet de créer un éditeur avec coloration syntaxique, auto-complétion et validation intégrée dans Eclipse. Le fichier de grammaire est \texttt{LoadBalancer.xtext} :
+
+\begin{lstlisting}[language=Xtext, caption={Grammaire Xtext complète du DSL de répartition de charge}]
+grammar org.loadbalancer.dsl.LoadBalancer
+  with org.eclipse.xtext.common.Terminals
+
+generate loadBalancer "http://www.loadbalancer.org/dsl/LoadBalancer"
+
+// ==========================================
+// Racine du modele
+// ==========================================
+LoadBalancerSystem:
+  'LoadBalancerSystem' name=STRING '{'
+    ('description:' description=STRING)?
+    ('version:' version=STRING)?
+    clusters+=Cluster+
+    listeners+=Listener+
+    (alerts+=Alert)*
+  '}';
+
+// ==========================================
+// Cluster de serveurs
+// ==========================================
+Cluster:
+  'cluster' name=ID '{'
+    loadBalancer=LoadBalancerConfig
+    servers+=Server+
+    (healthCheck=HealthCheck)?
+    (scalingRule=ScalingRule)?
+  '}';
+
+// ==========================================
+// Configuration du repartiteur
+// ==========================================
+LoadBalancerConfig:
+  'loadbalancer' '{'
+    'algorithm:' algorithm=Algorithm
+    'stickySession:' stickySession=BooleanValue
+    (sessionPersistence=SessionPersistence)?
+  '}';
+
+// ==========================================
+// Serveur
+// ==========================================
+Server:
+  'server' name=ID '{'
+    'host:' host=STRING
+    'port:' port=INT
+    ('weight:' weight=INT)?
+    ('maxConnections:' maxConnections=INT)?
+    'enabled:' enabled=BooleanValue
+  '}';
+
+// ==========================================
+// Health Check
+// ==========================================
+HealthCheck:
+  'healthCheck' '{'
+    'protocol:' protocol=Protocol
+    'path:' path=STRING
+    'interval:' interval=INT
+    'timeout:' timeout=INT
+    ('healthyThreshold:' healthyThreshold=INT)?
+    ('unhealthyThreshold:' unhealthyThreshold=INT)?
+  '}';
+
+// ==========================================
+// Persistence de session
+// ==========================================
+SessionPersistence:
+  'sessionPersistence' '{'
+    'type:' type=PersistenceType
+    ('cookieName:' cookieName=STRING)?
+    ('ttl:' ttl=INT)?
+  '}';
+
+// ==========================================
+// Regle de mise a l'echelle
+// ==========================================
+ScalingRule:
+  'scalingRule' name=ID '{'
+    'metric:' metric=Metric
+    'scaleUpThreshold:' scaleUpThreshold=DOUBLE
+    'scaleDownThreshold:' scaleDownThreshold=DOUBLE
+    'minInstances:' minInstances=INT
+    'maxInstances:' maxInstances=INT
+  '}';
+
+// ==========================================
+// Listener (point d'entree)
+// ==========================================
+Listener:
+  'listener' name=ID '{'
+    'protocol:' protocol=Protocol
+    'port:' port=INT
+    'targetCluster:' targetCluster=[Cluster]
+  '}';
+
+// ==========================================
+// Alerte
+// ==========================================
+Alert:
+  'alert' name=ID '{'
+    'metric:' metric=Metric
+    'threshold:' threshold=DOUBLE
+    'action:' action=STRING
+  '}';
+
+// ==========================================
+// Enumerations
+// ==========================================
+enum Algorithm:
+  ROUND_ROBIN = 'ROUND_ROBIN' |
+  WEIGHTED_ROUND_ROBIN = 'WEIGHTED_ROUND_ROBIN' |
+  LEAST_CONNECTIONS = 'LEAST_CONNECTIONS' |
+  IP_HASH = 'IP_HASH' |
+  RANDOM = 'RANDOM';
+
+enum Protocol:
+  HTTP = 'HTTP' |
+  HTTPS = 'HTTPS' |
+  TCP = 'TCP';
+
+enum Metric:
+  CPU_USAGE = 'CPU_USAGE' |
+  MEMORY_USAGE = 'MEMORY_USAGE' |
+  RESPONSE_TIME = 'RESPONSE_TIME' |
+  REQUEST_COUNT = 'REQUEST_COUNT' |
+  ERROR_RATE = 'ERROR_RATE';
+
+enum PersistenceType:
+  COOKIE = 'COOKIE' |
+  IP = 'IP' |
+  HEADER = 'HEADER';
+
+// ==========================================
+// Types terminaux
+// ==========================================
+BooleanValue:
+  value=('true' | 'false');
+
+terminal DOUBLE returns ecore::EDouble:
+  INT '.' INT;
+\end{lstlisting}
+
+\subsection{Explication de la grammaire}
+
+La grammaire ci-dessus définit la syntaxe concrète complète du DSL. Voici les éléments clés :
+
+\begin{itemize}
+  \item \textbf{LoadBalancerSystem} : élément racine, contient les clusters, listeners et alertes.
+  \item \textbf{Cluster} : regroupe un ensemble de serveurs avec une stratégie de répartition commune. Chaque cluster possède une configuration de \texttt{LoadBalancerConfig}, au moins un \texttt{Server}, et optionnellement un \texttt{HealthCheck} et un \texttt{ScalingRule}.
+  \item \textbf{Server} : représente un serveur backend avec son hôte, port, poids et état d'activation.
+  \item \textbf{Listener} : définit un point d'écoute (port d'entrée) et le cluster cible via une \textbf{référence croisée} (\texttt{[Cluster]}).
+  \item \textbf{Énumérations} : \texttt{Algorithm}, \texttt{Protocol}, \texttt{Metric} et \texttt{PersistenceType} contraignent les valeurs acceptées.
+  \item \textbf{Terminal DOUBLE} : terminal personnalisé pour les valeurs décimales (seuils de scaling et alertes).
+\end{itemize}
+
+\subsection{Artefacts générés par Xtext}
+
+L'exécution de \texttt{Generate Xtext Artifacts} produit automatiquement :
+
+\begin{table}[H]
+\centering
+\caption{Artefacts générés par le workflow Xtext}
+\begin{tabular}{|p{5cm}|p{8cm}|}
+\hline
+\textbf{Artefact} & \textbf{Description} \\
+\hline
+Parseur ANTLR & Analyse syntaxique des fichiers \texttt{.lb} \\
+\hline
+Modèle EMF (EPackage) & Syntaxe abstraite dérivée de la grammaire \\
+\hline
+Éditeur Eclipse & Coloration syntaxique, auto-complétion, outline \\
+\hline
+Sérialiseur & Conversion modèle $\leftrightarrow$ texte \\
+\hline
+Validateur & Classe \texttt{LoadBalancerValidator.xtend} pour les contraintes \\
+\hline
+Formateur & Indentation et formatage du code DSL \\
+\hline
+Scope Provider & Résolution des références croisées (ex: \texttt{targetCluster}) \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Métamodèle PSM Nginx (nginx.ecore)}
+
+Le métamodèle PSM Nginx représente la structure d'une configuration Nginx. Il est la cible de la transformation ATL (T1) et la source du template Acceleo (T3).
+
+\begin{lstlisting}[language=XML, caption={Métamodèle PSM Nginx (nginx.ecore)}]
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="nginx"
+    nsURI="http://www.example.org/nginx"
+    nsPrefix="nginx">
+
+  <!-- Racine : configuration globale Nginx -->
+  <eClassifiers xsi:type="ecore:EClass" name="NginxConfig">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="workerProcesses" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="auto"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="workerConnections" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1024"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="upstreams" upperBound="-1"
+        eType="#//Upstream" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="servers" upperBound="-1"
+        eType="#//ServerBlock" containment="true"/>
+  </eClassifiers>
+
+  <!-- Bloc upstream (groupe de backends) -->
+  <eClassifiers xsi:type="ecore:EClass" name="Upstream">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="name" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="algorithm" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="servers" upperBound="-1"
+        eType="#//UpstreamServer" containment="true"/>
+  </eClassifiers>
+
+  <!-- Serveur dans un upstream -->
+  <eClassifiers xsi:type="ecore:EClass" name="UpstreamServer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="address" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="weight" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="maxFails" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="failTimeout" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="30s"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="backup" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+
+  <!-- Bloc server (point d'entree) -->
+  <eClassifiers xsi:type="ecore:EClass" name="ServerBlock">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="listenPort" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="serverName" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="_"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="proxyPass" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="locations" upperBound="-1"
+        eType="#//Location" containment="true"/>
+  </eClassifiers>
+
+  <!-- Bloc location -->
+  <eClassifiers xsi:type="ecore:EClass" name="Location">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="path" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="/"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="proxyPass" eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="proxySetHeaders" upperBound="-1"
+        eType="ecore:EDataType
+        http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+
+</ecore:EPackage>
+\end{lstlisting}
+
+\subsection{Diagramme du métamodèle PSM Nginx}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  class/.style={rectangle, draw, fill=white, minimum width=3.8cm, minimum height=1.4cm, align=center, font=\small},
+  arrow/.style={-{Stealth}, thick},
+  comp/.style={-{Diamond[open]}, thick}
+]
+  \node[class] (config) at (0,0) {\textbf{NginxConfig}\\workerProcesses, workerConnections};
+  \node[class] (upstream) at (-4,-3) {\textbf{Upstream}\\name, algorithm};
+  \node[class] (server) at (4,-3) {\textbf{ServerBlock}\\listenPort, serverName, proxyPass};
+  \node[class] (us) at (-4,-6) {\textbf{UpstreamServer}\\address, weight, maxFails, backup};
+  \node[class] (loc) at (4,-6) {\textbf{Location}\\path, proxyPass, proxySetHeaders};
+
+  \draw[comp] (config) -- node[left, font=\scriptsize] {0..*} (upstream);
+  \draw[comp] (config) -- node[right, font=\scriptsize] {0..*} (server);
+  \draw[comp] (upstream) -- node[left, font=\scriptsize] {0..*} (us);
+  \draw[comp] (server) -- node[right, font=\scriptsize] {0..*} (loc);
+\end{tikzpicture}
+\caption{Diagramme de classes du métamodèle PSM Nginx}
+\end{figure}
+
+\section{Transformation T1 : PIM $\rightarrow$ PSM Nginx (ATL)}
+
+\begin{lstlisting}[language=ATL, caption={Transformation ATL PIM vers Nginx}]
+-- Fichier : PIM2Nginx.atl
+module PIM2Nginx;
+create OUT : NginxModel from IN : LoadBalancerModel;
+
+rule System2NginxConfig {
+  from s : LoadBalancerModel!LoadBalancerSystem
+  to   c : NginxModel!NginxConfig (
+    workerProcesses <- 'auto',
+    workerConnections <- 1024,
+    upstreams <- s.clusters->collect(cl |
+      thisModule.Cluster2Upstream(cl)),
+    servers <- s.listeners->collect(l |
+      thisModule.Listener2ServerBlock(l))
+  )
+}
+
+lazy rule Cluster2Upstream {
+  from cl : LoadBalancerModel!Cluster
+  to   u : NginxModel!Upstream (
+    name <- cl.name,
+    algorithm <- cl.loadBalancer.algorithm.mapNginxAlgo(),
+    servers <- cl.servers->select(s | s.enabled)
+              ->collect(s | thisModule.Server2UpstreamServer(s))
+  )
+}
+
+lazy rule Server2UpstreamServer {
+  from s : LoadBalancerModel!Server
+  to   us : NginxModel!UpstreamServer (
+    address <- s.host + ':' + s.port.toString(),
+    weight <- s.weight
+  )
+}
+
+lazy rule Listener2ServerBlock {
+  from l : LoadBalancerModel!Listener
+  to   sb : NginxModel!ServerBlock (
+    listenPort <- l.port,
+    proxyPass <- 'http://' + l.targetCluster.name
+  )
+}
+
+helper context LoadBalancerModel!Algorithm
+def : mapNginxAlgo() : String =
+  if self = #LEAST_CONNECTIONS then 'least_conn'
+  else if self = #IP_HASH then 'ip_hash'
+  else '' endif endif;
+\end{lstlisting}
+
+\section{Transformation T3 : PSM Nginx $\rightarrow$ Code (Acceleo)}
+
+\begin{lstlisting}[caption={Template Acceleo pour nginx.conf}]
+[comment encoding = UTF-8 /]
+[module generateNginx('http://www.example.org/nginx')]
+
+[template public generateNginxConf(config : NginxConfig)]
+[comment @main /]
+[file ('nginx.conf', false, 'UTF-8')]
+worker_processes [config.workerProcesses/];
+
+events {
+    worker_connections [config.workerConnections/];
+}
+
+http {
+[for (upstream : Upstream | config.upstreams)]
+    upstream [upstream.name/] {
+[if (upstream.algorithm = 'least_conn')]
+        least_conn;
+[elseif (upstream.algorithm = 'ip_hash')]
+        ip_hash;
+[/if]
+[for (server : UpstreamServer | upstream.servers)]
+        server [server.address/] weight=[server.weight/];
+[/for]
+    }
+
+[/for]
+[for (server : ServerBlock | config.servers)]
+    server {
+        listen [server.listenPort/];
+        location / {
+            proxy_pass [server.proxyPass/];
+        }
+    }
+[/for]
+}
+[/file]
+[/template]
+\end{lstlisting}
+
+\section{Transformation T5 : PIM $\rightarrow$ Docker Compose (Acceleo)}
+
+\begin{lstlisting}[caption={Template Acceleo pour docker-compose.yml}]
+[comment encoding = UTF-8 /]
+[module generateDockerCompose('http://www.example.org/loadbalancer')]
+
+[template public generateCompose(system : LoadBalancerSystem)]
+[comment @main /]
+[file ('docker-compose.yml', false, 'UTF-8')]
+version: '3.8'
+services:
+[for (cluster : Cluster | system.clusters)]
+[for (server : Server | cluster.servers)]
+  [server.name/]:
+    image: nginx:alpine
+    ports:
+      - "[server.port/]:[server.port/]"
+[/for]
+  [cluster.name/]-lb:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+[for (listener : Listener | system.listeners)]
+[if (listener.targetCluster.name = cluster.name)]
+      - "[listener.port/]:[listener.port/]"
+[/if]
+[/for]
+    depends_on:
+[for (server : Server | cluster.servers)]
+      - [server.name/]
+[/for]
+[/for]
+[/file]
+[/template]
+\end{lstlisting}
+
+% ============================================================
+% CHAPITRE 9 : INSTALLATION DES OUTILS
+% ============================================================
+\chapter{Installation et configuration des outils}
+
+Cette section décrit l'installation des outils nécessaires pour exécuter et tester les artefacts générés par notre chaîne de transformation (nginx.conf et docker-compose.yml).
+
+\section{Prérequis système}
+
+\begin{itemize}
+  \item Système d'exploitation : Linux (Ubuntu/Debian recommandé), macOS ou Windows avec WSL2
+  \item Minimum 4 Go de RAM disponible
+  \item Connexion internet pour télécharger les images Docker
+\end{itemize}
+
+\section{Installation de Docker}
+
+Docker est le moteur de conteneurisation qui permet d'exécuter les serveurs backend et le load balancer.
+
+\subsection{Sur Ubuntu/Debian}
+
+\begin{lstlisting}[language=bash, caption={Installation de Docker sur Ubuntu/Debian}]
+# 1. Mise a jour du systeme
+sudo apt update && sudo apt upgrade -y
+
+# 2. Installation des dependances
+sudo apt install -y apt-transport-https ca-certificates \
+  curl gnupg lsb-release
+
+# 3. Ajout de la cle GPG officielle Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+  sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# 4. Ajout du depot Docker
+echo "deb [arch=$(dpkg --print-architecture) \
+  signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 5. Installation de Docker Engine
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+# 6. Ajout de l'utilisateur au groupe docker (evite sudo)
+sudo usermod -aG docker $USER
+newgrp docker
+
+# 7. Verification
+docker --version
+docker run hello-world
+\end{lstlisting}
+
+\subsection{Sur macOS}
+
+\begin{lstlisting}[language=bash, caption={Installation de Docker sur macOS}]
+# Telecharger Docker Desktop depuis :
+# https://www.docker.com/products/docker-desktop/
+# Ou via Homebrew :
+brew install --cask docker
+
+# Lancer Docker Desktop puis verifier :
+docker --version
+\end{lstlisting}
+
+\section{Installation de Docker Compose}
+
+Docker Compose V2 est inclus avec Docker Desktop. Sur Linux, il peut être installé séparément :
+
+\begin{lstlisting}[language=bash, caption={Installation de Docker Compose sur Linux}]
+# Docker Compose V2 (plugin Docker)
+sudo apt install -y docker-compose-plugin
+
+# Verification
+docker compose version
+
+# Alternative : installation standalone
+sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+  -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+\end{lstlisting}
+
+\section{Installation de Nginx (pour tests locaux sans Docker)}
+
+Bien que notre approche utilise Docker, il est utile d'avoir Nginx installé localement pour des tests rapides :
+
+\begin{lstlisting}[language=bash, caption={Installation de Nginx}]
+# Ubuntu/Debian
+sudo apt install -y nginx
+
+# Verification
+nginx -v
+sudo systemctl status nginx
+
+# Test de configuration
+sudo nginx -t
+
+# Demarrage
+sudo systemctl start nginx
+sudo systemctl enable nginx
+\end{lstlisting}
+
+\section{Installation des outils IDM (Eclipse)}
+
+Pour la partie modélisation et transformation :
+
+\begin{lstlisting}[language=bash, caption={Installation d'Eclipse Modeling Tools}]
+# 1. Telecharger Eclipse Modeling Tools depuis :
+#    https://www.eclipse.org/downloads/packages/
+#    Choisir "Eclipse Modeling Tools"
+
+# 2. Installer les plugins via Help > Eclipse Marketplace :
+#    - Xtext Complete SDK
+#    - ATL/EMFTVM
+#    - Acceleo
+#    - OCL Tools (Eclipse OCL)
+
+# 3. Ou via Help > Install New Software :
+#    URL: https://download.eclipse.org/releases/2023-12
+#    Selectionner : Modeling > EMF, Xtext, ATL, Acceleo, OCL
+\end{lstlisting}
+
+\section{Outils complémentaires utiles}
+
+\begin{lstlisting}[language=bash, caption={Outils complémentaires}]
+# curl - pour tester les requetes HTTP
+sudo apt install -y curl
+
+# jq - pour formatter les reponses JSON
+sudo apt install -y jq
+
+# htop - pour surveiller les ressources
+sudo apt install -y htop
+
+# ab (Apache Bench) - pour les tests de charge
+sudo apt install -y apache2-utils
+
+# wrk - outil de benchmark HTTP performant
+sudo apt install -y wrk
+\end{lstlisting}
+
+\section{Vérification de l'installation complète}
+
+\begin{lstlisting}[language=bash, caption={Script de vérification}]
+#!/bin/bash
+echo "=== Verification de l'installation ==="
+echo ""
+echo -n "Docker: "
+docker --version 2>/dev/null || echo "NON INSTALLE"
+echo -n "Docker Compose: "
+docker compose version 2>/dev/null || echo "NON INSTALLE"
+echo -n "Nginx: "
+nginx -v 2>&1 || echo "NON INSTALLE"
+echo -n "curl: "
+curl --version | head -1 || echo "NON INSTALLE"
+echo ""
+echo "=== Test Docker ==="
+docker run --rm hello-world 2>/dev/null && echo "Docker OK" || echo "Docker ERREUR"
+\end{lstlisting}
+
+% ============================================================
+% CHAPITRE 10 : ETUDE DE CAS
+% ============================================================
+\chapter{Étude de cas : Application E-Commerce}
+
+\section{Description du cas d'étude}
+
+Nous illustrons notre approche avec un cas concret : une application web e-commerce déployée sur un système distribué. L'application possède :
+
+\begin{itemize}
+  \item Un cluster de 3 serveurs web (frontend) avec répartition Round Robin
+  \item Un cluster de 2 serveurs API (backend) avec répartition Least Connections
+  \item Des health checks HTTP sur chaque cluster
+  \item Une règle de scaling automatique basée sur l'utilisation CPU
+  \item Des alertes en cas de dépassement de seuils
+\end{itemize}
+
+\section{Modèle DSL du cas d'étude}
+
+Voici le modèle écrit avec notre DSL (syntaxe concrète textuelle) :
+
+\begin{lstlisting}[language=DSL, caption={Modèle DSL de l'application e-commerce (ecommerce.lb)}]
+LoadBalancerSystem "ECommerceSystem" {
+  description: "Systeme de repartition de charge pour e-commerce"
+  version: "1.0"
+
+  cluster WebFrontend {
+    loadbalancer {
+      algorithm: ROUND_ROBIN
+      stickySession: true
+      sessionPersistence {
+        type: COOKIE
+        cookieName: "SESSIONID"
+        ttl: 3600
+      }
+    }
+
+    server web1 {
+      host: "192.168.1.10"
+      port: 8080
+      weight: 3
+      maxConnections: 1000
+      enabled: true
+    }
+    server web2 {
+      host: "192.168.1.11"
+      port: 8080
+      weight: 2
+      maxConnections: 800
+      enabled: true
+    }
+    server web3 {
+      host: "192.168.1.12"
+      port: 8080
+      weight: 1
+      maxConnections: 500
+      enabled: true
+    }
+
+    healthCheck {
+      protocol: HTTP
+      path: "/health"
+      interval: 30
+      timeout: 10
+      healthyThreshold: 3
+      unhealthyThreshold: 2
+    }
+
+    scalingRule autoScaleWeb {
+      metric: CPU_USAGE
+      scaleUpThreshold: 80.0
+      scaleDownThreshold: 30.0
+      minInstances: 2
+      maxInstances: 10
+    }
+  }
+
+  cluster APIBackend {
+    loadbalancer {
+      algorithm: LEAST_CONNECTIONS
+      stickySession: false
+    }
+
+    server api1 {
+      host: "192.168.2.10"
+      port: 3000
+      weight: 1
+      maxConnections: 500
+      enabled: true
+    }
+    server api2 {
+      host: "192.168.2.11"
+      port: 3000
+      weight: 1
+      maxConnections: 500
+      enabled: true
+    }
+
+    healthCheck {
+      protocol: HTTP
+      path: "/api/health"
+      interval: 15
+      timeout: 5
+      healthyThreshold: 2
+      unhealthyThreshold: 3
+    }
+  }
+
+  listener httpListener {
+    protocol: HTTP
+    port: 80
+    targetCluster: WebFrontend
+  }
+
+  listener apiListener {
+    protocol: HTTP
+    port: 3000
+    targetCluster: APIBackend
+  }
+
+  alert highCPU {
+    metric: CPU_USAGE
+    threshold: 90.0
+    action: "email:admin@ecommerce.com"
+  }
+
+  alert highLatency {
+    metric: RESPONSE_TIME
+    threshold: 5000.0
+    action: "webhook:https://hooks.slack.com/alert"
+  }
+}
+\end{lstlisting}
+
+\section{Code généré : nginx.conf}
+
+Après exécution de la chaîne de transformations, le fichier nginx.conf suivant est généré :
+
+\begin{lstlisting}[language={}, caption={Fichier nginx.conf généré}]
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream WebFrontend {
+        server 192.168.1.10:8080 weight=3;
+        server 192.168.1.11:8080 weight=2;
+        server 192.168.1.12:8080 weight=1;
+    }
+
+    upstream APIBackend {
+        least_conn;
+        server 192.168.2.10:3000 weight=1;
+        server 192.168.2.11:3000 weight=1;
+    }
+
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://WebFrontend;
+        }
+    }
+
+    server {
+        listen 3000;
+        location / {
+            proxy_pass http://APIBackend;
+        }
+    }
+}
+\end{lstlisting}
+
+\section{Code généré : docker-compose.yml}
+
+\begin{lstlisting}[language={}, caption={Fichier docker-compose.yml généré}]
+version: '3.8'
+
+services:
+  web1:
+    build: ./servers/web
+    environment:
+      - SERVER_NAME=web1
+      - SERVER_PORT=8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  web2:
+    build: ./servers/web
+    environment:
+      - SERVER_NAME=web2
+      - SERVER_PORT=8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  web3:
+    build: ./servers/web
+    environment:
+      - SERVER_NAME=web3
+      - SERVER_PORT=8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api1:
+    build: ./servers/api
+    environment:
+      - SERVER_NAME=api1
+      - SERVER_PORT=3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  api2:
+    build: ./servers/api
+    environment:
+      - SERVER_NAME=api2
+      - SERVER_PORT=3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  loadbalancer:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      - "3000:3000"
+    depends_on:
+      - web1
+      - web2
+      - web3
+      - api1
+      - api2
+\end{lstlisting}
+
+\section{Déploiement et test}
+
+\subsection{Lancement de l'infrastructure}
+
+\begin{lstlisting}[language=bash, caption={Commandes de déploiement}]
+# Se placer dans le dossier du cas d'etude
+cd case-study/
+
+# Construire et demarrer tous les services
+docker compose up --build -d
+
+# Verifier que tous les conteneurs sont actifs
+docker compose ps
+
+# Voir les logs
+docker compose logs -f
+\end{lstlisting}
+
+\subsection{Tests de la répartition de charge}
+
+\begin{lstlisting}[language=bash, caption={Tests de vérification}]
+# Test du cluster Web Frontend (Round Robin)
+for i in $(seq 1 10); do
+  echo "Request $i:"
+  curl -s http://localhost:80/ | jq .
+  echo "---"
+done
+
+# Test du cluster API Backend (Least Connections)
+for i in $(seq 1 10); do
+  echo "Request $i:"
+  curl -s http://localhost:3000/api/health | jq .
+  echo "---"
+done
+
+# Test de charge avec wrk
+wrk -t4 -c100 -d30s http://localhost:80/
+
+# Test de charge avec ab
+ab -n 1000 -c 50 http://localhost:80/
+\end{lstlisting}
+
+\subsection{Vérification du health check}
+
+\begin{lstlisting}[language=bash, caption={Test du health check}]
+# Arreter un serveur pour tester le failover
+docker compose stop web3
+
+# Verifier que les requetes sont redistribuees
+for i in $(seq 1 6); do
+  curl -s http://localhost:80/ | jq .serverName
+done
+
+# Redemarrer le serveur
+docker compose start web3
+\end{lstlisting}
+
+% ============================================================
+% CHAPITRE 11 : TUTORIEL
+% ============================================================
+\chapter{Tutoriel de réalisation pas à pas}
+
+\section{Prérequis}
+
+\begin{itemize}
+  \item Eclipse Modeling Tools (version 2023-12 ou supérieure)
+  \item Plugins : EMF, Xtext, ATL, Acceleo, OCL Tools
+  \item Java JDK 17+
+  \item Docker et Docker Compose (pour les tests)
+\end{itemize}
+
+\section{Étape 1 : Création du métamodèle Ecore}
+
+\begin{enumerate}
+  \item Dans Eclipse : \texttt{File $\rightarrow$ New $\rightarrow$ Other $\rightarrow$ Eclipse Modeling Framework $\rightarrow$ Ecore Modeling Project}
+  \item Nommer le projet : \texttt{org.loadbalancer.metamodel}
+  \item Créer le fichier \texttt{loadbalancer.ecore}
+  \item Définir toutes les classes, attributs et relations (voir chapitre 5)
+  \item Ouvrir avec l'éditeur graphique pour visualiser le diagramme
+\end{enumerate}
+
+\section{Étape 2 : Génération du code Java EMF}
+
+\begin{enumerate}
+  \item Clic droit sur \texttt{loadbalancer.ecore} $\rightarrow$ \texttt{New} $\rightarrow$ \texttt{EMF Generator Model}
+  \item Créer \texttt{loadbalancer.genmodel}
+  \item Ouvrir le \texttt{.genmodel} $\rightarrow$ Clic droit sur la racine $\rightarrow$ \texttt{Generate All}
+\end{enumerate}
+
+\section{Étape 3 : Définition de la syntaxe concrète (Xtext)}
+
+\begin{enumerate}
+  \item \texttt{File $\rightarrow$ New $\rightarrow$ Project $\rightarrow$ Xtext $\rightarrow$ Xtext Project}
+  \item Nommer : \texttt{org.loadbalancer.dsl}, extension : \texttt{.lb}
+  \item Définir la grammaire (voir chapitre 8, section Xtext)
+  \item Exécuter : Clic droit Dsl.xtext $\rightarrow$ \texttt{Run As $\rightarrow$ Generate Xtext Artifacts}
+  \item Tester dans une Eclipse Application
+\end{enumerate}
+
+\section{Étape 4 : Implémentation des contraintes}
+
+\begin{enumerate}
+  \item ajouter les constraints OCL dans le fichier ecore (voir chapitre 7)
+  \item Ouvrir le fichier \texttt{LoadBalancerValidator.java} généré par Xtext
+  \item Ajouter les méthodes de validation (voir chapitre 7)
+  \item Chaque méthode annotée \texttt{@Check} implémente une règle OCL
+\end{enumerate}
+
+\section{Étape 5 : Transformations ATL}
+
+\begin{enumerate}
+  \item \texttt{File $\rightarrow$ New $\rightarrow$ ATL Project} : \texttt{org.loadbalancer.transformations}
+  \item Créer le métamodèle cible \texttt{nginx.ecore}
+  \item Écrire \texttt{PIM2Nginx.atl} (voir chapitre 8)
+  \item Configurer le \texttt{Run Configuration ATL}
+\end{enumerate}
+
+\section{Étape 6 : Génération de code (Acceleo)}
+
+\subsection{Création du projet Acceleo}
+
+\begin{enumerate}
+  \item \texttt{File $\rightarrow$ New $\rightarrow$ Project $\rightarrow$ Acceleo $\rightarrow$ Acceleo Project}
+  \item Nommer le projet : \texttt{org.loadbalancer.generators}
+  \item Sélectionner le métamodèle source :
+    \begin{itemize}
+      \item Pour T3 (nginx.conf) : \texttt{http://www.example.org/nginx}
+      \item Pour T5 (docker-compose) : \texttt{http://www.example.org/loadbalancer}
+    \end{itemize}
+  \item Cliquer sur \texttt{Finish}
+\end{enumerate}
+
+La structure du projet générée est la suivante :
+
+\begin{lstlisting}
+org.loadbalancer.generators/
+  src/
+    org.loadbalancer.generators/
+      files/
+        generateNginx.mtl          # Template nginx.conf
+        generateDockerCompose.mtl  # Template docker-compose.yml
+  META-INF/
+    MANIFEST.MF
+  build.properties
+\end{lstlisting}
+
+\subsection{Création des templates .mtl}
+
+\paragraph{Template T3 : generateNginx.mtl}
+
+Créer le fichier \texttt{src/org.loadbalancer.generators/files/generateNginx.mtl} avec le contenu suivant :
+
+\begin{lstlisting}[caption={Template Acceleo generateNginx.mtl}]
+[comment encoding = UTF-8 /]
+[module generateNginx('http://www.example.org/nginx')]
+
+[template public generateNginxConf(config : NginxConfig)]
+[comment @main /]
+[file ('nginx.conf', false, 'UTF-8')]
+worker_processes [config.workerProcesses/];
+
+events {
+    worker_connections [config.workerConnections/];
+}
+
+http {
+[for (upstream : Upstream | config.upstreams)]
+    upstream [upstream.name/] {
+[if (upstream.algorithm = 'least_conn')]
+        least_conn;
+[elseif (upstream.algorithm = 'ip_hash')]
+        ip_hash;
+[/if]
+[for (server : UpstreamServer | upstream.servers)]
+        server [server.address/] weight=[server.weight/]
+            max_fails=[server.maxFails/]
+            fail_timeout=[server.failTimeout/][if (server.backup)]
+            backup[/if];
+[/for]
+    }
+
+[/for]
+[for (server : ServerBlock | config.servers)]
+    server {
+        listen [server.listenPort/];
+        server_name [server.serverName/];
+[for (loc : Location | server.locations)]
+        location [loc.path/] {
+            proxy_pass [loc.proxyPass/];
+[for (header : String | loc.proxySetHeaders)]
+            proxy_set_header [header/];
+[/for]
+            proxy_connect_timeout 5s;
+            proxy_read_timeout 10s;
+        }
+[/for]
+    }
+[/for]
+}
+[/file]
+[/template]
+\end{lstlisting}
+
+\paragraph{Template T5 : generateDockerCompose.mtl}
+
+Créer le fichier \texttt{src/org.loadbalancer.generators/files/generateDockerCompose.mtl} avec le contenu suivant :
+
+\begin{lstlisting}[caption={Template Acceleo generateDockerCompose.mtl}]
+[comment encoding = UTF-8 /]
+[module generateDockerCompose(
+  'http://www.example.org/loadbalancer')]
+
+[template public generateCompose(
+  sys : LoadBalancerSystem)]
+[comment @main /]
+[file ('docker-compose.yml', false, 'UTF-8')]
+version: '3.8'
+services:
+[for (cluster : Cluster | sys.clusters)]
+[for (server : Server | cluster.servers)]
+  [server.name/]:
+    build: ./servers/[if (cluster.name = 'WebFrontend')]
+web[else]api[/if]
+    environment:
+      - SERVER_NAME=[server.name/]
+      - SERVER_PORT=[server.port/]
+    healthcheck:
+[if (cluster.healthCheck <> null)]
+      test: ['['"CMD"'/]', '['"curl"'/]', '['"
+        -f"'/]', '['"[cluster.healthCheck.protocol
+        .toString().toLower()/]://localhost:
+        [server.port/][cluster.healthCheck.path/]
+        "'/]']
+      interval: [cluster.healthCheck.interval/]s
+      timeout: [cluster.healthCheck.timeout/]s
+[/if]
+    networks:
+      - lb-network
+
+[/for]
+[/for]
+  loadbalancer:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+[for (listener : Listener | sys.listeners)]
+      - "[listener.port/]:[listener.port/]"
+[/for]
+    depends_on:
+[for (cluster : Cluster | sys.clusters)]
+[for (server : Server | cluster.servers)]
+      [server.name/]:
+        condition: service_healthy
+[/for]
+[/for]
+    networks:
+      - lb-network
+
+networks:
+  lb-network:
+    driver: bridge
+[/file]
+[/template]
+\end{lstlisting}
+
+\subsection{Configuration du Launch Configuration}
+
+Pour exécuter les templates Acceleo, il faut créer une configuration de lancement :
+
+\begin{enumerate}
+  \item \texttt{Run $\rightarrow$ Run Configurations...}
+  \item Clic droit sur \texttt{Acceleo Application} $\rightarrow$ \texttt{New Configuration}
+  \item Configurer les champs suivants :
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Configuration du Launch Configuration Acceleo}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Champ} & \textbf{Valeur} \\
+\hline
+\texttt{Project} & \texttt{org.loadbalancer.generators} \\
+\hline
+\texttt{Main class} & \texttt{org.loadbalancer.generators.files.GenerateNginx} \\
+\hline
+\texttt{Model} & Chemin vers le modèle source, par exemple : \texttt{/org.loadbalancer.examples/models/ecommerce.nginx} (pour T3) ou \texttt{/org.loadbalancer.examples/models/ecommerce.lb} (pour T5) \\
+\hline
+\texttt{Target} & Répertoire de sortie des fichiers générés, par exemple : \texttt{/org.loadbalancer.examples/generated/} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item Cliquer sur \texttt{Apply} puis \texttt{Run}
+  \item Les fichiers générés apparaissent dans le répertoire cible :
+    \begin{itemize}
+      \item \texttt{generated/nginx.conf} -- configuration Nginx
+      \item \texttt{generated/docker-compose.yml} -- orchestration Docker
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Vérification des fichiers générés}
+
+Après exécution, vérifier que les fichiers générés sont corrects :
+
+\begin{lstlisting}[language=bash, caption={Vérification des fichiers générés}]
+# Verifier la syntaxe nginx
+nginx -t -c $(pwd)/generated/nginx.conf
+
+# Verifier la syntaxe docker-compose
+docker compose -f generated/docker-compose.yml config
+
+# Si les deux commandes passent sans erreur,
+# les fichiers generes sont valides
+\end{lstlisting}
+
+\section{Étape 7 : Test de bout en bout}
+
+\begin{enumerate}
+  \item Lancer une Eclipse Application
+  \item Créer un fichier \texttt{ecommerce.lb}
+  \item Vérifier la validation des contraintes
+  \item Exécuter les transformations
+  \item Récupérer les fichiers générés
+  \item Tester avec Docker Compose (chapitre 10)
+\end{enumerate}
+
+% ============================================================
+% CHAPITRE 12 : PERSPECTIVES
+% ============================================================
+\chapter{Perspectives et améliorations}
+
+Ce qui resterait à faire pour atteindre pleinement les objectifs :
+
+\begin{itemize}
+  \item Support complet HAProxy comme cible PSM supplémentaire
+  \item Génération de manifestes Kubernetes (Deployment, Service, Ingress)
+  \item Éditeur graphique avec Eclipse Sirius
+  \item Support du load balancing DNS
+  \item Intégration monitoring (Prometheus + Grafana)
+  \item Validation dynamique avec simulation de charge
+  \item Support multi-cloud (AWS ALB, GCP LB, Azure LB)
+  \item Interface web pour les non-développeurs
+\end{itemize}
+
+% ============================================================
+% CONCLUSION
+% ============================================================
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+
+Ce projet a permis de mettre en pratique les concepts fondamentaux de l'Ingénierie Dirigée par les Modèles (IDM) à travers la conception d'un DSL dédié à la répartition de charge dans les systèmes distribués.
+
+Nous avons suivi une démarche MDA complète :
+\begin{itemize}
+  \item \textbf{Niveau CIM} : analyse et description du domaine de la répartition de charge
+  \item \textbf{Niveau PIM} : conception du métamodèle Ecore, définition des contraintes OCL, et création de la syntaxe concrète Xtext
+  \item \textbf{Niveau PSM} : transformation ATL vers des modèles spécifiques (Nginx)
+  \item \textbf{Niveau Code} : génération automatique de fichiers de configuration via Acceleo
+\end{itemize}
+
+L'approche proposée démontre les avantages de l'IDM : abstraction, réutilisabilité, portabilité entre plateformes, et validation formelle des modèles. Le DSL créé permet aux administrateurs système de décrire leur infrastructure de répartition de charge de manière déclarative et indépendante de la technologie, tout en bénéficiant d'une génération automatique de code fiable et cohérente.
+
+L'étude de cas avec Docker Compose et Nginx prouve la faisabilité de l'approche en permettant un déploiement réel de l'infrastructure générée.
+
+% ============================================================
+% REFERENCES
+% ============================================================
+\chapter*{Références bibliographiques}
+\addcontentsline{toc}{chapter}{Références bibliographiques}
+
+\begin{enumerate}[label={[\arabic*]}]
+  \item J. Bézivin, \og On the Unification Power of Models \fg{}, \textit{Software and Systems Modeling}, vol.~4, no.~2, pp.~171--188, 2005.
+  \item OMG, \og MDA Guide Version 2.0 \fg{}, Object Management Group, 2014.
+  \item F. Jouault, F. Allilaire, J. Bézivin, I. Kurtev, \og ATL: A model transformation tool \fg{}, \textit{Science of Computer Programming}, vol.~72, no.~1-2, pp.~31--39, 2008.
+  \item M. Bettini, \og Implementing Domain-Specific Languages with Xtext and Xtend \fg{}, Packt Publishing, 2\textsuperscript{nd} edition, 2016.
+  \item Eclipse Foundation, \og Acceleo User Guide \fg{}, \url{https://wiki.eclipse.org/Acceleo}.
+  \item Eclipse Foundation, \og Eclipse Modeling Framework (EMF) \fg{}, \url{https://www.eclipse.org/modeling/emf/}.
+  \item Nginx Documentation, \og HTTP Load Balancing \fg{}, \url{https://docs.nginx.com/}.
+  \item HAProxy Documentation, \og Configuration Manual \fg{}, \url{https://www.haproxy.org/}.
+  \item T. Stahl, M. Voelter, \og Model-Driven Software Development \fg{}, Wiley, 2006.
+  \item A. Kleppe, J. Warmer, W. Bast, \og MDA Explained \fg{}, Addison-Wesley, 2003.
+\end{enumerate}
+
+\end{document}
