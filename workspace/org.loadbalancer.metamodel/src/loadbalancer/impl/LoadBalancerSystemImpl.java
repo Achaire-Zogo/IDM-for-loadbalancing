@@ -2,17 +2,23 @@
  */
 package loadbalancer.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import loadbalancer.Alert;
 import loadbalancer.Cluster;
 import loadbalancer.Listener;
 import loadbalancer.LoadBalancerSystem;
 import loadbalancer.LoadbalancerPackage;
 
+import loadbalancer.LoadbalancerTables;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -23,6 +29,19 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.ocl.pivot.evaluation.Executor;
+import org.eclipse.ocl.pivot.ids.IdResolver;
+import org.eclipse.ocl.pivot.ids.TypeId;
+import org.eclipse.ocl.pivot.library.collection.CollectionSizeOperation;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableGreaterThanEqualOperation;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableLessThanEqualOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringGetSeverityOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringLogDiagnosticOperation;
+import org.eclipse.ocl.pivot.utilities.PivotUtil;
+import org.eclipse.ocl.pivot.utilities.ValueUtil;
+import org.eclipse.ocl.pivot.values.IntegerValue;
+import org.eclipse.ocl.pivot.values.OrderedSetValue;
+import org.eclipse.ocl.pivot.values.SetValue.Accumulator;
 
 /**
  * <!-- begin-user-doc -->
@@ -266,6 +285,117 @@ public class LoadBalancerSystemImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
+	public boolean uniqueListenerPorts(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		final String constraintName = "LoadBalancerSystem::uniqueListenerPorts";
+		try {
+			/**
+			 *
+			 * inv uniqueListenerPorts:
+			 *   let severity : Integer[1] = constraintName.getSeverity()
+			 *   in
+			 *     if severity <= 0
+			 *     then true
+			 *     else
+			 *       let result : Boolean[1] = self.listeners->isUnique(l | l.port)
+			 *       in
+			 *         constraintName.logDiagnostic(self, null, diagnostics, context, null, severity, result, 0)
+			 *     endif
+			 */
+			final /*@NonInvalid*/ Executor executor = PivotUtil.getExecutor(this);
+			final /*@NonInvalid*/ IdResolver idResolver = executor.getIdResolver();
+			final /*@NonInvalid*/ IntegerValue severity_0 = CGStringGetSeverityOperation.INSTANCE.evaluate(executor, LoadbalancerPackage.Literals.LOAD_BALANCER_SYSTEM___UNIQUE_LISTENER_PORTS__DIAGNOSTICCHAIN_MAP);
+			final /*@NonInvalid*/ boolean le = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, severity_0, LoadbalancerTables.INT_0).booleanValue();
+			/*@NonInvalid*/ boolean IF_le;
+			if (le) {
+				IF_le = true;
+			}
+			else {
+				final /*@NonInvalid*/ List<Listener> listeners = this.getListeners();
+				final /*@NonInvalid*/ OrderedSetValue BOXED_listeners = idResolver.createOrderedSetOfAll(LoadbalancerTables.ORD_CLSSid_Listener, listeners);
+				/*@Thrown*/ Accumulator accumulator = ValueUtil.createSetAccumulatorValue(LoadbalancerTables.ORD_CLSSid_Listener);
+				Iterator<Object> ITERATOR_l = BOXED_listeners.iterator();
+				/*@NonInvalid*/ boolean result;
+				while (true) {
+					if (!ITERATOR_l.hasNext()) {
+						result = true;
+						break;
+					}
+					/*@NonInvalid*/ Listener l = (Listener)ITERATOR_l.next();
+					/**
+					 * l.port
+					 */
+					final /*@NonInvalid*/ int port = l.getPort();
+					final /*@NonInvalid*/ IntegerValue BOXED_port = ValueUtil.integerValueOf(port);
+					//
+					if (accumulator.includes(BOXED_port) == ValueUtil.TRUE_VALUE) {
+						result = false;
+						break;			// Abort after second find
+					}
+					else {
+						accumulator.add(BOXED_port);
+					}
+				}
+				final /*@NonInvalid*/ boolean logDiagnostic = CGStringLogDiagnosticOperation.INSTANCE.evaluate(executor, TypeId.BOOLEAN, constraintName, this, (Object)null, diagnostics, context, (Object)null, severity_0, result, LoadbalancerTables.INT_0).booleanValue();
+				IF_le = logDiagnostic;
+			}
+			return IF_le;
+		}
+		catch (Throwable e) {
+			return ValueUtil.validationFailedDiagnostic(constraintName, this, diagnostics, context, e);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean atLeastOneListener(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		final String constraintName = "LoadBalancerSystem::atLeastOneListener";
+		try {
+			/**
+			 *
+			 * inv atLeastOneListener:
+			 *   let severity : Integer[1] = constraintName.getSeverity()
+			 *   in
+			 *     if severity <= 0
+			 *     then true
+			 *     else
+			 *       let result : Boolean[1] = self.listeners->size() >= 1
+			 *       in
+			 *         constraintName.logDiagnostic(self, null, diagnostics, context, null, severity, result, 0)
+			 *     endif
+			 */
+			final /*@NonInvalid*/ Executor executor = PivotUtil.getExecutor(this);
+			final /*@NonInvalid*/ IdResolver idResolver = executor.getIdResolver();
+			final /*@NonInvalid*/ IntegerValue severity_0 = CGStringGetSeverityOperation.INSTANCE.evaluate(executor, LoadbalancerPackage.Literals.LOAD_BALANCER_SYSTEM___AT_LEAST_ONE_LISTENER__DIAGNOSTICCHAIN_MAP);
+			final /*@NonInvalid*/ boolean le = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, severity_0, LoadbalancerTables.INT_0).booleanValue();
+			/*@NonInvalid*/ boolean IF_le;
+			if (le) {
+				IF_le = true;
+			}
+			else {
+				final /*@NonInvalid*/ List<Listener> listeners = this.getListeners();
+				final /*@NonInvalid*/ OrderedSetValue BOXED_listeners = idResolver.createOrderedSetOfAll(LoadbalancerTables.ORD_CLSSid_Listener, listeners);
+				final /*@NonInvalid*/ IntegerValue size = CollectionSizeOperation.INSTANCE.evaluate(BOXED_listeners);
+				final /*@NonInvalid*/ boolean result = OclComparableGreaterThanEqualOperation.INSTANCE.evaluate(executor, size, LoadbalancerTables.INT_1).booleanValue();
+				final /*@NonInvalid*/ boolean logDiagnostic = CGStringLogDiagnosticOperation.INSTANCE.evaluate(executor, TypeId.BOOLEAN, constraintName, this, (Object)null, diagnostics, context, (Object)null, severity_0, result, LoadbalancerTables.INT_0).booleanValue();
+				IF_le = logDiagnostic;
+			}
+			return IF_le;
+		}
+		catch (Throwable e) {
+			return ValueUtil.validationFailedDiagnostic(constraintName, this, diagnostics, context, e);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case LoadbalancerPackage.LOAD_BALANCER_SYSTEM__CLUSTERS:
@@ -388,6 +518,23 @@ public class LoadBalancerSystemImpl extends MinimalEObjectImpl.Container impleme
 				return alerts != null && !alerts.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case LoadbalancerPackage.LOAD_BALANCER_SYSTEM___UNIQUE_LISTENER_PORTS__DIAGNOSTICCHAIN_MAP:
+				return uniqueListenerPorts((DiagnosticChain)arguments.get(0), (Map<Object, Object>)arguments.get(1));
+			case LoadbalancerPackage.LOAD_BALANCER_SYSTEM___AT_LEAST_ONE_LISTENER__DIAGNOSTICCHAIN_MAP:
+				return atLeastOneListener((DiagnosticChain)arguments.get(0), (Map<Object, Object>)arguments.get(1));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

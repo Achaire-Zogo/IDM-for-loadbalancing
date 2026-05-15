@@ -5,6 +5,16 @@ package org.loadbalancer.dsl.serializer;
 
 import com.google.inject.Inject;
 import java.util.Set;
+import loadbalancer.Alert;
+import loadbalancer.Cluster;
+import loadbalancer.HealthCheck;
+import loadbalancer.Listener;
+import loadbalancer.LoadBalancer;
+import loadbalancer.LoadBalancerSystem;
+import loadbalancer.LoadbalancerPackage;
+import loadbalancer.ScalingRule;
+import loadbalancer.Server;
+import loadbalancer.SessionPersistence;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.xtext.Action;
@@ -14,17 +24,6 @@ import org.eclipse.xtext.serializer.ISerializationContext;
 import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
-import org.loadbalancer.dsl.loadBalancer.Alert;
-import org.loadbalancer.dsl.loadBalancer.BooleanValue;
-import org.loadbalancer.dsl.loadBalancer.Cluster;
-import org.loadbalancer.dsl.loadBalancer.HealthCheck;
-import org.loadbalancer.dsl.loadBalancer.Listener;
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerConfig;
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerPackage;
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerSystem;
-import org.loadbalancer.dsl.loadBalancer.ScalingRule;
-import org.loadbalancer.dsl.loadBalancer.Server;
-import org.loadbalancer.dsl.loadBalancer.SessionPersistence;
 import org.loadbalancer.dsl.services.LoadBalancerGrammarAccess;
 
 @SuppressWarnings("all")
@@ -39,36 +38,33 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 		ParserRule rule = context.getParserRule();
 		Action action = context.getAssignedAction();
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
-		if (epackage == LoadBalancerPackage.eINSTANCE)
+		if (epackage == LoadbalancerPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
-			case LoadBalancerPackage.ALERT:
+			case LoadbalancerPackage.ALERT:
 				sequence_Alert(context, (Alert) semanticObject); 
 				return; 
-			case LoadBalancerPackage.BOOLEAN_VALUE:
-				sequence_BooleanValue(context, (BooleanValue) semanticObject); 
-				return; 
-			case LoadBalancerPackage.CLUSTER:
+			case LoadbalancerPackage.CLUSTER:
 				sequence_Cluster(context, (Cluster) semanticObject); 
 				return; 
-			case LoadBalancerPackage.HEALTH_CHECK:
+			case LoadbalancerPackage.HEALTH_CHECK:
 				sequence_HealthCheck(context, (HealthCheck) semanticObject); 
 				return; 
-			case LoadBalancerPackage.LISTENER:
+			case LoadbalancerPackage.LISTENER:
 				sequence_Listener(context, (Listener) semanticObject); 
 				return; 
-			case LoadBalancerPackage.LOAD_BALANCER_CONFIG:
-				sequence_LoadBalancerConfig(context, (LoadBalancerConfig) semanticObject); 
+			case LoadbalancerPackage.LOAD_BALANCER:
+				sequence_LoadBalancerConfig(context, (LoadBalancer) semanticObject); 
 				return; 
-			case LoadBalancerPackage.LOAD_BALANCER_SYSTEM:
+			case LoadbalancerPackage.LOAD_BALANCER_SYSTEM:
 				sequence_LoadBalancerSystem(context, (LoadBalancerSystem) semanticObject); 
 				return; 
-			case LoadBalancerPackage.SCALING_RULE:
+			case LoadbalancerPackage.SCALING_RULE:
 				sequence_ScalingRule(context, (ScalingRule) semanticObject); 
 				return; 
-			case LoadBalancerPackage.SERVER:
+			case LoadbalancerPackage.SERVER:
 				sequence_Server(context, (Server) semanticObject); 
 				return; 
-			case LoadBalancerPackage.SESSION_PERSISTENCE:
+			case LoadbalancerPackage.SESSION_PERSISTENCE:
 				sequence_SessionPersistence(context, (SessionPersistence) semanticObject); 
 				return; 
 			}
@@ -87,14 +83,14 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 	 */
 	protected void sequence_Alert(ISerializationContext context, Alert semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.ALERT__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.ALERT__NAME));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.ALERT__METRIC) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.ALERT__METRIC));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.ALERT__THRESHOLD) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.ALERT__THRESHOLD));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.ALERT__ACTION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.ALERT__ACTION));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.ALERT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.ALERT__NAME));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.ALERT__METRIC) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.ALERT__METRIC));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.ALERT__THRESHOLD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.ALERT__THRESHOLD));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.ALERT__ACTION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.ALERT__ACTION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getAlertAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
@@ -102,20 +98,6 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 		feeder.accept(grammarAccess.getAlertAccess().getThresholdDOUBLETerminalRuleCall_6_0(), semanticObject.getThreshold());
 		feeder.accept(grammarAccess.getAlertAccess().getActionSTRINGTerminalRuleCall_8_0(), semanticObject.getAction());
 		feeder.finish();
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     BooleanValue returns BooleanValue
-	 *
-	 * Constraint:
-	 *     (value='true' | value='false')
-	 * </pre>
-	 */
-	protected void sequence_BooleanValue(ISerializationContext context, BooleanValue semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -165,20 +147,20 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 	 */
 	protected void sequence_Listener(ISerializationContext context, Listener semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.LISTENER__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.LISTENER__NAME));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.LISTENER__PROTOCOL) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.LISTENER__PROTOCOL));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.LISTENER__PORT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.LISTENER__PORT));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.LISTENER__TARGET_CLUSTER) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.LISTENER__TARGET_CLUSTER));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.LISTENER__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.LISTENER__NAME));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.LISTENER__PROTOCOL) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.LISTENER__PROTOCOL));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.LISTENER__PORT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.LISTENER__PORT));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.LISTENER__TARGET_CLUSTER) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.LISTENER__TARGET_CLUSTER));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getListenerAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
 		feeder.accept(grammarAccess.getListenerAccess().getProtocolProtocolEnumRuleCall_4_0(), semanticObject.getProtocol());
 		feeder.accept(grammarAccess.getListenerAccess().getPortINTTerminalRuleCall_6_0(), semanticObject.getPort());
-		feeder.accept(grammarAccess.getListenerAccess().getTargetClusterClusterIDTerminalRuleCall_8_0_1(), semanticObject.eGet(LoadBalancerPackage.Literals.LISTENER__TARGET_CLUSTER, false));
+		feeder.accept(grammarAccess.getListenerAccess().getTargetClusterClusterIDTerminalRuleCall_8_0_1(), semanticObject.eGet(LoadbalancerPackage.Literals.LISTENER__TARGET_CLUSTER, false));
 		feeder.finish();
 	}
 	
@@ -186,13 +168,13 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     LoadBalancerConfig returns LoadBalancerConfig
+	 *     LoadBalancerConfig returns LoadBalancer
 	 *
 	 * Constraint:
-	 *     (algorithm=Algorithm stickySession=BooleanValue sessionPersistence=SessionPersistence?)
+	 *     (algorithm=Algorithm stickySession=BOOLEAN_VALUE sessionPersistence=SessionPersistence?)
 	 * </pre>
 	 */
-	protected void sequence_LoadBalancerConfig(ISerializationContext context, LoadBalancerConfig semanticObject) {
+	protected void sequence_LoadBalancerConfig(ISerializationContext context, LoadBalancer semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -207,8 +189,8 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 	 *         name=STRING 
 	 *         description=STRING? 
 	 *         version=STRING? 
-	 *         clusters+=Cluster+ 
-	 *         listeners+=Listener+ 
+	 *         clusters+=Cluster* 
+	 *         listeners+=Listener* 
 	 *         alerts+=Alert*
 	 *     )
 	 * </pre>
@@ -236,18 +218,18 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 	 */
 	protected void sequence_ScalingRule(ISerializationContext context, ScalingRule semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__NAME));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__METRIC) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__METRIC));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__SCALE_DOWN_THRESHOLD) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__SCALE_DOWN_THRESHOLD));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__MIN_INSTANCES) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__MIN_INSTANCES));
-			if (transientValues.isValueTransient(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__MAX_INSTANCES) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadBalancerPackage.Literals.SCALING_RULE__MAX_INSTANCES));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__NAME));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__METRIC) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__METRIC));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__SCALE_DOWN_THRESHOLD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__SCALE_DOWN_THRESHOLD));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__MIN_INSTANCES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__MIN_INSTANCES));
+			if (transientValues.isValueTransient(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__MAX_INSTANCES) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, LoadbalancerPackage.Literals.SCALING_RULE__MAX_INSTANCES));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getScalingRuleAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
@@ -272,7 +254,7 @@ public class LoadBalancerSemanticSequencer extends AbstractDelegatingSemanticSeq
 	 *         port=INT 
 	 *         weight=INT? 
 	 *         maxConnections=INT? 
-	 *         enabled=BooleanValue
+	 *         enabled=BOOLEAN_VALUE
 	 *     )
 	 * </pre>
 	 */

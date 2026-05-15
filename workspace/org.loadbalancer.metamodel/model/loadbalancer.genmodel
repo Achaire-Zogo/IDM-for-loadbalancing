@@ -8,8 +8,8 @@
   <genPackages prefix="Loadbalancer" disposableProviderFactory="true" ecorePackage="loadbalancer.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="loadbalancer.ecore#//Algorithm">
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/ROUND_ROBIN"/>
-      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/WEIGHTED_RR"/>
-      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/LEAST_CONN"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/WEIGHTED_ROUND_ROBIN"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/LEAST_CONNECTIONS"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/IP_HASH"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Algorithm/RANDOM"/>
     </genEnums>
@@ -17,14 +17,18 @@
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/HTTP"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/HTTPS"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/TCP"/>
-      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Protocol/UDP"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="loadbalancer.ecore#//PersistenceType">
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//PersistenceType/COOKIE"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//PersistenceType/IP"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//PersistenceType/HEADER"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="loadbalancer.ecore#//Metric">
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/CPU_USAGE"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/MEMORY_USAGE"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/REQUEST_COUNT"/>
       <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/RESPONSE_TIME"/>
-      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/ACTIVE_CONNECTIONS"/>
+      <genEnumLiterals ecoreEnumLiteral="loadbalancer.ecore#//Metric/ERROR_RATE"/>
     </genEnums>
     <genClasses ecoreClass="loadbalancer.ecore#//LoadBalancerSystem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//LoadBalancerSystem/name"/>
@@ -60,7 +64,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/path"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/interval"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/timeout"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//HealthCheck/thresholds"/>
     </genClasses>
     <genClasses ecoreClass="loadbalancer.ecore#//Listener">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Listener/name"/>
@@ -77,11 +80,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/metric"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/threshold"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//Alert/action"/>
     </genClasses>
     <genClasses ecoreClass="loadbalancer.ecore#//ScalingRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/metric"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/scaleUpDown"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/scaleUpThreshold"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/scaleDownThreshold"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/minInstances"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute loadbalancer.ecore#//ScalingRule/maxInstances"/>
     </genClasses>

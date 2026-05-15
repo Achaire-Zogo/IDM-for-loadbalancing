@@ -49,14 +49,14 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_8 = (Keyword)cGroup.eContents().get(8);
 		
 		//// ==========================================
-		//// Racine du modèle
+		//// RACINE
 		//// ==========================================
-		//LoadBalancerSystem:
+		//LoadBalancerSystem returns lb::LoadBalancerSystem:
 		//    'LoadBalancerSystem' name=STRING '{'
 		//        ('description:' description=STRING)?
 		//        ('version:' version=STRING)?
-		//        clusters+=Cluster+
-		//        listeners+=Listener+
+		//        clusters+=Cluster*
+		//        listeners+=Listener*
 		//        (alerts+=Alert)*
 		//    '}'
 		//;
@@ -65,8 +65,8 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//'LoadBalancerSystem' name=STRING '{'
 		//    ('description:' description=STRING)?
 		//    ('version:' version=STRING)?
-		//    clusters+=Cluster+
-		//    listeners+=Listener+
+		//    clusters+=Cluster*
+		//    listeners+=Listener*
 		//    (alerts+=Alert)*
 		//'}'
 		public Group getGroup() { return cGroup; }
@@ -107,13 +107,13 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//STRING
 		public RuleCall getVersionSTRINGTerminalRuleCall_4_1_0() { return cVersionSTRINGTerminalRuleCall_4_1_0; }
 		
-		//clusters+=Cluster+
+		//clusters+=Cluster*
 		public Assignment getClustersAssignment_5() { return cClustersAssignment_5; }
 		
 		//Cluster
 		public RuleCall getClustersClusterParserRuleCall_5_0() { return cClustersClusterParserRuleCall_5_0; }
 		
-		//listeners+=Listener+
+		//listeners+=Listener*
 		public Assignment getListenersAssignment_6() { return cListenersAssignment_6; }
 		
 		//Listener
@@ -146,9 +146,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
 		//// ==========================================
-		//// Cluster de serveurs
+		//// CLUSTER
 		//// ==========================================
-		//Cluster:
+		//Cluster returns lb::Cluster:
 		//    'cluster' name=ID '{'
 		//        loadBalancer=LoadBalancerConfig
 		//        servers+=Server+
@@ -215,18 +215,18 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final RuleCall cAlgorithmAlgorithmEnumRuleCall_3_0 = (RuleCall)cAlgorithmAssignment_3.eContents().get(0);
 		private final Keyword cStickySessionKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		private final Assignment cStickySessionAssignment_5 = (Assignment)cGroup.eContents().get(5);
-		private final RuleCall cStickySessionBooleanValueParserRuleCall_5_0 = (RuleCall)cStickySessionAssignment_5.eContents().get(0);
+		private final RuleCall cStickySessionBOOLEAN_VALUETerminalRuleCall_5_0 = (RuleCall)cStickySessionAssignment_5.eContents().get(0);
 		private final Assignment cSessionPersistenceAssignment_6 = (Assignment)cGroup.eContents().get(6);
 		private final RuleCall cSessionPersistenceSessionPersistenceParserRuleCall_6_0 = (RuleCall)cSessionPersistenceAssignment_6.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
 		//// ==========================================
-		//// Configuration du répartiteur
+		//// LOAD BALANCER CONFIG  →  classe "LoadBalancer" dans le .ecore
 		//// ==========================================
-		//LoadBalancerConfig:
+		//LoadBalancerConfig returns lb::LoadBalancer:
 		//    'loadbalancer' '{'
 		//        'algorithm:' algorithm=Algorithm
-		//        'stickySession:' stickySession=BooleanValue
+		//        'stickySession:' stickySession=BOOLEAN_VALUE
 		//        (sessionPersistence=SessionPersistence)?
 		//    '}'
 		//;
@@ -234,7 +234,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		
 		//'loadbalancer' '{'
 		//    'algorithm:' algorithm=Algorithm
-		//    'stickySession:' stickySession=BooleanValue
+		//    'stickySession:' stickySession=BOOLEAN_VALUE
 		//    (sessionPersistence=SessionPersistence)?
 		//'}'
 		public Group getGroup() { return cGroup; }
@@ -257,11 +257,11 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//'stickySession:'
 		public Keyword getStickySessionKeyword_4() { return cStickySessionKeyword_4; }
 		
-		//stickySession=BooleanValue
+		//stickySession=BOOLEAN_VALUE
 		public Assignment getStickySessionAssignment_5() { return cStickySessionAssignment_5; }
 		
-		//BooleanValue
-		public RuleCall getStickySessionBooleanValueParserRuleCall_5_0() { return cStickySessionBooleanValueParserRuleCall_5_0; }
+		//BOOLEAN_VALUE
+		public RuleCall getStickySessionBOOLEAN_VALUETerminalRuleCall_5_0() { return cStickySessionBOOLEAN_VALUETerminalRuleCall_5_0; }
 		
 		//(sessionPersistence=SessionPersistence)?
 		public Assignment getSessionPersistenceAssignment_6() { return cSessionPersistenceAssignment_6; }
@@ -295,19 +295,19 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final RuleCall cMaxConnectionsINTTerminalRuleCall_8_1_0 = (RuleCall)cMaxConnectionsAssignment_8_1.eContents().get(0);
 		private final Keyword cEnabledKeyword_9 = (Keyword)cGroup.eContents().get(9);
 		private final Assignment cEnabledAssignment_10 = (Assignment)cGroup.eContents().get(10);
-		private final RuleCall cEnabledBooleanValueParserRuleCall_10_0 = (RuleCall)cEnabledAssignment_10.eContents().get(0);
+		private final RuleCall cEnabledBOOLEAN_VALUETerminalRuleCall_10_0 = (RuleCall)cEnabledAssignment_10.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_11 = (Keyword)cGroup.eContents().get(11);
 		
 		//// ==========================================
-		//// Serveur
+		//// SERVEUR
 		//// ==========================================
-		//Server:
+		//Server returns lb::Server:
 		//    'server' name=ID '{'
 		//        'host:' host=STRING
 		//        'port:' port=INT
 		//        ('weight:' weight=INT)?
 		//        ('maxConnections:' maxConnections=INT)?
-		//        'enabled:' enabled=BooleanValue
+		//        'enabled:' enabled=BOOLEAN_VALUE
 		//    '}'
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -317,7 +317,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//    'port:' port=INT
 		//    ('weight:' weight=INT)?
 		//    ('maxConnections:' maxConnections=INT)?
-		//    'enabled:' enabled=BooleanValue
+		//    'enabled:' enabled=BOOLEAN_VALUE
 		//'}'
 		public Group getGroup() { return cGroup; }
 		
@@ -378,11 +378,11 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//'enabled:'
 		public Keyword getEnabledKeyword_9() { return cEnabledKeyword_9; }
 		
-		//enabled=BooleanValue
+		//enabled=BOOLEAN_VALUE
 		public Assignment getEnabledAssignment_10() { return cEnabledAssignment_10; }
 		
-		//BooleanValue
-		public RuleCall getEnabledBooleanValueParserRuleCall_10_0() { return cEnabledBooleanValueParserRuleCall_10_0; }
+		//BOOLEAN_VALUE
+		public RuleCall getEnabledBOOLEAN_VALUETerminalRuleCall_10_0() { return cEnabledBOOLEAN_VALUETerminalRuleCall_10_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_11() { return cRightCurlyBracketKeyword_11; }
@@ -415,9 +415,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
 		//// ==========================================
-		//// Health Check
+		//// HEALTH CHECK
 		//// ==========================================
-		//HealthCheck:
+		//HealthCheck returns lb::HealthCheck:
 		//    'healthCheck' '{'
 		//        'protocol:' protocol=Protocol
 		//        'path:' path=STRING
@@ -527,9 +527,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//// ==========================================
-		//// Persistance de session
+		//// PERSISTANCE DE SESSION
 		//// ==========================================
-		//SessionPersistence:
+		//SessionPersistence returns lb::SessionPersistence:
 		//    'sessionPersistence' '{'
 		//        'type:' type=PersistenceType
 		//        ('cookieName:' cookieName=STRING)?
@@ -612,9 +612,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_13 = (Keyword)cGroup.eContents().get(13);
 		
 		//// ==========================================
-		//// Règle de mise à l’échelle
+		//// RÈGLE DE MISE À L'ÉCHELLE
 		//// ==========================================
-		//ScalingRule:
+		//ScalingRule returns lb::ScalingRule:
 		//    'scalingRule' name=ID '{'
 		//        'metric:' metric=Metric
 		//        'scaleUpThreshold:' scaleUpThreshold=DOUBLE
@@ -714,13 +714,13 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
 		
 		//// ==========================================
-		//// Listener (point d'entrée)
+		//// LISTENER
 		//// ==========================================
-		//Listener:
+		//Listener returns lb::Listener:
 		//    'listener' name=ID '{'
 		//        'protocol:' protocol=Protocol
 		//        'port:' port=INT
-		//        'targetCluster:' targetCluster=[Cluster]
+		//        'targetCluster:' targetCluster=[lb::Cluster|ID]
 		//    '}'
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -728,7 +728,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//'listener' name=ID '{'
 		//    'protocol:' protocol=Protocol
 		//    'port:' port=INT
-		//    'targetCluster:' targetCluster=[Cluster]
+		//    'targetCluster:' targetCluster=[lb::Cluster|ID]
 		//'}'
 		public Group getGroup() { return cGroup; }
 		
@@ -765,10 +765,10 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//'targetCluster:'
 		public Keyword getTargetClusterKeyword_7() { return cTargetClusterKeyword_7; }
 		
-		//targetCluster=[Cluster]
+		//targetCluster=[lb::Cluster|ID]
 		public Assignment getTargetClusterAssignment_8() { return cTargetClusterAssignment_8; }
 		
-		//[Cluster]
+		//[lb::Cluster|ID]
 		public CrossReference getTargetClusterClusterCrossReference_8_0() { return cTargetClusterClusterCrossReference_8_0; }
 		
 		//ID
@@ -796,9 +796,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRightCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
 		
 		//// ==========================================
-		//// Alerte
+		//// ALERTE
 		//// ==========================================
-		//Alert:
+		//Alert returns lb::Alert:
 		//    'alert' name=ID '{'
 		//        'metric:' metric=Metric
 		//        'threshold:' threshold=DOUBLE
@@ -856,33 +856,6 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_9() { return cRightCurlyBracketKeyword_9; }
 	}
-	public class BooleanValueElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.loadbalancer.dsl.LoadBalancer.BooleanValue");
-		private final Assignment cValueAssignment = (Assignment)rule.eContents().get(1);
-		private final Alternatives cValueAlternatives_0 = (Alternatives)cValueAssignment.eContents().get(0);
-		private final Keyword cValueTrueKeyword_0_0 = (Keyword)cValueAlternatives_0.eContents().get(0);
-		private final Keyword cValueFalseKeyword_0_1 = (Keyword)cValueAlternatives_0.eContents().get(1);
-		
-		//// ==========================================
-		//// Types terminaux
-		//// ==========================================
-		//BooleanValue:
-		//    value=('true' | 'false')
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//value=('true' | 'false')
-		public Assignment getValueAssignment() { return cValueAssignment; }
-		
-		//('true' | 'false')
-		public Alternatives getValueAlternatives_0() { return cValueAlternatives_0; }
-		
-		//'true'
-		public Keyword getValueTrueKeyword_0_0() { return cValueTrueKeyword_0_0; }
-		
-		//'false'
-		public Keyword getValueFalseKeyword_0_1() { return cValueFalseKeyword_0_1; }
-	}
 	
 	public class AlgorithmElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "org.loadbalancer.dsl.LoadBalancer.Algorithm");
@@ -899,9 +872,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final Keyword cRANDOMRANDOMKeyword_4_0 = (Keyword)cRANDOMEnumLiteralDeclaration_4.eContents().get(0);
 		
 		//// ==========================================
-		//// Enumerations
+		//// ÉNUMÉRATIONS
 		//// ==========================================
-		//enum Algorithm:
+		//enum Algorithm returns lb::Algorithm:
 		//    ROUND_ROBIN='ROUND_ROBIN' |
 		//    WEIGHTED_ROUND_ROBIN='WEIGHTED_ROUND_ROBIN' |
 		//    LEAST_CONNECTIONS='LEAST_CONNECTIONS' |
@@ -957,7 +930,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final EnumLiteralDeclaration cTCPEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
 		private final Keyword cTCPTCPKeyword_2_0 = (Keyword)cTCPEnumLiteralDeclaration_2.eContents().get(0);
 		
-		//enum Protocol:
+		//enum Protocol returns lb::Protocol:
 		//    HTTP='HTTP' |
 		//    HTTPS='HTTPS' |
 		//    TCP='TCP'
@@ -1001,7 +974,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final EnumLiteralDeclaration cERROR_RATEEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
 		private final Keyword cERROR_RATEERROR_RATEKeyword_4_0 = (Keyword)cERROR_RATEEnumLiteralDeclaration_4.eContents().get(0);
 		
-		//enum Metric:
+		//enum Metric returns lb::Metric:
 		//    CPU_USAGE='CPU_USAGE' |
 		//    MEMORY_USAGE='MEMORY_USAGE' |
 		//    RESPONSE_TIME='RESPONSE_TIME' |
@@ -1057,7 +1030,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		private final EnumLiteralDeclaration cHEADEREnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
 		private final Keyword cHEADERHEADERKeyword_2_0 = (Keyword)cHEADEREnumLiteralDeclaration_2.eContents().get(0);
 		
-		//enum PersistenceType:
+		//enum PersistenceType returns lb::PersistenceType:
 		//    COOKIE='COOKIE' |
 		//    IP='IP' |
 		//    HEADER='HEADER'
@@ -1101,7 +1074,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	private final ProtocolElements eProtocol;
 	private final MetricElements eMetric;
 	private final PersistenceTypeElements ePersistenceType;
-	private final BooleanValueElements pBooleanValue;
+	private final TerminalRule tBOOLEAN_VALUE;
 	private final TerminalRule tDOUBLE;
 	
 	private final Grammar grammar;
@@ -1126,7 +1099,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		this.eProtocol = new ProtocolElements();
 		this.eMetric = new MetricElements();
 		this.ePersistenceType = new PersistenceTypeElements();
-		this.pBooleanValue = new BooleanValueElements();
+		this.tBOOLEAN_VALUE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.loadbalancer.dsl.LoadBalancer.BOOLEAN_VALUE");
 		this.tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.loadbalancer.dsl.LoadBalancer.DOUBLE");
 	}
 	
@@ -1158,14 +1131,14 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 
 	
 	//// ==========================================
-	//// Racine du modèle
+	//// RACINE
 	//// ==========================================
-	//LoadBalancerSystem:
+	//LoadBalancerSystem returns lb::LoadBalancerSystem:
 	//    'LoadBalancerSystem' name=STRING '{'
 	//        ('description:' description=STRING)?
 	//        ('version:' version=STRING)?
-	//        clusters+=Cluster+
-	//        listeners+=Listener+
+	//        clusters+=Cluster*
+	//        listeners+=Listener*
 	//        (alerts+=Alert)*
 	//    '}'
 	//;
@@ -1178,9 +1151,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Cluster de serveurs
+	//// CLUSTER
 	//// ==========================================
-	//Cluster:
+	//Cluster returns lb::Cluster:
 	//    'cluster' name=ID '{'
 	//        loadBalancer=LoadBalancerConfig
 	//        servers+=Server+
@@ -1197,12 +1170,12 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Configuration du répartiteur
+	//// LOAD BALANCER CONFIG  →  classe "LoadBalancer" dans le .ecore
 	//// ==========================================
-	//LoadBalancerConfig:
+	//LoadBalancerConfig returns lb::LoadBalancer:
 	//    'loadbalancer' '{'
 	//        'algorithm:' algorithm=Algorithm
-	//        'stickySession:' stickySession=BooleanValue
+	//        'stickySession:' stickySession=BOOLEAN_VALUE
 	//        (sessionPersistence=SessionPersistence)?
 	//    '}'
 	//;
@@ -1215,15 +1188,15 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Serveur
+	//// SERVEUR
 	//// ==========================================
-	//Server:
+	//Server returns lb::Server:
 	//    'server' name=ID '{'
 	//        'host:' host=STRING
 	//        'port:' port=INT
 	//        ('weight:' weight=INT)?
 	//        ('maxConnections:' maxConnections=INT)?
-	//        'enabled:' enabled=BooleanValue
+	//        'enabled:' enabled=BOOLEAN_VALUE
 	//    '}'
 	//;
 	public ServerElements getServerAccess() {
@@ -1235,9 +1208,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Health Check
+	//// HEALTH CHECK
 	//// ==========================================
-	//HealthCheck:
+	//HealthCheck returns lb::HealthCheck:
 	//    'healthCheck' '{'
 	//        'protocol:' protocol=Protocol
 	//        'path:' path=STRING
@@ -1256,9 +1229,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Persistance de session
+	//// PERSISTANCE DE SESSION
 	//// ==========================================
-	//SessionPersistence:
+	//SessionPersistence returns lb::SessionPersistence:
 	//    'sessionPersistence' '{'
 	//        'type:' type=PersistenceType
 	//        ('cookieName:' cookieName=STRING)?
@@ -1274,9 +1247,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Règle de mise à l’échelle
+	//// RÈGLE DE MISE À L'ÉCHELLE
 	//// ==========================================
-	//ScalingRule:
+	//ScalingRule returns lb::ScalingRule:
 	//    'scalingRule' name=ID '{'
 	//        'metric:' metric=Metric
 	//        'scaleUpThreshold:' scaleUpThreshold=DOUBLE
@@ -1294,13 +1267,13 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Listener (point d'entrée)
+	//// LISTENER
 	//// ==========================================
-	//Listener:
+	//Listener returns lb::Listener:
 	//    'listener' name=ID '{'
 	//        'protocol:' protocol=Protocol
 	//        'port:' port=INT
-	//        'targetCluster:' targetCluster=[Cluster]
+	//        'targetCluster:' targetCluster=[lb::Cluster|ID]
 	//    '}'
 	//;
 	public ListenerElements getListenerAccess() {
@@ -1312,9 +1285,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Alerte
+	//// ALERTE
 	//// ==========================================
-	//Alert:
+	//Alert returns lb::Alert:
 	//    'alert' name=ID '{'
 	//        'metric:' metric=Metric
 	//        'threshold:' threshold=DOUBLE
@@ -1330,9 +1303,9 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Enumerations
+	//// ÉNUMÉRATIONS
 	//// ==========================================
-	//enum Algorithm:
+	//enum Algorithm returns lb::Algorithm:
 	//    ROUND_ROBIN='ROUND_ROBIN' |
 	//    WEIGHTED_ROUND_ROBIN='WEIGHTED_ROUND_ROBIN' |
 	//    LEAST_CONNECTIONS='LEAST_CONNECTIONS' |
@@ -1347,7 +1320,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		return getAlgorithmAccess().getRule();
 	}
 	
-	//enum Protocol:
+	//enum Protocol returns lb::Protocol:
 	//    HTTP='HTTP' |
 	//    HTTPS='HTTPS' |
 	//    TCP='TCP'
@@ -1360,7 +1333,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		return getProtocolAccess().getRule();
 	}
 	
-	//enum Metric:
+	//enum Metric returns lb::Metric:
 	//    CPU_USAGE='CPU_USAGE' |
 	//    MEMORY_USAGE='MEMORY_USAGE' |
 	//    RESPONSE_TIME='RESPONSE_TIME' |
@@ -1375,7 +1348,7 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 		return getMetricAccess().getRule();
 	}
 	
-	//enum PersistenceType:
+	//enum PersistenceType returns lb::PersistenceType:
 	//    COOKIE='COOKIE' |
 	//    IP='IP' |
 	//    HEADER='HEADER'
@@ -1389,17 +1362,13 @@ public class LoadBalancerGrammarAccess extends AbstractElementFinder.AbstractGra
 	}
 	
 	//// ==========================================
-	//// Types terminaux
+	//// TYPES TERMINAUX
 	//// ==========================================
-	//BooleanValue:
-	//    value=('true' | 'false')
+	//terminal BOOLEAN_VALUE returns ecore::EBoolean:
+	//    'true' | 'false'
 	//;
-	public BooleanValueElements getBooleanValueAccess() {
-		return pBooleanValue;
-	}
-	
-	public ParserRule getBooleanValueRule() {
-		return getBooleanValueAccess().getRule();
+	public TerminalRule getBOOLEAN_VALUERule() {
+		return tBOOLEAN_VALUE;
 	}
 	
 	//terminal DOUBLE returns ecore::EDouble:

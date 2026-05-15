@@ -2,15 +2,31 @@
  */
 package loadbalancer.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import loadbalancer.LoadbalancerPackage;
+import loadbalancer.LoadbalancerTables;
+import loadbalancer.PersistenceType;
 import loadbalancer.SessionPersistence;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.ocl.pivot.evaluation.Executor;
+import org.eclipse.ocl.pivot.ids.EnumerationLiteralId;
+import org.eclipse.ocl.pivot.ids.TypeId;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableLessThanEqualOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringGetSeverityOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringLogDiagnosticOperation;
+import org.eclipse.ocl.pivot.utilities.ClassUtil;
+import org.eclipse.ocl.pivot.utilities.PivotUtil;
+import org.eclipse.ocl.pivot.utilities.ValueUtil;
+import org.eclipse.ocl.pivot.values.IntegerValue;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,7 +52,7 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TYPE_EDEFAULT = null;
+	protected static final PersistenceType TYPE_EDEFAULT = PersistenceType.COOKIE;
 
 	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
@@ -46,7 +62,7 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected String type = TYPE_EDEFAULT;
+	protected PersistenceType type = TYPE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getCookieName() <em>Cookie Name</em>}' attribute.
@@ -113,7 +129,7 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getType() {
+	public PersistenceType getType() {
 		return type;
 	}
 
@@ -123,9 +139,9 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setType(String newType) {
-		String oldType = type;
-		type = newType;
+	public void setType(PersistenceType newType) {
+		PersistenceType oldType = type;
+		type = newType == null ? TYPE_EDEFAULT : newType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.SESSION_PERSISTENCE__TYPE, oldType, type));
 	}
@@ -182,6 +198,88 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
+	public boolean cookieRequiresName(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		final String constraintName = "SessionPersistence::cookieRequiresName";
+		try {
+			/**
+			 *
+			 * inv cookieRequiresName:
+			 *   let severity : Integer[1] = constraintName.getSeverity()
+			 *   in
+			 *     if severity <= 0
+			 *     then true
+			 *     else
+			 *       let result : Boolean[?] = self.type = PersistenceType::COOKIE implies self.cookieName <> '' and self.cookieName <> null
+			 *       in
+			 *         constraintName.logDiagnostic(self, null, diagnostics, context, null, severity, result, 0)
+			 *     endif
+			 */
+			final /*@NonInvalid*/ Executor executor = PivotUtil.getExecutor(this);
+			final /*@NonInvalid*/ IntegerValue severity_0 = CGStringGetSeverityOperation.INSTANCE.evaluate(executor, LoadbalancerPackage.Literals.SESSION_PERSISTENCE___COOKIE_REQUIRES_NAME__DIAGNOSTICCHAIN_MAP);
+			final /*@NonInvalid*/ boolean le = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, severity_0, LoadbalancerTables.INT_0).booleanValue();
+			/*@NonInvalid*/ boolean IF_le;
+			if (le) {
+				IF_le = true;
+			}
+			else {
+				/*@Caught*/ Object CAUGHT_result;
+				try {
+					final /*@NonInvalid*/ String cookieName_0 = this.getCookieName();
+					final /*@NonInvalid*/ PersistenceType type = this.getType();
+					final /*@NonInvalid*/ EnumerationLiteralId BOXED_type = type == null ? null : LoadbalancerTables.ENUMid_PersistenceType.getEnumerationLiteralId(ClassUtil.nonNullState(type.getName()));
+					final /*@NonInvalid*/ boolean eq = BOXED_type == LoadbalancerTables.ELITid_COOKIE;
+					final /*@Thrown*/ Boolean result;
+					if (!eq) {
+						result = ValueUtil.TRUE_VALUE;
+					}
+					else {
+						final /*@NonInvalid*/ boolean ne = !LoadbalancerTables.STR_.equals(cookieName_0);
+						final /*@NonInvalid*/ Boolean and;
+						if (!ne) {
+							and = ValueUtil.FALSE_VALUE;
+						}
+						else {
+							final /*@NonInvalid*/ boolean ne_0 = cookieName_0 != null;
+							if (!ne_0) {
+								and = ValueUtil.FALSE_VALUE;
+							}
+							else {
+								and = ValueUtil.TRUE_VALUE;
+							}
+						}
+						if (and == ValueUtil.TRUE_VALUE) {
+							result = ValueUtil.TRUE_VALUE;
+						}
+						else {
+							if (and == null) {
+								result = null;
+							}
+							else {
+								result = ValueUtil.FALSE_VALUE;
+							}
+						}
+					}
+					CAUGHT_result = result;
+				}
+				catch (Exception e) {
+					CAUGHT_result = ValueUtil.createInvalidValue(e);
+				}
+				final /*@NonInvalid*/ boolean logDiagnostic = CGStringLogDiagnosticOperation.INSTANCE.evaluate(executor, TypeId.BOOLEAN, constraintName, this, (Object)null, diagnostics, context, (Object)null, severity_0, CAUGHT_result, LoadbalancerTables.INT_0).booleanValue();
+				IF_le = logDiagnostic;
+			}
+			return IF_le;
+		}
+		catch (Throwable e) {
+			return ValueUtil.validationFailedDiagnostic(constraintName, this, diagnostics, context, e);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case LoadbalancerPackage.SESSION_PERSISTENCE__TYPE:
@@ -203,7 +301,7 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case LoadbalancerPackage.SESSION_PERSISTENCE__TYPE:
-				setType((String)newValue);
+				setType((PersistenceType)newValue);
 				return;
 			case LoadbalancerPackage.SESSION_PERSISTENCE__COOKIE_NAME:
 				setCookieName((String)newValue);
@@ -245,13 +343,28 @@ public class SessionPersistenceImpl extends MinimalEObjectImpl.Container impleme
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case LoadbalancerPackage.SESSION_PERSISTENCE__TYPE:
-				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+				return type != TYPE_EDEFAULT;
 			case LoadbalancerPackage.SESSION_PERSISTENCE__COOKIE_NAME:
 				return COOKIE_NAME_EDEFAULT == null ? cookieName != null : !COOKIE_NAME_EDEFAULT.equals(cookieName);
 			case LoadbalancerPackage.SESSION_PERSISTENCE__TTL:
 				return ttl != TTL_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case LoadbalancerPackage.SESSION_PERSISTENCE___COOKIE_REQUIRES_NAME__DIAGNOSTICCHAIN_MAP:
+				return cookieRequiresName((DiagnosticChain)arguments.get(0), (Map<Object, Object>)arguments.get(1));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

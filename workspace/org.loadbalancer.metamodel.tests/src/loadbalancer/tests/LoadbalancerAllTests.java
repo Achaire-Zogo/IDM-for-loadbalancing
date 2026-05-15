@@ -31,6 +31,7 @@ public class LoadbalancerAllTests extends TestSuite {
 	 */
 	public static Test suite() {
 		TestSuite suite = new LoadbalancerAllTests("Loadbalancer Tests");
+		suite.addTest(LoadbalancerTests.suite());
 		return suite;
 	}
 

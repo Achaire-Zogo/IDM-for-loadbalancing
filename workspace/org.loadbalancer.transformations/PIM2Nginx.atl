@@ -1,5 +1,5 @@
--- @path NginxModel=/org.loadbalancer.transformations/nginx.ecore
--- @path LoadBalancerModel=/org.loadbalancer.metamodel/model/loadbalancer.ecore
+-- @nsURI NginxModel=http://www.example.org/nginx
+-- @nsURI LoadBalancerModel=http://www.example.org/loadbalancer
 
 module PIM2Nginx;
 create OUT : NginxModel from IN : LoadBalancerModel;
@@ -8,7 +8,7 @@ rule System2NginxConfig {
     from
         s : LoadBalancerModel!LoadBalancerSystem
     to
-        c : NginxModel!NginxConfig (
+        c : NginxModel!NginxConfig (	
             workerProcesses   <- 'auto',
             workerConnections <- 1024,
             upstreams         <- s.clusters->collect(cl | thisModule.Cluster2Upstream(cl)),
@@ -22,8 +22,9 @@ lazy rule Cluster2Upstream {
     to
         u : NginxModel!Upstream (
             name      <- cl.name,
-            algorithm <- cl.loadBalancer.algorithm.mapNginxAlgo(),
-            servers   <- cl.servers->select(s | s.enabled)->collect(s | thisModule.Server2UpstreamServer(s))
+            algorithm <- thisModule.mapNginxAlgo(cl.loadBalancer.algorithm),
+            servers   <- cl.servers->select(s | s.enabled = true)
+                                   ->collect(s | thisModule.Server2UpstreamServer(s))
         )
 }
 
@@ -47,13 +48,15 @@ lazy rule Listener2ServerBlock {
         )
 }
 
-helper context LoadBalancerModel!Algorithm
-    def: mapNginxAlgo() : String =
-        if self = #LEAST_CONNECTIONS then
-            'least_conn'
-        else if self = #IP_HASH then
-            'ip_hash'
-        else
-            ''
-        endif endif
+-- Helper module (pas de context enum) pour éviter le bug de dispatch ATL
+helper def: mapNginxAlgo(algo : OclAny) : String =
+    if algo = #LEAST_CONNECTIONS then
+        'least_conn'
+    else if algo = #IP_HASH then
+        'ip_hash'
+    else if algo = #WEIGHTED_ROUND_ROBIN then
+        'least_conn'
+    else
+        ''
+    endif endif endif
 ;

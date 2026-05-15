@@ -65,7 +65,8 @@ public class HealthCheckItemProvider
 			addPathPropertyDescriptor(object);
 			addIntervalPropertyDescriptor(object);
 			addTimeoutPropertyDescriptor(object);
-			addThresholdsPropertyDescriptor(object);
+			addHealthyThresholdPropertyDescriptor(object);
+			addUnhealthyThresholdPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -159,19 +160,41 @@ public class HealthCheckItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Thresholds feature.
+	 * This adds a property descriptor for the Healthy Threshold feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addThresholdsPropertyDescriptor(Object object) {
+	protected void addHealthyThresholdPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_HealthCheck_thresholds_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_HealthCheck_thresholds_feature", "_UI_HealthCheck_type"),
-				 LoadbalancerPackage.Literals.HEALTH_CHECK__THRESHOLDS,
+				 getString("_UI_HealthCheck_healthyThreshold_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_HealthCheck_healthyThreshold_feature", "_UI_HealthCheck_type"),
+				 LoadbalancerPackage.Literals.HEALTH_CHECK__HEALTHY_THRESHOLD,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Unhealthy Threshold feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addUnhealthyThresholdPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_HealthCheck_unhealthyThreshold_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_HealthCheck_unhealthyThreshold_feature", "_UI_HealthCheck_type"),
+				 LoadbalancerPackage.Literals.HEALTH_CHECK__UNHEALTHY_THRESHOLD,
 				 true,
 				 false,
 				 false,
@@ -223,7 +246,8 @@ public class HealthCheckItemProvider
 			case LoadbalancerPackage.HEALTH_CHECK__PATH:
 			case LoadbalancerPackage.HEALTH_CHECK__INTERVAL:
 			case LoadbalancerPackage.HEALTH_CHECK__TIMEOUT:
-			case LoadbalancerPackage.HEALTH_CHECK__THRESHOLDS:
+			case LoadbalancerPackage.HEALTH_CHECK__HEALTHY_THRESHOLD:
+			case LoadbalancerPackage.HEALTH_CHECK__UNHEALTHY_THRESHOLD:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ASCII"?>
+<lb:LoadBalancerSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:lb="http://www.example.org/loadbalancer" name="ECommerceSystem" description="Systeme de repartition de charge pour e-commerce" version="1.0">
+  <clusters name="WebFrontend">
+    <servers name="web1" host="192.168.1.10" port="8080" weight="3" maxConnections="1000"/>
+    <servers name="web2" host="192.168.1.11" port="8080" weight="2" maxConnections="800"/>
+    <servers name="web3" host="192.168.1.12" port="8080" maxConnections="500"/>
+    <loadBalancer stickySession="true">
+      <sessionPersistence cookieName="SESSIONID" ttl="3600"/>
+    </loadBalancer>
+    <healthCheck path="/health" interval="30" timeout="10" healthyThreshold="3" unhealthyThreshold="2"/>
+    <scalingRule name="autoScaleWeb" scaleUpThreshold="80.0" scaleDownThreshold="30.0" minInstances="2" maxInstances="10"/>
+  </clusters>
+  <clusters name="APIBackend">
+    <servers name="api1" host="192.168.2.10" port="3000" maxConnections="500"/>
+    <servers name="api2" host="192.168.2.11" port="3000" maxConnections="500"/>
+    <loadBalancer algorithm="LEAST_CONNECTIONS"/>
+    <healthCheck path="/api/health" interval="15" timeout="5" healthyThreshold="2" unhealthyThreshold="3"/>
+  </clusters>
+  <listeners name="httpListener" port="80" targetCluster="//@clusters.0"/>
+  <listeners name="apiListener" port="3000" targetCluster="//@clusters.1"/>
+  <alerts name="highCPU" threshold="90.0" action="email: admin@ecommerce.com"/>
+  <alerts name="highLatency" metric="RESPONSE_TIME" threshold="5000.0" action="webhook: https://hooks.slack.com/alert"/>
+</lb:LoadBalancerSystem>

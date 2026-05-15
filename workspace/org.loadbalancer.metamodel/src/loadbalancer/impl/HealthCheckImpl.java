@@ -2,16 +2,30 @@
  */
 package loadbalancer.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import loadbalancer.HealthCheck;
 import loadbalancer.LoadbalancerPackage;
+import loadbalancer.LoadbalancerTables;
 import loadbalancer.Protocol;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.ocl.pivot.evaluation.Executor;
+import org.eclipse.ocl.pivot.ids.TypeId;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableGreaterThanOperation;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableLessThanEqualOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringGetSeverityOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringLogDiagnosticOperation;
+import org.eclipse.ocl.pivot.utilities.PivotUtil;
+import org.eclipse.ocl.pivot.utilities.ValueUtil;
+import org.eclipse.ocl.pivot.values.IntegerValue;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +39,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link loadbalancer.impl.HealthCheckImpl#getPath <em>Path</em>}</li>
  *   <li>{@link loadbalancer.impl.HealthCheckImpl#getInterval <em>Interval</em>}</li>
  *   <li>{@link loadbalancer.impl.HealthCheckImpl#getTimeout <em>Timeout</em>}</li>
- *   <li>{@link loadbalancer.impl.HealthCheckImpl#getThresholds <em>Thresholds</em>}</li>
+ *   <li>{@link loadbalancer.impl.HealthCheckImpl#getHealthyThreshold <em>Healthy Threshold</em>}</li>
+ *   <li>{@link loadbalancer.impl.HealthCheckImpl#getUnhealthyThreshold <em>Unhealthy Threshold</em>}</li>
  * </ul>
  *
  * @generated
@@ -112,24 +127,44 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 	protected int timeout = TIMEOUT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getThresholds() <em>Thresholds</em>}' attribute.
+	 * The default value of the '{@link #getHealthyThreshold() <em>Healthy Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getThresholds()
+	 * @see #getHealthyThreshold()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int THRESHOLDS_EDEFAULT = 0;
+	protected static final int HEALTHY_THRESHOLD_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getThresholds() <em>Thresholds</em>}' attribute.
+	 * The cached value of the '{@link #getHealthyThreshold() <em>Healthy Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getThresholds()
+	 * @see #getHealthyThreshold()
 	 * @generated
 	 * @ordered
 	 */
-	protected int thresholds = THRESHOLDS_EDEFAULT;
+	protected int healthyThreshold = HEALTHY_THRESHOLD_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getUnhealthyThreshold() <em>Unhealthy Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUnhealthyThreshold()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int UNHEALTHY_THRESHOLD_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getUnhealthyThreshold() <em>Unhealthy Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUnhealthyThreshold()
+	 * @generated
+	 * @ordered
+	 */
+	protected int unhealthyThreshold = UNHEALTHY_THRESHOLD_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -248,8 +283,8 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 	 * @generated
 	 */
 	@Override
-	public int getThresholds() {
-		return thresholds;
+	public int getHealthyThreshold() {
+		return healthyThreshold;
 	}
 
 	/**
@@ -258,11 +293,79 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 	 * @generated
 	 */
 	@Override
-	public void setThresholds(int newThresholds) {
-		int oldThresholds = thresholds;
-		thresholds = newThresholds;
+	public void setHealthyThreshold(int newHealthyThreshold) {
+		int oldHealthyThreshold = healthyThreshold;
+		healthyThreshold = newHealthyThreshold;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.HEALTH_CHECK__THRESHOLDS, oldThresholds, thresholds));
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.HEALTH_CHECK__HEALTHY_THRESHOLD, oldHealthyThreshold, healthyThreshold));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int getUnhealthyThreshold() {
+		return unhealthyThreshold;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setUnhealthyThreshold(int newUnhealthyThreshold) {
+		int oldUnhealthyThreshold = unhealthyThreshold;
+		unhealthyThreshold = newUnhealthyThreshold;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.HEALTH_CHECK__UNHEALTHY_THRESHOLD, oldUnhealthyThreshold, unhealthyThreshold));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean intervalGreaterThanTimeout(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		final String constraintName = "HealthCheck::intervalGreaterThanTimeout";
+		try {
+			/**
+			 *
+			 * inv intervalGreaterThanTimeout:
+			 *   let severity : Integer[1] = constraintName.getSeverity()
+			 *   in
+			 *     if severity <= 0
+			 *     then true
+			 *     else
+			 *       let result : Boolean[1] = self.interval > self.timeout
+			 *       in
+			 *         constraintName.logDiagnostic(self, null, diagnostics, context, null, severity, result, 0)
+			 *     endif
+			 */
+			final /*@NonInvalid*/ Executor executor = PivotUtil.getExecutor(this);
+			final /*@NonInvalid*/ IntegerValue severity_0 = CGStringGetSeverityOperation.INSTANCE.evaluate(executor, LoadbalancerPackage.Literals.HEALTH_CHECK___INTERVAL_GREATER_THAN_TIMEOUT__DIAGNOSTICCHAIN_MAP);
+			final /*@NonInvalid*/ boolean le = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, severity_0, LoadbalancerTables.INT_0).booleanValue();
+			/*@NonInvalid*/ boolean IF_le;
+			if (le) {
+				IF_le = true;
+			}
+			else {
+				final /*@NonInvalid*/ int interval = this.getInterval();
+				final /*@NonInvalid*/ IntegerValue BOXED_interval = ValueUtil.integerValueOf(interval);
+				final /*@NonInvalid*/ int timeout = this.getTimeout();
+				final /*@NonInvalid*/ IntegerValue BOXED_timeout = ValueUtil.integerValueOf(timeout);
+				final /*@NonInvalid*/ boolean result = OclComparableGreaterThanOperation.INSTANCE.evaluate(executor, BOXED_interval, BOXED_timeout).booleanValue();
+				final /*@NonInvalid*/ boolean logDiagnostic = CGStringLogDiagnosticOperation.INSTANCE.evaluate(executor, TypeId.BOOLEAN, constraintName, this, (Object)null, diagnostics, context, (Object)null, severity_0, result, LoadbalancerTables.INT_0).booleanValue();
+				IF_le = logDiagnostic;
+			}
+			return IF_le;
+		}
+		catch (Throwable e) {
+			return ValueUtil.validationFailedDiagnostic(constraintName, this, diagnostics, context, e);
+		}
 	}
 
 	/**
@@ -281,8 +384,10 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 				return getInterval();
 			case LoadbalancerPackage.HEALTH_CHECK__TIMEOUT:
 				return getTimeout();
-			case LoadbalancerPackage.HEALTH_CHECK__THRESHOLDS:
-				return getThresholds();
+			case LoadbalancerPackage.HEALTH_CHECK__HEALTHY_THRESHOLD:
+				return getHealthyThreshold();
+			case LoadbalancerPackage.HEALTH_CHECK__UNHEALTHY_THRESHOLD:
+				return getUnhealthyThreshold();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -307,8 +412,11 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 			case LoadbalancerPackage.HEALTH_CHECK__TIMEOUT:
 				setTimeout((Integer)newValue);
 				return;
-			case LoadbalancerPackage.HEALTH_CHECK__THRESHOLDS:
-				setThresholds((Integer)newValue);
+			case LoadbalancerPackage.HEALTH_CHECK__HEALTHY_THRESHOLD:
+				setHealthyThreshold((Integer)newValue);
+				return;
+			case LoadbalancerPackage.HEALTH_CHECK__UNHEALTHY_THRESHOLD:
+				setUnhealthyThreshold((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -334,8 +442,11 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 			case LoadbalancerPackage.HEALTH_CHECK__TIMEOUT:
 				setTimeout(TIMEOUT_EDEFAULT);
 				return;
-			case LoadbalancerPackage.HEALTH_CHECK__THRESHOLDS:
-				setThresholds(THRESHOLDS_EDEFAULT);
+			case LoadbalancerPackage.HEALTH_CHECK__HEALTHY_THRESHOLD:
+				setHealthyThreshold(HEALTHY_THRESHOLD_EDEFAULT);
+				return;
+			case LoadbalancerPackage.HEALTH_CHECK__UNHEALTHY_THRESHOLD:
+				setUnhealthyThreshold(UNHEALTHY_THRESHOLD_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -357,10 +468,27 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 				return interval != INTERVAL_EDEFAULT;
 			case LoadbalancerPackage.HEALTH_CHECK__TIMEOUT:
 				return timeout != TIMEOUT_EDEFAULT;
-			case LoadbalancerPackage.HEALTH_CHECK__THRESHOLDS:
-				return thresholds != THRESHOLDS_EDEFAULT;
+			case LoadbalancerPackage.HEALTH_CHECK__HEALTHY_THRESHOLD:
+				return healthyThreshold != HEALTHY_THRESHOLD_EDEFAULT;
+			case LoadbalancerPackage.HEALTH_CHECK__UNHEALTHY_THRESHOLD:
+				return unhealthyThreshold != UNHEALTHY_THRESHOLD_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case LoadbalancerPackage.HEALTH_CHECK___INTERVAL_GREATER_THAN_TIMEOUT__DIAGNOSTICCHAIN_MAP:
+				return intervalGreaterThanTimeout((DiagnosticChain)arguments.get(0), (Map<Object, Object>)arguments.get(1));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -381,8 +509,10 @@ public class HealthCheckImpl extends MinimalEObjectImpl.Container implements Hea
 		result.append(interval);
 		result.append(", timeout: ");
 		result.append(timeout);
-		result.append(", thresholds: ");
-		result.append(thresholds);
+		result.append(", healthyThreshold: ");
+		result.append(healthyThreshold);
+		result.append(", unhealthyThreshold: ");
+		result.append(unhealthyThreshold);
 		result.append(')');
 		return result.toString();
 	}

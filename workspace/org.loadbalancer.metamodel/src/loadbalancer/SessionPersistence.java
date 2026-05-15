@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -19,31 +21,34 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getSessionPersistence()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='cookieRequiresName'"
  * @generated
  */
 public interface SessionPersistence extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Type</b></em>' attribute.
+	 * The literals are from the enumeration {@link loadbalancer.PersistenceType}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
-	 * @see #setType(String)
+	 * @see loadbalancer.PersistenceType
+	 * @see #setType(PersistenceType)
 	 * @see loadbalancer.LoadbalancerPackage#getSessionPersistence_Type()
 	 * @model
 	 * @generated
 	 */
-	String getType();
+	PersistenceType getType();
 
 	/**
 	 * Sets the value of the '{@link loadbalancer.SessionPersistence#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.
+	 * @see loadbalancer.PersistenceType
 	 * @see #getType()
 	 * @generated
 	 */
-	void setType(String value);
+	void setType(PersistenceType value);
 
 	/**
 	 * Returns the value of the '<em><b>Cookie Name</b></em>' attribute.
@@ -74,7 +79,7 @@ public interface SessionPersistence extends EObject {
 	 * @return the value of the '<em>Ttl</em>' attribute.
 	 * @see #setTtl(int)
 	 * @see loadbalancer.LoadbalancerPackage#getSessionPersistence_Ttl()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getTtl();
@@ -88,5 +93,13 @@ public interface SessionPersistence extends EObject {
 	 * @generated
 	 */
 	void setTtl(int value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.type = PersistenceType::COOKIE implies\n\t\t\t\tself.cookieName &lt;&gt; \'\' and self.cookieName &lt;&gt; null'"
+	 * @generated
+	 */
+	boolean cookieRequiresName(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // SessionPersistence

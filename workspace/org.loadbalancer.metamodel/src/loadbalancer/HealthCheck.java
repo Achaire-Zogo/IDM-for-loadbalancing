@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -17,11 +19,12 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link loadbalancer.HealthCheck#getPath <em>Path</em>}</li>
  *   <li>{@link loadbalancer.HealthCheck#getInterval <em>Interval</em>}</li>
  *   <li>{@link loadbalancer.HealthCheck#getTimeout <em>Timeout</em>}</li>
- *   <li>{@link loadbalancer.HealthCheck#getThresholds <em>Thresholds</em>}</li>
+ *   <li>{@link loadbalancer.HealthCheck#getHealthyThreshold <em>Healthy Threshold</em>}</li>
+ *   <li>{@link loadbalancer.HealthCheck#getUnhealthyThreshold <em>Unhealthy Threshold</em>}</li>
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getHealthCheck()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='intervalGreaterThanTimeout'"
  * @generated
  */
 public interface HealthCheck extends EObject {
@@ -79,7 +82,7 @@ public interface HealthCheck extends EObject {
 	 * @return the value of the '<em>Interval</em>' attribute.
 	 * @see #setInterval(int)
 	 * @see loadbalancer.LoadbalancerPackage#getHealthCheck_Interval()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getInterval();
@@ -101,7 +104,7 @@ public interface HealthCheck extends EObject {
 	 * @return the value of the '<em>Timeout</em>' attribute.
 	 * @see #setTimeout(int)
 	 * @see loadbalancer.LoadbalancerPackage#getHealthCheck_Timeout()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getTimeout();
@@ -117,25 +120,55 @@ public interface HealthCheck extends EObject {
 	void setTimeout(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Thresholds</b></em>' attribute.
+	 * Returns the value of the '<em><b>Healthy Threshold</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Thresholds</em>' attribute.
-	 * @see #setThresholds(int)
-	 * @see loadbalancer.LoadbalancerPackage#getHealthCheck_Thresholds()
+	 * @return the value of the '<em>Healthy Threshold</em>' attribute.
+	 * @see #setHealthyThreshold(int)
+	 * @see loadbalancer.LoadbalancerPackage#getHealthCheck_HealthyThreshold()
 	 * @model
 	 * @generated
 	 */
-	int getThresholds();
+	int getHealthyThreshold();
 
 	/**
-	 * Sets the value of the '{@link loadbalancer.HealthCheck#getThresholds <em>Thresholds</em>}' attribute.
+	 * Sets the value of the '{@link loadbalancer.HealthCheck#getHealthyThreshold <em>Healthy Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Thresholds</em>' attribute.
-	 * @see #getThresholds()
+	 * @param value the new value of the '<em>Healthy Threshold</em>' attribute.
+	 * @see #getHealthyThreshold()
 	 * @generated
 	 */
-	void setThresholds(int value);
+	void setHealthyThreshold(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Unhealthy Threshold</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Unhealthy Threshold</em>' attribute.
+	 * @see #setUnhealthyThreshold(int)
+	 * @see loadbalancer.LoadbalancerPackage#getHealthCheck_UnhealthyThreshold()
+	 * @model
+	 * @generated
+	 */
+	int getUnhealthyThreshold();
+
+	/**
+	 * Sets the value of the '{@link loadbalancer.HealthCheck#getUnhealthyThreshold <em>Unhealthy Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Unhealthy Threshold</em>' attribute.
+	 * @see #getUnhealthyThreshold()
+	 * @generated
+	 */
+	void setUnhealthyThreshold(int value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.interval &gt; self.timeout'"
+	 * @generated
+	 */
+	boolean intervalGreaterThanTimeout(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // HealthCheck

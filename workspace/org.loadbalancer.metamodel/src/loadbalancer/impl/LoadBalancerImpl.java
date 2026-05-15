@@ -6,10 +6,13 @@ import loadbalancer.Algorithm;
 import loadbalancer.LoadBalancer;
 import loadbalancer.LoadbalancerPackage;
 
+import loadbalancer.SessionPersistence;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -24,6 +27,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link loadbalancer.impl.LoadBalancerImpl#getName <em>Name</em>}</li>
  *   <li>{@link loadbalancer.impl.LoadBalancerImpl#getAlgorithm <em>Algorithm</em>}</li>
  *   <li>{@link loadbalancer.impl.LoadBalancerImpl#isStickySession <em>Sticky Session</em>}</li>
+ *   <li>{@link loadbalancer.impl.LoadBalancerImpl#getSessionPersistence <em>Session Persistence</em>}</li>
  * </ul>
  *
  * @generated
@@ -88,6 +92,16 @@ public class LoadBalancerImpl extends MinimalEObjectImpl.Container implements Lo
 	 * @ordered
 	 */
 	protected boolean stickySession = STICKY_SESSION_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSessionPersistence() <em>Session Persistence</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSessionPersistence()
+	 * @generated
+	 * @ordered
+	 */
+	protected SessionPersistence sessionPersistence;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -183,6 +197,65 @@ public class LoadBalancerImpl extends MinimalEObjectImpl.Container implements Lo
 	 * @generated
 	 */
 	@Override
+	public SessionPersistence getSessionPersistence() {
+		return sessionPersistence;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetSessionPersistence(SessionPersistence newSessionPersistence, NotificationChain msgs) {
+		SessionPersistence oldSessionPersistence = sessionPersistence;
+		sessionPersistence = newSessionPersistence;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE, oldSessionPersistence, newSessionPersistence);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSessionPersistence(SessionPersistence newSessionPersistence) {
+		if (newSessionPersistence != sessionPersistence) {
+			NotificationChain msgs = null;
+			if (sessionPersistence != null)
+				msgs = ((InternalEObject)sessionPersistence).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE, null, msgs);
+			if (newSessionPersistence != null)
+				msgs = ((InternalEObject)newSessionPersistence).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE, null, msgs);
+			msgs = basicSetSessionPersistence(newSessionPersistence, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE, newSessionPersistence, newSessionPersistence));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE:
+				return basicSetSessionPersistence(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case LoadbalancerPackage.LOAD_BALANCER__NAME:
@@ -191,6 +264,8 @@ public class LoadBalancerImpl extends MinimalEObjectImpl.Container implements Lo
 				return getAlgorithm();
 			case LoadbalancerPackage.LOAD_BALANCER__STICKY_SESSION:
 				return isStickySession();
+			case LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE:
+				return getSessionPersistence();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -211,6 +286,9 @@ public class LoadBalancerImpl extends MinimalEObjectImpl.Container implements Lo
 				return;
 			case LoadbalancerPackage.LOAD_BALANCER__STICKY_SESSION:
 				setStickySession((Boolean)newValue);
+				return;
+			case LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE:
+				setSessionPersistence((SessionPersistence)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -233,6 +311,9 @@ public class LoadBalancerImpl extends MinimalEObjectImpl.Container implements Lo
 			case LoadbalancerPackage.LOAD_BALANCER__STICKY_SESSION:
 				setStickySession(STICKY_SESSION_EDEFAULT);
 				return;
+			case LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE:
+				setSessionPersistence((SessionPersistence)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -251,6 +332,8 @@ public class LoadBalancerImpl extends MinimalEObjectImpl.Container implements Lo
 				return algorithm != ALGORITHM_EDEFAULT;
 			case LoadbalancerPackage.LOAD_BALANCER__STICKY_SESSION:
 				return stickySession != STICKY_SESSION_EDEFAULT;
+			case LoadbalancerPackage.LOAD_BALANCER__SESSION_PERSISTENCE:
+				return sessionPersistence != null;
 		}
 		return super.eIsSet(featureID);
 	}

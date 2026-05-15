@@ -1,0 +1,49 @@
+[comment encoding="UTF-8"/]
+[module generateDockerCompose('http://www.example.org/loadbalancer')]
+
+[template public generateCompose(sys : LoadBalancerSystem)]
+[comment @main/]
+[file('docker-compose.yml', false, 'UTF-8')]
+version: '3.8'
+services:
+  [for (cluster : Cluster | sys.clusters)]
+    [for (server : Server | cluster.servers)]
+      [server.name/]:
+        build: ./servers/[if (cluster.name = 'WebFrontend')]web[else]api[/if]
+        environment:
+          - SERVER_NAME=[server.name/]
+          - SERVER_PORT=[server.port/]
+        [if (cluster.healthCheck <> null)]
+        healthcheck:
+          test: ["CMD", "curl", "-f", "[cluster.healthCheck.protocol.toString().toLower()/]://localhost:[server.port/][cluster.healthCheck.path/]"]
+          interval: [cluster.healthCheck.interval/]s
+          timeout: [cluster.healthCheck.timeout/]s
+        [/if]
+        networks:
+          - lb-network
+    [/for]
+  [/for]
+
+  loadbalancer:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      [for (listener : Listener | sys.listeners)]
+        - "[listener.port/]:[listener.port/]"
+      [/for]
+    depends_on:
+      [for (cluster : Cluster | sys.clusters)]
+        [for (server : Server | cluster.servers)]
+          [server.name/]:
+            condition: service_healthy
+        [/for]
+      [/for]
+    networks:
+      - lb-network
+
+networks:
+  lb-network:
+    driver: bridge
+[/file]
+[/template]

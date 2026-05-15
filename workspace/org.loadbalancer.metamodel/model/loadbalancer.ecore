@@ -72,6 +72,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="algorithm" eType="#//Algorithm"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stickySession" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sessionPersistence"
+        eType="#//SessionPersistence" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Algorithm">
     <eLiterals name="ROUND_ROBIN"/>
@@ -92,6 +94,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="interval" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeout" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="healthyThreshold"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unhealthyThreshold"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Listener">

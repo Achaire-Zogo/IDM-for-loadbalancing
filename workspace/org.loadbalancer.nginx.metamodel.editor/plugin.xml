@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated nginx -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.loadbalancer.nginx.metamodel.nginx.presentation.NginxModelWizardID"
+            name="%_UI_NginxModelWizard_label"
+            class="org.loadbalancer.nginx.metamodel.nginx.presentation.NginxModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/NginxModelFile.gif">
+         <description>%_UI_NginxModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated nginx -->
+      <editor
+            id="org.loadbalancer.nginx.metamodel.nginx.presentation.NginxEditorID"
+            name="%_UI_NginxEditor_label"
+            icon="icons/full/obj16/NginxModelFile.gif"
+            extensions="nginx"
+            class="org.loadbalancer.nginx.metamodel.nginx.presentation.NginxEditor"
+            contributorClass="org.loadbalancer.nginx.metamodel.nginx.presentation.NginxActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

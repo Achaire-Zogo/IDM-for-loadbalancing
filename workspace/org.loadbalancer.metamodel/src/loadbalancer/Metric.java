@@ -59,14 +59,14 @@ public enum Metric implements Enumerator {
 	RESPONSE_TIME(3, "RESPONSE_TIME", "RESPONSE_TIME"),
 
 	/**
-	 * The '<em><b>ACTIVE CONNECTIONS</b></em>' literal object.
+	 * The '<em><b>ERROR RATE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #ACTIVE_CONNECTIONS_VALUE
+	 * @see #ERROR_RATE_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	ACTIVE_CONNECTIONS(4, "ACTIVE_CONNECTIONS", "ACTIVE_CONNECTIONS");
+	ERROR_RATE(4, "ERROR_RATE", "ERROR_RATE");
 
 	/**
 	 * The '<em><b>CPU USAGE</b></em>' literal value.
@@ -113,15 +113,15 @@ public enum Metric implements Enumerator {
 	public static final int RESPONSE_TIME_VALUE = 3;
 
 	/**
-	 * The '<em><b>ACTIVE CONNECTIONS</b></em>' literal value.
+	 * The '<em><b>ERROR RATE</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #ACTIVE_CONNECTIONS
+	 * @see #ERROR_RATE
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int ACTIVE_CONNECTIONS_VALUE = 4;
+	public static final int ERROR_RATE_VALUE = 4;
 
 	/**
 	 * An array of all the '<em><b>Metric</b></em>' enumerators.
@@ -135,7 +135,7 @@ public enum Metric implements Enumerator {
 			MEMORY_USAGE,
 			REQUEST_COUNT,
 			RESPONSE_TIME,
-			ACTIVE_CONNECTIONS,
+			ERROR_RATE,
 		};
 
 	/**
@@ -196,7 +196,7 @@ public enum Metric implements Enumerator {
 			case MEMORY_USAGE_VALUE: return MEMORY_USAGE;
 			case REQUEST_COUNT_VALUE: return REQUEST_COUNT;
 			case RESPONSE_TIME_VALUE: return RESPONSE_TIME;
-			case ACTIVE_CONNECTIONS_VALUE: return ACTIVE_CONNECTIONS;
+			case ERROR_RATE_VALUE: return ERROR_RATE;
 		}
 		return null;
 	}

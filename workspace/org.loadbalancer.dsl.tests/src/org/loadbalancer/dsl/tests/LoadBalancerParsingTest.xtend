@@ -4,13 +4,13 @@
 package org.loadbalancer.dsl.tests
 
 import com.google.inject.Inject
+import loadbalancer.LoadBalancerSystem
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerSystem
 
 @ExtendWith(InjectionExtension)
 @InjectWith(LoadBalancerInjectorProvider)

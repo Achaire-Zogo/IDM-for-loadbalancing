@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -22,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getServer()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='positiveWeight'"
  * @generated
  */
 public interface Server extends EObject {
@@ -77,7 +79,7 @@ public interface Server extends EObject {
 	 * @return the value of the '<em>Port</em>' attribute.
 	 * @see #setPort(int)
 	 * @see loadbalancer.LoadbalancerPackage#getServer_Port()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getPort();
@@ -100,7 +102,7 @@ public interface Server extends EObject {
 	 * @return the value of the '<em>Weight</em>' attribute.
 	 * @see #setWeight(int)
 	 * @see loadbalancer.LoadbalancerPackage#getServer_Weight()
-	 * @model default="1"
+	 * @model default="1" required="true"
 	 * @generated
 	 */
 	int getWeight();
@@ -122,7 +124,7 @@ public interface Server extends EObject {
 	 * @return the value of the '<em>Max Connections</em>' attribute.
 	 * @see #setMaxConnections(int)
 	 * @see loadbalancer.LoadbalancerPackage#getServer_MaxConnections()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getMaxConnections();
@@ -145,7 +147,7 @@ public interface Server extends EObject {
 	 * @return the value of the '<em>Enabled</em>' attribute.
 	 * @see #setEnabled(boolean)
 	 * @see loadbalancer.LoadbalancerPackage#getServer_Enabled()
-	 * @model default="true"
+	 * @model default="true" required="true"
 	 * @generated
 	 */
 	boolean isEnabled();
@@ -159,5 +161,21 @@ public interface Server extends EObject {
 	 * @generated
 	 */
 	void setEnabled(boolean value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.port &gt;= 1 and self.port &lt;= 65535'"
+	 * @generated
+	 */
+	boolean validPort(DiagnosticChain diagnostics, Map<Object, Object> context);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.weight &gt;= 1'"
+	 * @generated
+	 */
+	boolean positiveWeight(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // Server

@@ -5,6 +5,7 @@ package loadbalancer;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see loadbalancer.LoadbalancerFactory
  * @model kind="package"
+ *        annotation="http://www.eclipse.org/emf/2002/Ecore"
  * @generated
  */
 public interface LoadbalancerPackage extends EPackage {
@@ -131,13 +133,31 @@ public interface LoadbalancerPackage extends EPackage {
 	int LOAD_BALANCER_SYSTEM_FEATURE_COUNT = 6;
 
 	/**
+	 * The operation id for the '<em>Unique Listener Ports</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOAD_BALANCER_SYSTEM___UNIQUE_LISTENER_PORTS__DIAGNOSTICCHAIN_MAP = 0;
+
+	/**
+	 * The operation id for the '<em>At Least One Listener</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOAD_BALANCER_SYSTEM___AT_LEAST_ONE_LISTENER__DIAGNOSTICCHAIN_MAP = 1;
+
+	/**
 	 * The number of operations of the '<em>Load Balancer System</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOAD_BALANCER_SYSTEM_OPERATION_COUNT = 0;
+	int LOAD_BALANCER_SYSTEM_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.impl.ClusterImpl <em>Cluster</em>}' class.
@@ -213,13 +233,49 @@ public interface LoadbalancerPackage extends EPackage {
 	int CLUSTER_FEATURE_COUNT = 6;
 
 	/**
+	 * The operation id for the '<em>Non Empty Cluster</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLUSTER___NON_EMPTY_CLUSTER__DIAGNOSTICCHAIN_MAP = 0;
+
+	/**
+	 * The operation id for the '<em>At Least One Enabled Server</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLUSTER___AT_LEAST_ONE_ENABLED_SERVER__DIAGNOSTICCHAIN_MAP = 1;
+
+	/**
+	 * The operation id for the '<em>Unique Server Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLUSTER___UNIQUE_SERVER_NAMES__DIAGNOSTICCHAIN_MAP = 2;
+
+	/**
+	 * The operation id for the '<em>Weighted Requires Weights</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLUSTER___WEIGHTED_REQUIRES_WEIGHTS__DIAGNOSTICCHAIN_MAP = 3;
+
+	/**
 	 * The number of operations of the '<em>Cluster</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CLUSTER_OPERATION_COUNT = 0;
+	int CLUSTER_OPERATION_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.impl.ServerImpl <em>Server</em>}' class.
@@ -295,13 +351,31 @@ public interface LoadbalancerPackage extends EPackage {
 	int SERVER_FEATURE_COUNT = 6;
 
 	/**
+	 * The operation id for the '<em>Valid Port</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SERVER___VALID_PORT__DIAGNOSTICCHAIN_MAP = 0;
+
+	/**
+	 * The operation id for the '<em>Positive Weight</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SERVER___POSITIVE_WEIGHT__DIAGNOSTICCHAIN_MAP = 1;
+
+	/**
 	 * The number of operations of the '<em>Server</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SERVER_OPERATION_COUNT = 0;
+	int SERVER_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.impl.LoadBalancerImpl <em>Load Balancer</em>}' class.
@@ -341,13 +415,22 @@ public interface LoadbalancerPackage extends EPackage {
 	int LOAD_BALANCER__STICKY_SESSION = 2;
 
 	/**
+	 * The feature id for the '<em><b>Session Persistence</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOAD_BALANCER__SESSION_PERSISTENCE = 3;
+
+	/**
 	 * The number of structural features of the '<em>Load Balancer</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LOAD_BALANCER_FEATURE_COUNT = 3;
+	int LOAD_BALANCER_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Load Balancer</em>' class.
@@ -405,13 +488,22 @@ public interface LoadbalancerPackage extends EPackage {
 	int HEALTH_CHECK__TIMEOUT = 3;
 
 	/**
-	 * The feature id for the '<em><b>Thresholds</b></em>' attribute.
+	 * The feature id for the '<em><b>Healthy Threshold</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int HEALTH_CHECK__THRESHOLDS = 4;
+	int HEALTH_CHECK__HEALTHY_THRESHOLD = 4;
+
+	/**
+	 * The feature id for the '<em><b>Unhealthy Threshold</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HEALTH_CHECK__UNHEALTHY_THRESHOLD = 5;
 
 	/**
 	 * The number of structural features of the '<em>Health Check</em>' class.
@@ -420,7 +512,16 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEALTH_CHECK_FEATURE_COUNT = 5;
+	int HEALTH_CHECK_FEATURE_COUNT = 6;
+
+	/**
+	 * The operation id for the '<em>Interval Greater Than Timeout</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HEALTH_CHECK___INTERVAL_GREATER_THAN_TIMEOUT__DIAGNOSTICCHAIN_MAP = 0;
 
 	/**
 	 * The number of operations of the '<em>Health Check</em>' class.
@@ -429,7 +530,7 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEALTH_CHECK_OPERATION_COUNT = 0;
+	int HEALTH_CHECK_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.impl.ListenerImpl <em>Listener</em>}' class.
@@ -487,13 +588,22 @@ public interface LoadbalancerPackage extends EPackage {
 	int LISTENER_FEATURE_COUNT = 4;
 
 	/**
+	 * The operation id for the '<em>Valid Listener Port</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LISTENER___VALID_LISTENER_PORT__DIAGNOSTICCHAIN_MAP = 0;
+
+	/**
 	 * The number of operations of the '<em>Listener</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LISTENER_OPERATION_COUNT = 0;
+	int LISTENER_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.impl.SessionPersistenceImpl <em>Session Persistence</em>}' class.
@@ -542,13 +652,22 @@ public interface LoadbalancerPackage extends EPackage {
 	int SESSION_PERSISTENCE_FEATURE_COUNT = 3;
 
 	/**
+	 * The operation id for the '<em>Cookie Requires Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION_PERSISTENCE___COOKIE_REQUIRES_NAME__DIAGNOSTICCHAIN_MAP = 0;
+
+	/**
 	 * The number of operations of the '<em>Session Persistence</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION_PERSISTENCE_OPERATION_COUNT = 0;
+	int SESSION_PERSISTENCE_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.impl.AlertImpl <em>Alert</em>}' class.
@@ -588,13 +707,22 @@ public interface LoadbalancerPackage extends EPackage {
 	int ALERT__THRESHOLD = 2;
 
 	/**
+	 * The feature id for the '<em><b>Action</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ALERT__ACTION = 3;
+
+	/**
 	 * The number of structural features of the '<em>Alert</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ALERT_FEATURE_COUNT = 3;
+	int ALERT_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Alert</em>' class.
@@ -634,13 +762,22 @@ public interface LoadbalancerPackage extends EPackage {
 	int SCALING_RULE__METRIC = 1;
 
 	/**
-	 * The feature id for the '<em><b>Scale Up Down</b></em>' attribute.
+	 * The feature id for the '<em><b>Scale Up Threshold</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCALING_RULE__SCALE_UP_DOWN = 2;
+	int SCALING_RULE__SCALE_UP_THRESHOLD = 2;
+
+	/**
+	 * The feature id for the '<em><b>Scale Down Threshold</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCALING_RULE__SCALE_DOWN_THRESHOLD = 3;
 
 	/**
 	 * The feature id for the '<em><b>Min Instances</b></em>' attribute.
@@ -649,7 +786,7 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCALING_RULE__MIN_INSTANCES = 3;
+	int SCALING_RULE__MIN_INSTANCES = 4;
 
 	/**
 	 * The feature id for the '<em><b>Max Instances</b></em>' attribute.
@@ -658,7 +795,7 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCALING_RULE__MAX_INSTANCES = 4;
+	int SCALING_RULE__MAX_INSTANCES = 5;
 
 	/**
 	 * The number of structural features of the '<em>Scaling Rule</em>' class.
@@ -667,7 +804,25 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCALING_RULE_FEATURE_COUNT = 5;
+	int SCALING_RULE_FEATURE_COUNT = 6;
+
+	/**
+	 * The operation id for the '<em>Min Less Or Equal Max</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCALING_RULE___MIN_LESS_OR_EQUAL_MAX__DIAGNOSTICCHAIN_MAP = 0;
+
+	/**
+	 * The operation id for the '<em>Scale Up Greater Than Down</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCALING_RULE___SCALE_UP_GREATER_THAN_DOWN__DIAGNOSTICCHAIN_MAP = 1;
 
 	/**
 	 * The number of operations of the '<em>Scaling Rule</em>' class.
@@ -676,7 +831,7 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCALING_RULE_OPERATION_COUNT = 0;
+	int SCALING_RULE_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link loadbalancer.Algorithm <em>Algorithm</em>}' enum.
@@ -699,6 +854,16 @@ public interface LoadbalancerPackage extends EPackage {
 	int PROTOCOL = 10;
 
 	/**
+	 * The meta object id for the '{@link loadbalancer.PersistenceType <em>Persistence Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see loadbalancer.PersistenceType
+	 * @see loadbalancer.impl.LoadbalancerPackageImpl#getPersistenceType()
+	 * @generated
+	 */
+	int PERSISTENCE_TYPE = 11;
+
+	/**
 	 * The meta object id for the '{@link loadbalancer.Metric <em>Metric</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -706,7 +871,7 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @see loadbalancer.impl.LoadbalancerPackageImpl#getMetric()
 	 * @generated
 	 */
-	int METRIC = 11;
+	int METRIC = 12;
 
 
 	/**
@@ -786,6 +951,26 @@ public interface LoadbalancerPackage extends EPackage {
 	EReference getLoadBalancerSystem_Alerts();
 
 	/**
+	 * Returns the meta object for the '{@link loadbalancer.LoadBalancerSystem#uniqueListenerPorts(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Unique Listener Ports</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Unique Listener Ports</em>' operation.
+	 * @see loadbalancer.LoadBalancerSystem#uniqueListenerPorts(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getLoadBalancerSystem__UniqueListenerPorts__DiagnosticChain_Map();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.LoadBalancerSystem#atLeastOneListener(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>At Least One Listener</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>At Least One Listener</em>' operation.
+	 * @see loadbalancer.LoadBalancerSystem#atLeastOneListener(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getLoadBalancerSystem__AtLeastOneListener__DiagnosticChain_Map();
+
+	/**
 	 * Returns the meta object for class '{@link loadbalancer.Cluster <em>Cluster</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -860,6 +1045,46 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCluster_ScalingRule();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.Cluster#nonEmptyCluster(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Non Empty Cluster</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Non Empty Cluster</em>' operation.
+	 * @see loadbalancer.Cluster#nonEmptyCluster(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getCluster__NonEmptyCluster__DiagnosticChain_Map();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.Cluster#atLeastOneEnabledServer(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>At Least One Enabled Server</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>At Least One Enabled Server</em>' operation.
+	 * @see loadbalancer.Cluster#atLeastOneEnabledServer(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getCluster__AtLeastOneEnabledServer__DiagnosticChain_Map();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.Cluster#uniqueServerNames(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Unique Server Names</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Unique Server Names</em>' operation.
+	 * @see loadbalancer.Cluster#uniqueServerNames(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getCluster__UniqueServerNames__DiagnosticChain_Map();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.Cluster#weightedRequiresWeights(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Weighted Requires Weights</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Weighted Requires Weights</em>' operation.
+	 * @see loadbalancer.Cluster#weightedRequiresWeights(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getCluster__WeightedRequiresWeights__DiagnosticChain_Map();
 
 	/**
 	 * Returns the meta object for class '{@link loadbalancer.Server <em>Server</em>}'.
@@ -938,6 +1163,26 @@ public interface LoadbalancerPackage extends EPackage {
 	EAttribute getServer_Enabled();
 
 	/**
+	 * Returns the meta object for the '{@link loadbalancer.Server#validPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Valid Port</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Valid Port</em>' operation.
+	 * @see loadbalancer.Server#validPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getServer__ValidPort__DiagnosticChain_Map();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.Server#positiveWeight(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Positive Weight</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Positive Weight</em>' operation.
+	 * @see loadbalancer.Server#positiveWeight(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getServer__PositiveWeight__DiagnosticChain_Map();
+
+	/**
 	 * Returns the meta object for class '{@link loadbalancer.LoadBalancer <em>Load Balancer</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -979,6 +1224,17 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getLoadBalancer_StickySession();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link loadbalancer.LoadBalancer#getSessionPersistence <em>Session Persistence</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Session Persistence</em>'.
+	 * @see loadbalancer.LoadBalancer#getSessionPersistence()
+	 * @see #getLoadBalancer()
+	 * @generated
+	 */
+	EReference getLoadBalancer_SessionPersistence();
 
 	/**
 	 * Returns the meta object for class '{@link loadbalancer.HealthCheck <em>Health Check</em>}'.
@@ -1035,15 +1291,36 @@ public interface LoadbalancerPackage extends EPackage {
 	EAttribute getHealthCheck_Timeout();
 
 	/**
-	 * Returns the meta object for the attribute '{@link loadbalancer.HealthCheck#getThresholds <em>Thresholds</em>}'.
+	 * Returns the meta object for the attribute '{@link loadbalancer.HealthCheck#getHealthyThreshold <em>Healthy Threshold</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Thresholds</em>'.
-	 * @see loadbalancer.HealthCheck#getThresholds()
+	 * @return the meta object for the attribute '<em>Healthy Threshold</em>'.
+	 * @see loadbalancer.HealthCheck#getHealthyThreshold()
 	 * @see #getHealthCheck()
 	 * @generated
 	 */
-	EAttribute getHealthCheck_Thresholds();
+	EAttribute getHealthCheck_HealthyThreshold();
+
+	/**
+	 * Returns the meta object for the attribute '{@link loadbalancer.HealthCheck#getUnhealthyThreshold <em>Unhealthy Threshold</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Unhealthy Threshold</em>'.
+	 * @see loadbalancer.HealthCheck#getUnhealthyThreshold()
+	 * @see #getHealthCheck()
+	 * @generated
+	 */
+	EAttribute getHealthCheck_UnhealthyThreshold();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.HealthCheck#intervalGreaterThanTimeout(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Interval Greater Than Timeout</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Interval Greater Than Timeout</em>' operation.
+	 * @see loadbalancer.HealthCheck#intervalGreaterThanTimeout(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getHealthCheck__IntervalGreaterThanTimeout__DiagnosticChain_Map();
 
 	/**
 	 * Returns the meta object for class '{@link loadbalancer.Listener <em>Listener</em>}'.
@@ -1100,6 +1377,16 @@ public interface LoadbalancerPackage extends EPackage {
 	EReference getListener_TargetCluster();
 
 	/**
+	 * Returns the meta object for the '{@link loadbalancer.Listener#validListenerPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Valid Listener Port</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Valid Listener Port</em>' operation.
+	 * @see loadbalancer.Listener#validListenerPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getListener__ValidListenerPort__DiagnosticChain_Map();
+
+	/**
 	 * Returns the meta object for class '{@link loadbalancer.SessionPersistence <em>Session Persistence</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1141,6 +1428,16 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSessionPersistence_Ttl();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.SessionPersistence#cookieRequiresName(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Cookie Requires Name</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Cookie Requires Name</em>' operation.
+	 * @see loadbalancer.SessionPersistence#cookieRequiresName(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getSessionPersistence__CookieRequiresName__DiagnosticChain_Map();
 
 	/**
 	 * Returns the meta object for class '{@link loadbalancer.Alert <em>Alert</em>}'.
@@ -1186,6 +1483,17 @@ public interface LoadbalancerPackage extends EPackage {
 	EAttribute getAlert_Threshold();
 
 	/**
+	 * Returns the meta object for the attribute '{@link loadbalancer.Alert#getAction <em>Action</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Action</em>'.
+	 * @see loadbalancer.Alert#getAction()
+	 * @see #getAlert()
+	 * @generated
+	 */
+	EAttribute getAlert_Action();
+
+	/**
 	 * Returns the meta object for class '{@link loadbalancer.ScalingRule <em>Scaling Rule</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1218,15 +1526,26 @@ public interface LoadbalancerPackage extends EPackage {
 	EAttribute getScalingRule_Metric();
 
 	/**
-	 * Returns the meta object for the attribute '{@link loadbalancer.ScalingRule#getScaleUpDown <em>Scale Up Down</em>}'.
+	 * Returns the meta object for the attribute '{@link loadbalancer.ScalingRule#getScaleUpThreshold <em>Scale Up Threshold</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Scale Up Down</em>'.
-	 * @see loadbalancer.ScalingRule#getScaleUpDown()
+	 * @return the meta object for the attribute '<em>Scale Up Threshold</em>'.
+	 * @see loadbalancer.ScalingRule#getScaleUpThreshold()
 	 * @see #getScalingRule()
 	 * @generated
 	 */
-	EAttribute getScalingRule_ScaleUpDown();
+	EAttribute getScalingRule_ScaleUpThreshold();
+
+	/**
+	 * Returns the meta object for the attribute '{@link loadbalancer.ScalingRule#getScaleDownThreshold <em>Scale Down Threshold</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Scale Down Threshold</em>'.
+	 * @see loadbalancer.ScalingRule#getScaleDownThreshold()
+	 * @see #getScalingRule()
+	 * @generated
+	 */
+	EAttribute getScalingRule_ScaleDownThreshold();
 
 	/**
 	 * Returns the meta object for the attribute '{@link loadbalancer.ScalingRule#getMinInstances <em>Min Instances</em>}'.
@@ -1251,6 +1570,26 @@ public interface LoadbalancerPackage extends EPackage {
 	EAttribute getScalingRule_MaxInstances();
 
 	/**
+	 * Returns the meta object for the '{@link loadbalancer.ScalingRule#minLessOrEqualMax(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Min Less Or Equal Max</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Min Less Or Equal Max</em>' operation.
+	 * @see loadbalancer.ScalingRule#minLessOrEqualMax(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getScalingRule__MinLessOrEqualMax__DiagnosticChain_Map();
+
+	/**
+	 * Returns the meta object for the '{@link loadbalancer.ScalingRule#scaleUpGreaterThanDown(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Scale Up Greater Than Down</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Scale Up Greater Than Down</em>' operation.
+	 * @see loadbalancer.ScalingRule#scaleUpGreaterThanDown(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	EOperation getScalingRule__ScaleUpGreaterThanDown__DiagnosticChain_Map();
+
+	/**
 	 * Returns the meta object for enum '{@link loadbalancer.Algorithm <em>Algorithm</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1269,6 +1608,16 @@ public interface LoadbalancerPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getProtocol();
+
+	/**
+	 * Returns the meta object for enum '{@link loadbalancer.PersistenceType <em>Persistence Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Persistence Type</em>'.
+	 * @see loadbalancer.PersistenceType
+	 * @generated
+	 */
+	EEnum getPersistenceType();
 
 	/**
 	 * Returns the meta object for enum '{@link loadbalancer.Metric <em>Metric</em>}'.
@@ -1362,6 +1711,22 @@ public interface LoadbalancerPackage extends EPackage {
 		EReference LOAD_BALANCER_SYSTEM__ALERTS = eINSTANCE.getLoadBalancerSystem_Alerts();
 
 		/**
+		 * The meta object literal for the '<em><b>Unique Listener Ports</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation LOAD_BALANCER_SYSTEM___UNIQUE_LISTENER_PORTS__DIAGNOSTICCHAIN_MAP = eINSTANCE.getLoadBalancerSystem__UniqueListenerPorts__DiagnosticChain_Map();
+
+		/**
+		 * The meta object literal for the '<em><b>At Least One Listener</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation LOAD_BALANCER_SYSTEM___AT_LEAST_ONE_LISTENER__DIAGNOSTICCHAIN_MAP = eINSTANCE.getLoadBalancerSystem__AtLeastOneListener__DiagnosticChain_Map();
+
+		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.ClusterImpl <em>Cluster</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1418,6 +1783,38 @@ public interface LoadbalancerPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CLUSTER__SCALING_RULE = eINSTANCE.getCluster_ScalingRule();
+
+		/**
+		 * The meta object literal for the '<em><b>Non Empty Cluster</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation CLUSTER___NON_EMPTY_CLUSTER__DIAGNOSTICCHAIN_MAP = eINSTANCE.getCluster__NonEmptyCluster__DiagnosticChain_Map();
+
+		/**
+		 * The meta object literal for the '<em><b>At Least One Enabled Server</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation CLUSTER___AT_LEAST_ONE_ENABLED_SERVER__DIAGNOSTICCHAIN_MAP = eINSTANCE.getCluster__AtLeastOneEnabledServer__DiagnosticChain_Map();
+
+		/**
+		 * The meta object literal for the '<em><b>Unique Server Names</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation CLUSTER___UNIQUE_SERVER_NAMES__DIAGNOSTICCHAIN_MAP = eINSTANCE.getCluster__UniqueServerNames__DiagnosticChain_Map();
+
+		/**
+		 * The meta object literal for the '<em><b>Weighted Requires Weights</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation CLUSTER___WEIGHTED_REQUIRES_WEIGHTS__DIAGNOSTICCHAIN_MAP = eINSTANCE.getCluster__WeightedRequiresWeights__DiagnosticChain_Map();
 
 		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.ServerImpl <em>Server</em>}' class.
@@ -1478,6 +1875,22 @@ public interface LoadbalancerPackage extends EPackage {
 		EAttribute SERVER__ENABLED = eINSTANCE.getServer_Enabled();
 
 		/**
+		 * The meta object literal for the '<em><b>Valid Port</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SERVER___VALID_PORT__DIAGNOSTICCHAIN_MAP = eINSTANCE.getServer__ValidPort__DiagnosticChain_Map();
+
+		/**
+		 * The meta object literal for the '<em><b>Positive Weight</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SERVER___POSITIVE_WEIGHT__DIAGNOSTICCHAIN_MAP = eINSTANCE.getServer__PositiveWeight__DiagnosticChain_Map();
+
+		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.LoadBalancerImpl <em>Load Balancer</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1510,6 +1923,14 @@ public interface LoadbalancerPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute LOAD_BALANCER__STICKY_SESSION = eINSTANCE.getLoadBalancer_StickySession();
+
+		/**
+		 * The meta object literal for the '<em><b>Session Persistence</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LOAD_BALANCER__SESSION_PERSISTENCE = eINSTANCE.getLoadBalancer_SessionPersistence();
 
 		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.HealthCheckImpl <em>Health Check</em>}' class.
@@ -1554,12 +1975,28 @@ public interface LoadbalancerPackage extends EPackage {
 		EAttribute HEALTH_CHECK__TIMEOUT = eINSTANCE.getHealthCheck_Timeout();
 
 		/**
-		 * The meta object literal for the '<em><b>Thresholds</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Healthy Threshold</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute HEALTH_CHECK__THRESHOLDS = eINSTANCE.getHealthCheck_Thresholds();
+		EAttribute HEALTH_CHECK__HEALTHY_THRESHOLD = eINSTANCE.getHealthCheck_HealthyThreshold();
+
+		/**
+		 * The meta object literal for the '<em><b>Unhealthy Threshold</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute HEALTH_CHECK__UNHEALTHY_THRESHOLD = eINSTANCE.getHealthCheck_UnhealthyThreshold();
+
+		/**
+		 * The meta object literal for the '<em><b>Interval Greater Than Timeout</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation HEALTH_CHECK___INTERVAL_GREATER_THAN_TIMEOUT__DIAGNOSTICCHAIN_MAP = eINSTANCE.getHealthCheck__IntervalGreaterThanTimeout__DiagnosticChain_Map();
 
 		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.ListenerImpl <em>Listener</em>}' class.
@@ -1604,6 +2041,14 @@ public interface LoadbalancerPackage extends EPackage {
 		EReference LISTENER__TARGET_CLUSTER = eINSTANCE.getListener_TargetCluster();
 
 		/**
+		 * The meta object literal for the '<em><b>Valid Listener Port</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation LISTENER___VALID_LISTENER_PORT__DIAGNOSTICCHAIN_MAP = eINSTANCE.getListener__ValidListenerPort__DiagnosticChain_Map();
+
+		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.SessionPersistenceImpl <em>Session Persistence</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1636,6 +2081,14 @@ public interface LoadbalancerPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SESSION_PERSISTENCE__TTL = eINSTANCE.getSessionPersistence_Ttl();
+
+		/**
+		 * The meta object literal for the '<em><b>Cookie Requires Name</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SESSION_PERSISTENCE___COOKIE_REQUIRES_NAME__DIAGNOSTICCHAIN_MAP = eINSTANCE.getSessionPersistence__CookieRequiresName__DiagnosticChain_Map();
 
 		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.AlertImpl <em>Alert</em>}' class.
@@ -1672,6 +2125,14 @@ public interface LoadbalancerPackage extends EPackage {
 		EAttribute ALERT__THRESHOLD = eINSTANCE.getAlert_Threshold();
 
 		/**
+		 * The meta object literal for the '<em><b>Action</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ALERT__ACTION = eINSTANCE.getAlert_Action();
+
+		/**
 		 * The meta object literal for the '{@link loadbalancer.impl.ScalingRuleImpl <em>Scaling Rule</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1698,12 +2159,20 @@ public interface LoadbalancerPackage extends EPackage {
 		EAttribute SCALING_RULE__METRIC = eINSTANCE.getScalingRule_Metric();
 
 		/**
-		 * The meta object literal for the '<em><b>Scale Up Down</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Scale Up Threshold</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SCALING_RULE__SCALE_UP_DOWN = eINSTANCE.getScalingRule_ScaleUpDown();
+		EAttribute SCALING_RULE__SCALE_UP_THRESHOLD = eINSTANCE.getScalingRule_ScaleUpThreshold();
+
+		/**
+		 * The meta object literal for the '<em><b>Scale Down Threshold</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCALING_RULE__SCALE_DOWN_THRESHOLD = eINSTANCE.getScalingRule_ScaleDownThreshold();
 
 		/**
 		 * The meta object literal for the '<em><b>Min Instances</b></em>' attribute feature.
@@ -1720,6 +2189,22 @@ public interface LoadbalancerPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SCALING_RULE__MAX_INSTANCES = eINSTANCE.getScalingRule_MaxInstances();
+
+		/**
+		 * The meta object literal for the '<em><b>Min Less Or Equal Max</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SCALING_RULE___MIN_LESS_OR_EQUAL_MAX__DIAGNOSTICCHAIN_MAP = eINSTANCE.getScalingRule__MinLessOrEqualMax__DiagnosticChain_Map();
+
+		/**
+		 * The meta object literal for the '<em><b>Scale Up Greater Than Down</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SCALING_RULE___SCALE_UP_GREATER_THAN_DOWN__DIAGNOSTICCHAIN_MAP = eINSTANCE.getScalingRule__ScaleUpGreaterThanDown__DiagnosticChain_Map();
 
 		/**
 		 * The meta object literal for the '{@link loadbalancer.Algorithm <em>Algorithm</em>}' enum.
@@ -1740,6 +2225,16 @@ public interface LoadbalancerPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum PROTOCOL = eINSTANCE.getProtocol();
+
+		/**
+		 * The meta object literal for the '{@link loadbalancer.PersistenceType <em>Persistence Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see loadbalancer.PersistenceType
+		 * @see loadbalancer.impl.LoadbalancerPackageImpl#getPersistenceType()
+		 * @generated
+		 */
+		EEnum PERSISTENCE_TYPE = eINSTANCE.getPersistenceType();
 
 		/**
 		 * The meta object literal for the '{@link loadbalancer.Metric <em>Metric</em>}' enum.

@@ -31,7 +31,6 @@ public class LoadBalancerParser extends AbstractContentAssistParser {
 		}
 		
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, LoadBalancerGrammarAccess grammarAccess) {
-			builder.put(grammarAccess.getBooleanValueAccess().getValueAlternatives_0(), "rule__BooleanValue__ValueAlternatives_0");
 			builder.put(grammarAccess.getAlgorithmAccess().getAlternatives(), "rule__Algorithm__Alternatives");
 			builder.put(grammarAccess.getProtocolAccess().getAlternatives(), "rule__Protocol__Alternatives");
 			builder.put(grammarAccess.getMetricAccess().getAlternatives(), "rule__Metric__Alternatives");
@@ -96,7 +95,6 @@ public class LoadBalancerParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAlertAccess().getMetricAssignment_4(), "rule__Alert__MetricAssignment_4");
 			builder.put(grammarAccess.getAlertAccess().getThresholdAssignment_6(), "rule__Alert__ThresholdAssignment_6");
 			builder.put(grammarAccess.getAlertAccess().getActionAssignment_8(), "rule__Alert__ActionAssignment_8");
-			builder.put(grammarAccess.getBooleanValueAccess().getValueAssignment(), "rule__BooleanValue__ValueAssignment");
 		}
 	}
 	

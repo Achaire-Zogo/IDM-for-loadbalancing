@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -24,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getLoadBalancerSystem()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='atLeastOneListener'"
  * @generated
  */
 public interface LoadBalancerSystem extends EObject {
@@ -129,5 +131,21 @@ public interface LoadBalancerSystem extends EObject {
 	 * @generated
 	 */
 	EList<Alert> getAlerts();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.listeners-&gt;isUnique(l | l.port)'"
+	 * @generated
+	 */
+	boolean uniqueListenerPorts(DiagnosticChain diagnostics, Map<Object, Object> context);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.listeners-&gt;size() &gt;= 1'"
+	 * @generated
+	 */
+	boolean atLeastOneListener(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // LoadBalancerSystem

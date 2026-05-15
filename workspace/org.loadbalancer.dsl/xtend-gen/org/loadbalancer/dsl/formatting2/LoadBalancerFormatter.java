@@ -5,6 +5,14 @@ package org.loadbalancer.dsl.formatting2;
 
 import com.google.inject.Inject;
 import java.util.Arrays;
+import loadbalancer.Alert;
+import loadbalancer.Cluster;
+import loadbalancer.HealthCheck;
+import loadbalancer.Listener;
+import loadbalancer.LoadBalancer;
+import loadbalancer.LoadBalancerSystem;
+import loadbalancer.ScalingRule;
+import loadbalancer.Server;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.formatting2.AbstractFormatter2;
@@ -12,14 +20,6 @@ import org.eclipse.xtext.formatting2.IFormattableDocument;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.XbaseGenerated;
-import org.loadbalancer.dsl.loadBalancer.Alert;
-import org.loadbalancer.dsl.loadBalancer.Cluster;
-import org.loadbalancer.dsl.loadBalancer.HealthCheck;
-import org.loadbalancer.dsl.loadBalancer.Listener;
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerConfig;
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerSystem;
-import org.loadbalancer.dsl.loadBalancer.ScalingRule;
-import org.loadbalancer.dsl.loadBalancer.Server;
 import org.loadbalancer.dsl.services.LoadBalancerGrammarAccess;
 
 @SuppressWarnings("all")
@@ -44,7 +44,7 @@ public class LoadBalancerFormatter extends AbstractFormatter2 {
   }
 
   protected void _format(final Cluster cluster, @Extension final IFormattableDocument document) {
-    document.<LoadBalancerConfig>format(cluster.getLoadBalancer());
+    document.<LoadBalancer>format(cluster.getLoadBalancer());
     EList<Server> _servers = cluster.getServers();
     for (final Server server : _servers) {
       document.<Server>format(server);

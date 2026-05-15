@@ -46,17 +46,7 @@ public enum Protocol implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	TCP(2, "TCP", "TCP"),
-
-	/**
-	 * The '<em><b>UDP</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #UDP_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	UDP(3, "UDP", "UDP");
+	TCP(2, "TCP", "TCP");
 
 	/**
 	 * The '<em><b>HTTP</b></em>' literal value.
@@ -92,17 +82,6 @@ public enum Protocol implements Enumerator {
 	public static final int TCP_VALUE = 2;
 
 	/**
-	 * The '<em><b>UDP</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #UDP
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int UDP_VALUE = 3;
-
-	/**
 	 * An array of all the '<em><b>Protocol</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -113,7 +92,6 @@ public enum Protocol implements Enumerator {
 			HTTP,
 			HTTPS,
 			TCP,
-			UDP,
 		};
 
 	/**
@@ -173,7 +151,6 @@ public enum Protocol implements Enumerator {
 			case HTTP_VALUE: return HTTP;
 			case HTTPS_VALUE: return HTTPS;
 			case TCP_VALUE: return TCP;
-			case UDP_VALUE: return UDP;
 		}
 		return null;
 	}

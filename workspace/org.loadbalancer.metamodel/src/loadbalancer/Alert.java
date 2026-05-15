@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link loadbalancer.Alert#getName <em>Name</em>}</li>
  *   <li>{@link loadbalancer.Alert#getMetric <em>Metric</em>}</li>
  *   <li>{@link loadbalancer.Alert#getThreshold <em>Threshold</em>}</li>
+ *   <li>{@link loadbalancer.Alert#getAction <em>Action</em>}</li>
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getAlert()
@@ -75,12 +76,12 @@ public interface Alert extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Threshold</em>' attribute.
-	 * @see #setThreshold(int)
+	 * @see #setThreshold(double)
 	 * @see loadbalancer.LoadbalancerPackage#getAlert_Threshold()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
-	int getThreshold();
+	double getThreshold();
 
 	/**
 	 * Sets the value of the '{@link loadbalancer.Alert#getThreshold <em>Threshold</em>}' attribute.
@@ -90,6 +91,28 @@ public interface Alert extends EObject {
 	 * @see #getThreshold()
 	 * @generated
 	 */
-	void setThreshold(int value);
+	void setThreshold(double value);
+
+	/**
+	 * Returns the value of the '<em><b>Action</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Action</em>' attribute.
+	 * @see #setAction(String)
+	 * @see loadbalancer.LoadbalancerPackage#getAlert_Action()
+	 * @model required="true"
+	 * @generated
+	 */
+	String getAction();
+
+	/**
+	 * Sets the value of the '{@link loadbalancer.Alert#getAction <em>Action</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Action</em>' attribute.
+	 * @see #getAction()
+	 * @generated
+	 */
+	void setAction(String value);
 
 } // Alert

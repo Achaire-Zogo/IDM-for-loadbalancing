@@ -4,10 +4,10 @@
 package org.loadbalancer.dsl.formatting2
 
 import com.google.inject.Inject
+import loadbalancer.Cluster
+import loadbalancer.LoadBalancerSystem
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import org.loadbalancer.dsl.loadBalancer.Cluster
-import org.loadbalancer.dsl.loadBalancer.LoadBalancerSystem
 import org.loadbalancer.dsl.services.LoadBalancerGrammarAccess
 
 class LoadBalancerFormatter extends AbstractFormatter2 {
@@ -37,5 +37,5 @@ class LoadBalancerFormatter extends AbstractFormatter2 {
 		cluster.scalingRule.format
 	}
 	
-	// TODO: implement for LoadBalancerConfig, Server
+	// TODO: implement for LoadBalancer
 }

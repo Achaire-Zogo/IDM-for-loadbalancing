@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -15,13 +17,14 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link loadbalancer.ScalingRule#getName <em>Name</em>}</li>
  *   <li>{@link loadbalancer.ScalingRule#getMetric <em>Metric</em>}</li>
- *   <li>{@link loadbalancer.ScalingRule#getScaleUpDown <em>Scale Up Down</em>}</li>
+ *   <li>{@link loadbalancer.ScalingRule#getScaleUpThreshold <em>Scale Up Threshold</em>}</li>
+ *   <li>{@link loadbalancer.ScalingRule#getScaleDownThreshold <em>Scale Down Threshold</em>}</li>
  *   <li>{@link loadbalancer.ScalingRule#getMinInstances <em>Min Instances</em>}</li>
  *   <li>{@link loadbalancer.ScalingRule#getMaxInstances <em>Max Instances</em>}</li>
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getScalingRule()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='scaleUpGreaterThanDown'"
  * @generated
  */
 public interface ScalingRule extends EObject {
@@ -73,26 +76,48 @@ public interface ScalingRule extends EObject {
 	void setMetric(Metric value);
 
 	/**
-	 * Returns the value of the '<em><b>Scale Up Down</b></em>' attribute.
+	 * Returns the value of the '<em><b>Scale Up Threshold</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Scale Up Down</em>' attribute.
-	 * @see #setScaleUpDown(String)
-	 * @see loadbalancer.LoadbalancerPackage#getScalingRule_ScaleUpDown()
-	 * @model
+	 * @return the value of the '<em>Scale Up Threshold</em>' attribute.
+	 * @see #setScaleUpThreshold(double)
+	 * @see loadbalancer.LoadbalancerPackage#getScalingRule_ScaleUpThreshold()
+	 * @model required="true"
 	 * @generated
 	 */
-	String getScaleUpDown();
+	double getScaleUpThreshold();
 
 	/**
-	 * Sets the value of the '{@link loadbalancer.ScalingRule#getScaleUpDown <em>Scale Up Down</em>}' attribute.
+	 * Sets the value of the '{@link loadbalancer.ScalingRule#getScaleUpThreshold <em>Scale Up Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Scale Up Down</em>' attribute.
-	 * @see #getScaleUpDown()
+	 * @param value the new value of the '<em>Scale Up Threshold</em>' attribute.
+	 * @see #getScaleUpThreshold()
 	 * @generated
 	 */
-	void setScaleUpDown(String value);
+	void setScaleUpThreshold(double value);
+
+	/**
+	 * Returns the value of the '<em><b>Scale Down Threshold</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Scale Down Threshold</em>' attribute.
+	 * @see #setScaleDownThreshold(double)
+	 * @see loadbalancer.LoadbalancerPackage#getScalingRule_ScaleDownThreshold()
+	 * @model required="true"
+	 * @generated
+	 */
+	double getScaleDownThreshold();
+
+	/**
+	 * Sets the value of the '{@link loadbalancer.ScalingRule#getScaleDownThreshold <em>Scale Down Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Scale Down Threshold</em>' attribute.
+	 * @see #getScaleDownThreshold()
+	 * @generated
+	 */
+	void setScaleDownThreshold(double value);
 
 	/**
 	 * Returns the value of the '<em><b>Min Instances</b></em>' attribute.
@@ -101,7 +126,7 @@ public interface ScalingRule extends EObject {
 	 * @return the value of the '<em>Min Instances</em>' attribute.
 	 * @see #setMinInstances(int)
 	 * @see loadbalancer.LoadbalancerPackage#getScalingRule_MinInstances()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getMinInstances();
@@ -123,7 +148,7 @@ public interface ScalingRule extends EObject {
 	 * @return the value of the '<em>Max Instances</em>' attribute.
 	 * @see #setMaxInstances(int)
 	 * @see loadbalancer.LoadbalancerPackage#getScalingRule_MaxInstances()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getMaxInstances();
@@ -137,5 +162,21 @@ public interface ScalingRule extends EObject {
 	 * @generated
 	 */
 	void setMaxInstances(int value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.minInstances &lt;= self.maxInstances'"
+	 * @generated
+	 */
+	boolean minLessOrEqualMax(DiagnosticChain diagnostics, Map<Object, Object> context);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.scaleUpThreshold &gt; self.scaleDownThreshold'"
+	 * @generated
+	 */
+	boolean scaleUpGreaterThanDown(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // ScalingRule

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="nginx"
+    nsURI="http://www.example.org/nginx"
+    nsPrefix="nginx">
+
+    <!-- Racine : configuration globale Nginx -->
+    <eClassifiers xsi:type="ecore:EClass" name="NginxConfig">
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="workerProcesses" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="auto"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="workerConnections" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+            defaultValueLiteral="1024"/>
+        <eStructuralFeatures xsi:type="ecore:EReference"
+            name="upstreams" upperBound="-1"
+            eType="#//Upstream" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference"
+            name="servers" upperBound="-1"
+            eType="#//ServerBlock" containment="true"/>
+    </eClassifiers>
+
+    <!-- Bloc upstream (groupe de backends) -->
+    <eClassifiers xsi:type="ecore:EClass" name="Upstream">
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="algorithm" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EReference"
+            name="servers" upperBound="-1"
+            eType="#//UpstreamServer" containment="true"/>
+    </eClassifiers>
+
+    <!-- Serveur dans un upstream -->
+    <eClassifiers xsi:type="ecore:EClass" name="UpstreamServer">
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="address" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="weight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+            defaultValueLiteral="1"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="maxFails" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+            defaultValueLiteral="3"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="failTimeout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="30s"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="backup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+            defaultValueLiteral="false"/>
+    </eClassifiers>
+
+    <!-- Bloc server (point d'entrée) -->
+    <eClassifiers xsi:type="ecore:EClass" name="ServerBlock">
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="listenPort" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="serverName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="_"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="proxyPass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EReference"
+            name="locations" upperBound="-1"
+            eType="#//Location" containment="true"/>
+    </eClassifiers>
+
+    <!-- Bloc location -->
+    <eClassifiers xsi:type="ecore:EClass" name="Location">
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="/"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="proxyPass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute"
+            name="proxySetHeaders" upperBound="-1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+
+</ecore:EPackage>

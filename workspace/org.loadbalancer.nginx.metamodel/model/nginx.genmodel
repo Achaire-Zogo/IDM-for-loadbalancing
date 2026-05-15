@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/org.loadbalancer.nginx.metamodel/src-gen" creationIcons="false"
+    editDirectory="/org.loadbalancer.nginx.metamodel.edit/src-gen" editorDirectory="/org.loadbalancer.nginx.metamodel.editor/src-gen"
+    modelPluginID="org.loadbalancer.nginx.metamodel" modelName="Nginx" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0"
+    copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>nginx.ecore</foreignModel>
+  <testsDirectory xsi:nil="true"/>
+  <genPackages prefix="Nginx" basePackage="org.loadbalancer.nginx.metamodel" disposableProviderFactory="true"
+      ecorePackage="nginx.ecore#/">
+    <genClasses ecoreClass="nginx.ecore#//NginxConfig">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//NginxConfig/workerProcesses"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//NginxConfig/workerConnections"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nginx.ecore#//NginxConfig/upstreams"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nginx.ecore#//NginxConfig/servers"/>
+    </genClasses>
+    <genClasses ecoreClass="nginx.ecore#//Upstream">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//Upstream/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//Upstream/algorithm"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nginx.ecore#//Upstream/servers"/>
+    </genClasses>
+    <genClasses ecoreClass="nginx.ecore#//UpstreamServer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//UpstreamServer/address"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//UpstreamServer/weight"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//UpstreamServer/maxFails"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//UpstreamServer/failTimeout"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//UpstreamServer/backup"/>
+    </genClasses>
+    <genClasses ecoreClass="nginx.ecore#//ServerBlock">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//ServerBlock/listenPort"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//ServerBlock/serverName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//ServerBlock/proxyPass"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference nginx.ecore#//ServerBlock/locations"/>
+    </genClasses>
+    <genClasses ecoreClass="nginx.ecore#//Location">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//Location/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//Location/proxyPass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute nginx.ecore#//Location/proxySetHeaders"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

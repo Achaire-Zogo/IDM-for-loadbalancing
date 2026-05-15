@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.loadbalancer.nginx.metamodel;singleton:=true
+Automatic-Module-Name: org.loadbalancer.nginx.metamodel
+Bundle-Version: 0.1.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: org.loadbalancer.nginx.metamodel.nginx,
+ org.loadbalancer.nginx.metamodel.nginx.impl,
+ org.loadbalancer.nginx.metamodel.nginx.util
+Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy

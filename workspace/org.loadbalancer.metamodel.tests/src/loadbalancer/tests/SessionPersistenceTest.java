@@ -13,6 +13,12 @@ import loadbalancer.SessionPersistence;
  * <!-- begin-user-doc -->
  * A test case for the model object '<em><b>Session Persistence</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * The following operations are tested:
+ * <ul>
+ *   <li>{@link loadbalancer.SessionPersistence#cookieRequiresName(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Cookie Requires Name</em>}</li>
+ * </ul>
+ * </p>
  * @generated
  */
 public class SessionPersistenceTest extends TestCase {
@@ -84,6 +90,19 @@ public class SessionPersistenceTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		setFixture(null);
+	}
+
+	/**
+	 * Tests the '{@link loadbalancer.SessionPersistence#cookieRequiresName(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Cookie Requires Name</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see loadbalancer.SessionPersistence#cookieRequiresName(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	public void testCookieRequiresName__DiagnosticChain_Map() {
+		// TODO: implement this operation test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
 	}
 
 } //SessionPersistenceTest

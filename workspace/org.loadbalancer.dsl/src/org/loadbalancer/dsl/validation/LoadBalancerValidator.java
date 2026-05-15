@@ -1,7 +1,17 @@
 package org.loadbalancer.dsl.validation;
 
 import org.eclipse.xtext.validation.Check;
-import org.loadbalancer.dsl.loadBalancer.*;
+
+import loadbalancer.Algorithm;
+import loadbalancer.Cluster;
+import loadbalancer.HealthCheck;
+import loadbalancer.Listener;
+import loadbalancer.LoadBalancerSystem;
+import loadbalancer.LoadbalancerPackage;
+import loadbalancer.PersistenceType;
+import loadbalancer.ScalingRule;
+import loadbalancer.Server;
+import loadbalancer.SessionPersistence;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +25,7 @@ public class LoadBalancerValidator extends AbstractLoadBalancerValidator {
         for (Server s : cluster.getServers()) {
             if (!names.add(s.getName())) {
                 error("Nom de serveur dupliqué : " + s.getName(),
-                        LoadBalancerPackage.Literals.CLUSTER__SERVERS);
+                        LoadbalancerPackage.Literals.CLUSTER__SERVERS);
             }
         }
     }
@@ -25,7 +35,7 @@ public class LoadBalancerValidator extends AbstractLoadBalancerValidator {
     public void checkValidPort(Server server) {
         if (server.getPort() < 1 || server.getPort() > 65535) {
             error("Le port doit être entre 1 et 65535",
-                    LoadBalancerPackage.Literals.SERVER__PORT);
+                    LoadbalancerPackage.Literals.SERVER__PORT);
         }
     }
 
@@ -33,7 +43,7 @@ public class LoadBalancerValidator extends AbstractLoadBalancerValidator {
     public void checkValidListenerPort(Listener listener) {
         if (listener.getPort() < 1 || listener.getPort() > 65535) {
             error("Le port du listener doit être entre 1 et 65535",
-                    LoadBalancerPackage.Literals.LISTENER__PORT);
+                    LoadbalancerPackage.Literals.LISTENER__PORT);
         }
     }
 
@@ -131,8 +141,9 @@ public class LoadBalancerValidator extends AbstractLoadBalancerValidator {
     @Check
     public void checkAtLeastOneEnabledServer(Cluster cluster) {
         boolean hasEnabled = false;
-        for (Server s : cluster.getServers()) {
-            if (s.isEnabled()) {
+        for (Server server : cluster.getServers()) {
+            // getEnabled() retourne directement un Boolean (true/false)
+            if (server.isEnabled()) {  // ou server.getEnabled() selon le naming
                 hasEnabled = true;
                 break;
             }

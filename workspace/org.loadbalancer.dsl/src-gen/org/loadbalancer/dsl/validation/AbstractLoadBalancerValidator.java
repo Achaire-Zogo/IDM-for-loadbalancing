@@ -13,7 +13,7 @@ public abstract class AbstractLoadBalancerValidator extends AbstractDeclarativeV
 	@Override
 	protected List<EPackage> getEPackages() {
 		List<EPackage> result = new ArrayList<EPackage>();
-		result.add(org.loadbalancer.dsl.loadBalancer.LoadBalancerPackage.eINSTANCE);
+		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.example.org/loadbalancer"));
 		return result;
 	}
 }

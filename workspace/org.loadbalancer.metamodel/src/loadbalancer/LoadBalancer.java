@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link loadbalancer.LoadBalancer#getName <em>Name</em>}</li>
  *   <li>{@link loadbalancer.LoadBalancer#getAlgorithm <em>Algorithm</em>}</li>
  *   <li>{@link loadbalancer.LoadBalancer#isStickySession <em>Sticky Session</em>}</li>
+ *   <li>{@link loadbalancer.LoadBalancer#getSessionPersistence <em>Session Persistence</em>}</li>
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getLoadBalancer()
@@ -77,7 +78,7 @@ public interface LoadBalancer extends EObject {
 	 * @return the value of the '<em>Sticky Session</em>' attribute.
 	 * @see #setStickySession(boolean)
 	 * @see loadbalancer.LoadbalancerPackage#getLoadBalancer_StickySession()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	boolean isStickySession();
@@ -91,5 +92,27 @@ public interface LoadBalancer extends EObject {
 	 * @generated
 	 */
 	void setStickySession(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Session Persistence</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Session Persistence</em>' containment reference.
+	 * @see #setSessionPersistence(SessionPersistence)
+	 * @see loadbalancer.LoadbalancerPackage#getLoadBalancer_SessionPersistence()
+	 * @model containment="true"
+	 * @generated
+	 */
+	SessionPersistence getSessionPersistence();
+
+	/**
+	 * Sets the value of the '{@link loadbalancer.LoadBalancer#getSessionPersistence <em>Session Persistence</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Session Persistence</em>' containment reference.
+	 * @see #getSessionPersistence()
+	 * @generated
+	 */
+	void setSessionPersistence(SessionPersistence value);
 
 } // LoadBalancer

@@ -1,0 +1,47 @@
+[comment encoding = UTF-8 /]
+[module generateNginx('http://www.example.org/nginx')]
+
+[template public generateNginxConf(config : NginxConfig)]
+    [comment @main /]
+    [file('nginx.conf', false, 'UTF-8')]
+worker_processes [config.workerProcesses/];
+
+events {
+    worker_connections [config.workerConnections/];
+}
+
+http {
+    [for (upstream : Upstream | config.upstreams)]
+    upstream [upstream.name/] {
+        [if (upstream.algorithm = 'least_conn')]
+        least_conn;
+        [elseif (upstream.algorithm = 'ip_hash')]
+        ip_hash;
+        [/if]
+        [for (server : UpstreamServer | upstream.servers)]
+        server [server.address/] weight=[server.weight/]
+            max_fails=[server.maxFails/]
+            fail_timeout=[server.failTimeout/][if (server.backup)] backup[/if];
+        [/for]
+    }
+    [/for]
+
+    [for (server : ServerBlock | config.servers)]
+    server {
+        listen [server.listenPort/];
+        server_name [server.serverName/];
+        [for (loc : Location | server.locations)]
+        location [loc.path/] {
+            proxy_pass [loc.proxyPass/];
+            [for (header : String | loc.proxySetHeaders)]
+            proxy_set_header [header/];
+            [/for]
+            proxy_connect_timeout 5s;
+            proxy_read_timeout 10s;
+        }
+        [/for]
+    }
+    [/for]
+}
+    [/file]
+[/template]

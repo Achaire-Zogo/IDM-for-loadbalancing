@@ -63,6 +63,7 @@ public class AlertItemProvider
 			addNamePropertyDescriptor(object);
 			addMetricPropertyDescriptor(object);
 			addThresholdPropertyDescriptor(object);
+			addActionPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -128,7 +129,29 @@ public class AlertItemProvider
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Action feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addActionPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Alert_action_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Alert_action_feature", "_UI_Alert_type"),
+				 LoadbalancerPackage.Literals.ALERT__ACTION,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -174,6 +197,7 @@ public class AlertItemProvider
 			case LoadbalancerPackage.ALERT__NAME:
 			case LoadbalancerPackage.ALERT__METRIC:
 			case LoadbalancerPackage.ALERT__THRESHOLD:
+			case LoadbalancerPackage.ALERT__ACTION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

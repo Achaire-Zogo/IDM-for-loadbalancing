@@ -62,7 +62,8 @@ public class ScalingRuleItemProvider
 
 			addNamePropertyDescriptor(object);
 			addMetricPropertyDescriptor(object);
-			addScaleUpDownPropertyDescriptor(object);
+			addScaleUpThresholdPropertyDescriptor(object);
+			addScaleDownThresholdPropertyDescriptor(object);
 			addMinInstancesPropertyDescriptor(object);
 			addMaxInstancesPropertyDescriptor(object);
 		}
@@ -114,23 +115,45 @@ public class ScalingRuleItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Scale Up Down feature.
+	 * This adds a property descriptor for the Scale Up Threshold feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addScaleUpDownPropertyDescriptor(Object object) {
+	protected void addScaleUpThresholdPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ScalingRule_scaleUpDown_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ScalingRule_scaleUpDown_feature", "_UI_ScalingRule_type"),
-				 LoadbalancerPackage.Literals.SCALING_RULE__SCALE_UP_DOWN,
+				 getString("_UI_ScalingRule_scaleUpThreshold_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ScalingRule_scaleUpThreshold_feature", "_UI_ScalingRule_type"),
+				 LoadbalancerPackage.Literals.SCALING_RULE__SCALE_UP_THRESHOLD,
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Scale Down Threshold feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addScaleDownThresholdPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ScalingRule_scaleDownThreshold_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ScalingRule_scaleDownThreshold_feature", "_UI_ScalingRule_type"),
+				 LoadbalancerPackage.Literals.SCALING_RULE__SCALE_DOWN_THRESHOLD,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.REAL_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -219,7 +242,8 @@ public class ScalingRuleItemProvider
 		switch (notification.getFeatureID(ScalingRule.class)) {
 			case LoadbalancerPackage.SCALING_RULE__NAME:
 			case LoadbalancerPackage.SCALING_RULE__METRIC:
-			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_DOWN:
+			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_THRESHOLD:
+			case LoadbalancerPackage.SCALING_RULE__SCALE_DOWN_THRESHOLD:
 			case LoadbalancerPackage.SCALING_RULE__MIN_INSTANCES:
 			case LoadbalancerPackage.SCALING_RULE__MAX_INSTANCES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));

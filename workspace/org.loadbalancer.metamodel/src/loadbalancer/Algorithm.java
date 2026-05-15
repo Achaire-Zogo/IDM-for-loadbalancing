@@ -29,26 +29,22 @@ public enum Algorithm implements Enumerator {
 	ROUND_ROBIN(0, "ROUND_ROBIN", "ROUND_ROBIN"),
 
 	/**
-	 * The '<em><b>WEIGHTED RR</b></em>' literal object.
+	 * The '<em><b>WEIGHTED ROUND ROBIN</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #WEIGHTED_RR_VALUE
+	 * @see #WEIGHTED_ROUND_ROBIN_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	WEIGHTED_RR(1, "WEIGHTED_RR", "WEIGHTED_RR"),
-
-	/**
-	 * The '<em><b>LEAST CONN</b></em>' literal object.
+	WEIGHTED_ROUND_ROBIN(1, "WEIGHTED_ROUND_ROBIN", "WEIGHTED_ROUND_ROBIN"), /**
+	 * The '<em><b>LEAST CONNECTIONS</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #LEAST_CONN_VALUE
+	 * @see #LEAST_CONNECTIONS_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	LEAST_CONN(2, "LEAST_CONN", "LEAST_CONN"),
-
-	/**
+	LEAST_CONNECTIONS(2, "LEAST_CONNECTIONS", "LEAST_CONNECTIONS"), /**
 	 * The '<em><b>IP HASH</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -80,26 +76,26 @@ public enum Algorithm implements Enumerator {
 	public static final int ROUND_ROBIN_VALUE = 0;
 
 	/**
-	 * The '<em><b>WEIGHTED RR</b></em>' literal value.
+	 * The '<em><b>WEIGHTED ROUND ROBIN</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #WEIGHTED_RR
+	 * @see #WEIGHTED_ROUND_ROBIN
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int WEIGHTED_RR_VALUE = 1;
+	public static final int WEIGHTED_ROUND_ROBIN_VALUE = 1;
 
 	/**
-	 * The '<em><b>LEAST CONN</b></em>' literal value.
+	 * The '<em><b>LEAST CONNECTIONS</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #LEAST_CONN
+	 * @see #LEAST_CONNECTIONS
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LEAST_CONN_VALUE = 2;
+	public static final int LEAST_CONNECTIONS_VALUE = 2;
 
 	/**
 	 * The '<em><b>IP HASH</b></em>' literal value.
@@ -132,8 +128,8 @@ public enum Algorithm implements Enumerator {
 	private static final Algorithm[] VALUES_ARRAY =
 		new Algorithm[] {
 			ROUND_ROBIN,
-			WEIGHTED_RR,
-			LEAST_CONN,
+			WEIGHTED_ROUND_ROBIN,
+			LEAST_CONNECTIONS,
 			IP_HASH,
 			RANDOM,
 		};
@@ -193,8 +189,8 @@ public enum Algorithm implements Enumerator {
 	public static Algorithm get(int value) {
 		switch (value) {
 			case ROUND_ROBIN_VALUE: return ROUND_ROBIN;
-			case WEIGHTED_RR_VALUE: return WEIGHTED_RR;
-			case LEAST_CONN_VALUE: return LEAST_CONN;
+			case WEIGHTED_ROUND_ROBIN_VALUE: return WEIGHTED_ROUND_ROBIN;
+			case LEAST_CONNECTIONS_VALUE: return LEAST_CONNECTIONS;
 			case IP_HASH_VALUE: return IP_HASH;
 			case RANDOM_VALUE: return RANDOM;
 		}

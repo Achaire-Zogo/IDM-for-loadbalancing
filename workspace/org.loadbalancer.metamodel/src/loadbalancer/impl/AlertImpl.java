@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link loadbalancer.impl.AlertImpl#getName <em>Name</em>}</li>
  *   <li>{@link loadbalancer.impl.AlertImpl#getMetric <em>Metric</em>}</li>
  *   <li>{@link loadbalancer.impl.AlertImpl#getThreshold <em>Threshold</em>}</li>
+ *   <li>{@link loadbalancer.impl.AlertImpl#getAction <em>Action</em>}</li>
  * </ul>
  *
  * @generated
@@ -77,7 +78,7 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int THRESHOLD_EDEFAULT = 0;
+	protected static final double THRESHOLD_EDEFAULT = 0.0;
 
 	/**
 	 * The cached value of the '{@link #getThreshold() <em>Threshold</em>}' attribute.
@@ -87,7 +88,27 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 	 * @generated
 	 * @ordered
 	 */
-	protected int threshold = THRESHOLD_EDEFAULT;
+	protected double threshold = THRESHOLD_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getAction() <em>Action</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAction()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ACTION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getAction() <em>Action</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAction()
+	 * @generated
+	 * @ordered
+	 */
+	protected String action = ACTION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -160,7 +181,7 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 	 * @generated
 	 */
 	@Override
-	public int getThreshold() {
+	public double getThreshold() {
 		return threshold;
 	}
 
@@ -170,11 +191,34 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 	 * @generated
 	 */
 	@Override
-	public void setThreshold(int newThreshold) {
-		int oldThreshold = threshold;
+	public void setThreshold(double newThreshold) {
+		double oldThreshold = threshold;
 		threshold = newThreshold;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.ALERT__THRESHOLD, oldThreshold, threshold));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getAction() {
+		return action;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAction(String newAction) {
+		String oldAction = action;
+		action = newAction;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.ALERT__ACTION, oldAction, action));
 	}
 
 	/**
@@ -191,6 +235,8 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 				return getMetric();
 			case LoadbalancerPackage.ALERT__THRESHOLD:
 				return getThreshold();
+			case LoadbalancerPackage.ALERT__ACTION:
+				return getAction();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -210,7 +256,10 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 				setMetric((Metric)newValue);
 				return;
 			case LoadbalancerPackage.ALERT__THRESHOLD:
-				setThreshold((Integer)newValue);
+				setThreshold((Double)newValue);
+				return;
+			case LoadbalancerPackage.ALERT__ACTION:
+				setAction((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -233,6 +282,9 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 			case LoadbalancerPackage.ALERT__THRESHOLD:
 				setThreshold(THRESHOLD_EDEFAULT);
 				return;
+			case LoadbalancerPackage.ALERT__ACTION:
+				setAction(ACTION_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -251,6 +303,8 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 				return metric != METRIC_EDEFAULT;
 			case LoadbalancerPackage.ALERT__THRESHOLD:
 				return threshold != THRESHOLD_EDEFAULT;
+			case LoadbalancerPackage.ALERT__ACTION:
+				return ACTION_EDEFAULT == null ? action != null : !ACTION_EDEFAULT.equals(action);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -271,6 +325,8 @@ public class AlertImpl extends MinimalEObjectImpl.Container implements Alert {
 		result.append(metric);
 		result.append(", threshold: ");
 		result.append(threshold);
+		result.append(", action: ");
+		result.append(action);
 		result.append(')');
 		return result.toString();
 	}

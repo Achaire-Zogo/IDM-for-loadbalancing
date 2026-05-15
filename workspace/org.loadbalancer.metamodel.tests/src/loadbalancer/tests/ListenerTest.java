@@ -13,6 +13,12 @@ import loadbalancer.LoadbalancerFactory;
  * <!-- begin-user-doc -->
  * A test case for the model object '<em><b>Listener</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * The following operations are tested:
+ * <ul>
+ *   <li>{@link loadbalancer.Listener#validListenerPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Valid Listener Port</em>}</li>
+ * </ul>
+ * </p>
  * @generated
  */
 public class ListenerTest extends TestCase {
@@ -84,6 +90,19 @@ public class ListenerTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		setFixture(null);
+	}
+
+	/**
+	 * Tests the '{@link loadbalancer.Listener#validListenerPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map) <em>Valid Listener Port</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see loadbalancer.Listener#validListenerPort(org.eclipse.emf.common.util.DiagnosticChain, java.util.Map)
+	 * @generated
+	 */
+	public void testValidListenerPort__DiagnosticChain_Map() {
+		// TODO: implement this operation test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
 	}
 
 } //ListenerTest

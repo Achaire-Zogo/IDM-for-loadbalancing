@@ -83,6 +83,8 @@ public class LoadbalancerFactoryImpl extends EFactoryImpl implements Loadbalance
 				return createAlgorithmFromString(eDataType, initialValue);
 			case LoadbalancerPackage.PROTOCOL:
 				return createProtocolFromString(eDataType, initialValue);
+			case LoadbalancerPackage.PERSISTENCE_TYPE:
+				return createPersistenceTypeFromString(eDataType, initialValue);
 			case LoadbalancerPackage.METRIC:
 				return createMetricFromString(eDataType, initialValue);
 			default:
@@ -102,6 +104,8 @@ public class LoadbalancerFactoryImpl extends EFactoryImpl implements Loadbalance
 				return convertAlgorithmToString(eDataType, instanceValue);
 			case LoadbalancerPackage.PROTOCOL:
 				return convertProtocolToString(eDataType, instanceValue);
+			case LoadbalancerPackage.PERSISTENCE_TYPE:
+				return convertPersistenceTypeToString(eDataType, instanceValue);
 			case LoadbalancerPackage.METRIC:
 				return convertMetricToString(eDataType, instanceValue);
 			default:
@@ -245,6 +249,26 @@ public class LoadbalancerFactoryImpl extends EFactoryImpl implements Loadbalance
 	 * @generated
 	 */
 	public String convertProtocolToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PersistenceType createPersistenceTypeFromString(EDataType eDataType, String initialValue) {
+		PersistenceType result = PersistenceType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPersistenceTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

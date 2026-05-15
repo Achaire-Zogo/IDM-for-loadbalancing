@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -20,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getListener()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='validListenerPort'"
  * @generated
  */
 public interface Listener extends EObject {
@@ -78,7 +80,7 @@ public interface Listener extends EObject {
 	 * @return the value of the '<em>Port</em>' attribute.
 	 * @see #setPort(int)
 	 * @see loadbalancer.LoadbalancerPackage#getListener_Port()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getPort();
@@ -114,5 +116,13 @@ public interface Listener extends EObject {
 	 * @generated
 	 */
 	void setTargetCluster(Cluster value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.port &gt;= 1 and self.port &lt;= 65535'"
+	 * @generated
+	 */
+	boolean validListenerPort(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // Listener

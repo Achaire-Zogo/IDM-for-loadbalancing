@@ -2,16 +2,31 @@
  */
 package loadbalancer.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import loadbalancer.LoadbalancerPackage;
+import loadbalancer.LoadbalancerTables;
 import loadbalancer.Metric;
 import loadbalancer.ScalingRule;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.ocl.pivot.evaluation.Executor;
+import org.eclipse.ocl.pivot.ids.TypeId;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableGreaterThanOperation;
+import org.eclipse.ocl.pivot.library.oclany.OclComparableLessThanEqualOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringGetSeverityOperation;
+import org.eclipse.ocl.pivot.library.string.CGStringLogDiagnosticOperation;
+import org.eclipse.ocl.pivot.utilities.PivotUtil;
+import org.eclipse.ocl.pivot.utilities.ValueUtil;
+import org.eclipse.ocl.pivot.values.IntegerValue;
+import org.eclipse.ocl.pivot.values.RealValue;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,7 +38,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getMetric <em>Metric</em>}</li>
- *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getScaleUpDown <em>Scale Up Down</em>}</li>
+ *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getScaleUpThreshold <em>Scale Up Threshold</em>}</li>
+ *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getScaleDownThreshold <em>Scale Down Threshold</em>}</li>
  *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getMinInstances <em>Min Instances</em>}</li>
  *   <li>{@link loadbalancer.impl.ScalingRuleImpl#getMaxInstances <em>Max Instances</em>}</li>
  * </ul>
@@ -72,24 +88,44 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 	protected Metric metric = METRIC_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getScaleUpDown() <em>Scale Up Down</em>}' attribute.
+	 * The default value of the '{@link #getScaleUpThreshold() <em>Scale Up Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getScaleUpDown()
+	 * @see #getScaleUpThreshold()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String SCALE_UP_DOWN_EDEFAULT = null;
+	protected static final double SCALE_UP_THRESHOLD_EDEFAULT = 0.0;
 
 	/**
-	 * The cached value of the '{@link #getScaleUpDown() <em>Scale Up Down</em>}' attribute.
+	 * The cached value of the '{@link #getScaleUpThreshold() <em>Scale Up Threshold</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getScaleUpDown()
+	 * @see #getScaleUpThreshold()
 	 * @generated
 	 * @ordered
 	 */
-	protected String scaleUpDown = SCALE_UP_DOWN_EDEFAULT;
+	protected double scaleUpThreshold = SCALE_UP_THRESHOLD_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getScaleDownThreshold() <em>Scale Down Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScaleDownThreshold()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final double SCALE_DOWN_THRESHOLD_EDEFAULT = 0.0;
+
+	/**
+	 * The cached value of the '{@link #getScaleDownThreshold() <em>Scale Down Threshold</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScaleDownThreshold()
+	 * @generated
+	 * @ordered
+	 */
+	protected double scaleDownThreshold = SCALE_DOWN_THRESHOLD_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getMinInstances() <em>Min Instances</em>}' attribute.
@@ -202,8 +238,8 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 	 * @generated
 	 */
 	@Override
-	public String getScaleUpDown() {
-		return scaleUpDown;
+	public double getScaleUpThreshold() {
+		return scaleUpThreshold;
 	}
 
 	/**
@@ -212,11 +248,34 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 	 * @generated
 	 */
 	@Override
-	public void setScaleUpDown(String newScaleUpDown) {
-		String oldScaleUpDown = scaleUpDown;
-		scaleUpDown = newScaleUpDown;
+	public void setScaleUpThreshold(double newScaleUpThreshold) {
+		double oldScaleUpThreshold = scaleUpThreshold;
+		scaleUpThreshold = newScaleUpThreshold;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.SCALING_RULE__SCALE_UP_DOWN, oldScaleUpDown, scaleUpDown));
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.SCALING_RULE__SCALE_UP_THRESHOLD, oldScaleUpThreshold, scaleUpThreshold));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public double getScaleDownThreshold() {
+		return scaleDownThreshold;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setScaleDownThreshold(double newScaleDownThreshold) {
+		double oldScaleDownThreshold = scaleDownThreshold;
+		scaleDownThreshold = newScaleDownThreshold;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LoadbalancerPackage.SCALING_RULE__SCALE_DOWN_THRESHOLD, oldScaleDownThreshold, scaleDownThreshold));
 	}
 
 	/**
@@ -271,14 +330,106 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 	 * @generated
 	 */
 	@Override
+	public boolean minLessOrEqualMax(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		final String constraintName = "ScalingRule::minLessOrEqualMax";
+		try {
+			/**
+			 *
+			 * inv minLessOrEqualMax:
+			 *   let severity : Integer[1] = constraintName.getSeverity()
+			 *   in
+			 *     if severity <= 0
+			 *     then true
+			 *     else
+			 *       let result : Boolean[1] = self.minInstances <= self.maxInstances
+			 *       in
+			 *         constraintName.logDiagnostic(self, null, diagnostics, context, null, severity, result, 0)
+			 *     endif
+			 */
+			final /*@NonInvalid*/ Executor executor = PivotUtil.getExecutor(this);
+			final /*@NonInvalid*/ IntegerValue severity_0 = CGStringGetSeverityOperation.INSTANCE.evaluate(executor, LoadbalancerPackage.Literals.SCALING_RULE___MIN_LESS_OR_EQUAL_MAX__DIAGNOSTICCHAIN_MAP);
+			final /*@NonInvalid*/ boolean le = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, severity_0, LoadbalancerTables.INT_0).booleanValue();
+			/*@NonInvalid*/ boolean IF_le;
+			if (le) {
+				IF_le = true;
+			}
+			else {
+				final /*@NonInvalid*/ int minInstances = this.getMinInstances();
+				final /*@NonInvalid*/ IntegerValue BOXED_minInstances = ValueUtil.integerValueOf(minInstances);
+				final /*@NonInvalid*/ int maxInstances = this.getMaxInstances();
+				final /*@NonInvalid*/ IntegerValue BOXED_maxInstances = ValueUtil.integerValueOf(maxInstances);
+				final /*@NonInvalid*/ boolean result = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, BOXED_minInstances, BOXED_maxInstances).booleanValue();
+				final /*@NonInvalid*/ boolean logDiagnostic = CGStringLogDiagnosticOperation.INSTANCE.evaluate(executor, TypeId.BOOLEAN, constraintName, this, (Object)null, diagnostics, context, (Object)null, severity_0, result, LoadbalancerTables.INT_0).booleanValue();
+				IF_le = logDiagnostic;
+			}
+			return IF_le;
+		}
+		catch (Throwable e) {
+			return ValueUtil.validationFailedDiagnostic(constraintName, this, diagnostics, context, e);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean scaleUpGreaterThanDown(final DiagnosticChain diagnostics, final Map<Object, Object> context) {
+		final String constraintName = "ScalingRule::scaleUpGreaterThanDown";
+		try {
+			/**
+			 *
+			 * inv scaleUpGreaterThanDown:
+			 *   let severity : Integer[1] = constraintName.getSeverity()
+			 *   in
+			 *     if severity <= 0
+			 *     then true
+			 *     else
+			 *       let result : Boolean[1] = self.scaleUpThreshold > self.scaleDownThreshold
+			 *       in
+			 *         constraintName.logDiagnostic(self, null, diagnostics, context, null, severity, result, 0)
+			 *     endif
+			 */
+			final /*@NonInvalid*/ Executor executor = PivotUtil.getExecutor(this);
+			final /*@NonInvalid*/ IntegerValue severity_0 = CGStringGetSeverityOperation.INSTANCE.evaluate(executor, LoadbalancerPackage.Literals.SCALING_RULE___SCALE_UP_GREATER_THAN_DOWN__DIAGNOSTICCHAIN_MAP);
+			final /*@NonInvalid*/ boolean le = OclComparableLessThanEqualOperation.INSTANCE.evaluate(executor, severity_0, LoadbalancerTables.INT_0).booleanValue();
+			/*@NonInvalid*/ boolean IF_le;
+			if (le) {
+				IF_le = true;
+			}
+			else {
+				final /*@NonInvalid*/ double scaleUpThreshold = this.getScaleUpThreshold();
+				final /*@NonInvalid*/ RealValue BOXED_scaleUpThreshold = ValueUtil.realValueOf(scaleUpThreshold);
+				final /*@NonInvalid*/ double scaleDownThreshold = this.getScaleDownThreshold();
+				final /*@NonInvalid*/ RealValue BOXED_scaleDownThreshold = ValueUtil.realValueOf(scaleDownThreshold);
+				final /*@NonInvalid*/ boolean result = OclComparableGreaterThanOperation.INSTANCE.evaluate(executor, BOXED_scaleUpThreshold, BOXED_scaleDownThreshold).booleanValue();
+				final /*@NonInvalid*/ boolean logDiagnostic = CGStringLogDiagnosticOperation.INSTANCE.evaluate(executor, TypeId.BOOLEAN, constraintName, this, (Object)null, diagnostics, context, (Object)null, severity_0, result, LoadbalancerTables.INT_0).booleanValue();
+				IF_le = logDiagnostic;
+			}
+			return IF_le;
+		}
+		catch (Throwable e) {
+			return ValueUtil.validationFailedDiagnostic(constraintName, this, diagnostics, context, e);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case LoadbalancerPackage.SCALING_RULE__NAME:
 				return getName();
 			case LoadbalancerPackage.SCALING_RULE__METRIC:
 				return getMetric();
-			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_DOWN:
-				return getScaleUpDown();
+			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_THRESHOLD:
+				return getScaleUpThreshold();
+			case LoadbalancerPackage.SCALING_RULE__SCALE_DOWN_THRESHOLD:
+				return getScaleDownThreshold();
 			case LoadbalancerPackage.SCALING_RULE__MIN_INSTANCES:
 				return getMinInstances();
 			case LoadbalancerPackage.SCALING_RULE__MAX_INSTANCES:
@@ -301,8 +452,11 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 			case LoadbalancerPackage.SCALING_RULE__METRIC:
 				setMetric((Metric)newValue);
 				return;
-			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_DOWN:
-				setScaleUpDown((String)newValue);
+			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_THRESHOLD:
+				setScaleUpThreshold((Double)newValue);
+				return;
+			case LoadbalancerPackage.SCALING_RULE__SCALE_DOWN_THRESHOLD:
+				setScaleDownThreshold((Double)newValue);
 				return;
 			case LoadbalancerPackage.SCALING_RULE__MIN_INSTANCES:
 				setMinInstances((Integer)newValue);
@@ -328,8 +482,11 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 			case LoadbalancerPackage.SCALING_RULE__METRIC:
 				setMetric(METRIC_EDEFAULT);
 				return;
-			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_DOWN:
-				setScaleUpDown(SCALE_UP_DOWN_EDEFAULT);
+			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_THRESHOLD:
+				setScaleUpThreshold(SCALE_UP_THRESHOLD_EDEFAULT);
+				return;
+			case LoadbalancerPackage.SCALING_RULE__SCALE_DOWN_THRESHOLD:
+				setScaleDownThreshold(SCALE_DOWN_THRESHOLD_EDEFAULT);
 				return;
 			case LoadbalancerPackage.SCALING_RULE__MIN_INSTANCES:
 				setMinInstances(MIN_INSTANCES_EDEFAULT);
@@ -353,14 +510,33 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case LoadbalancerPackage.SCALING_RULE__METRIC:
 				return metric != METRIC_EDEFAULT;
-			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_DOWN:
-				return SCALE_UP_DOWN_EDEFAULT == null ? scaleUpDown != null : !SCALE_UP_DOWN_EDEFAULT.equals(scaleUpDown);
+			case LoadbalancerPackage.SCALING_RULE__SCALE_UP_THRESHOLD:
+				return scaleUpThreshold != SCALE_UP_THRESHOLD_EDEFAULT;
+			case LoadbalancerPackage.SCALING_RULE__SCALE_DOWN_THRESHOLD:
+				return scaleDownThreshold != SCALE_DOWN_THRESHOLD_EDEFAULT;
 			case LoadbalancerPackage.SCALING_RULE__MIN_INSTANCES:
 				return minInstances != MIN_INSTANCES_EDEFAULT;
 			case LoadbalancerPackage.SCALING_RULE__MAX_INSTANCES:
 				return maxInstances != MAX_INSTANCES_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case LoadbalancerPackage.SCALING_RULE___MIN_LESS_OR_EQUAL_MAX__DIAGNOSTICCHAIN_MAP:
+				return minLessOrEqualMax((DiagnosticChain)arguments.get(0), (Map<Object, Object>)arguments.get(1));
+			case LoadbalancerPackage.SCALING_RULE___SCALE_UP_GREATER_THAN_DOWN__DIAGNOSTICCHAIN_MAP:
+				return scaleUpGreaterThanDown((DiagnosticChain)arguments.get(0), (Map<Object, Object>)arguments.get(1));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -377,8 +553,10 @@ public class ScalingRuleImpl extends MinimalEObjectImpl.Container implements Sca
 		result.append(name);
 		result.append(", metric: ");
 		result.append(metric);
-		result.append(", scaleUpDown: ");
-		result.append(scaleUpDown);
+		result.append(", scaleUpThreshold: ");
+		result.append(scaleUpThreshold);
+		result.append(", scaleDownThreshold: ");
+		result.append(scaleDownThreshold);
 		result.append(", minInstances: ");
 		result.append(minInstances);
 		result.append(", maxInstances: ");

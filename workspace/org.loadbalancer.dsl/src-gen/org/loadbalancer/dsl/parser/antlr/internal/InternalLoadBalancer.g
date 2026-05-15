@@ -169,7 +169,7 @@ ruleLoadBalancerSystem returns [EObject current=null]
 					afterParserOrEnumRuleCall();
 				}
 			)
-		)+
+		)*
 		(
 			(
 				{
@@ -188,7 +188,7 @@ ruleLoadBalancerSystem returns [EObject current=null]
 					afterParserOrEnumRuleCall();
 				}
 			)
-		)+
+		)*
 		(
 			(
 				{
@@ -393,20 +393,19 @@ ruleLoadBalancerConfig returns [EObject current=null]
 		}
 		(
 			(
+				lv_stickySession_5_0=RULE_BOOLEAN_VALUE
 				{
-					newCompositeNode(grammarAccess.getLoadBalancerConfigAccess().getStickySessionBooleanValueParserRuleCall_5_0());
+					newLeafNode(lv_stickySession_5_0, grammarAccess.getLoadBalancerConfigAccess().getStickySessionBOOLEAN_VALUETerminalRuleCall_5_0());
 				}
-				lv_stickySession_5_0=ruleBooleanValue
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getLoadBalancerConfigRule());
+						$current = createModelElement(grammarAccess.getLoadBalancerConfigRule());
 					}
-					set(
+					setWithLastConsumed(
 						$current,
 						"stickySession",
 						lv_stickySession_5_0,
-						"org.loadbalancer.dsl.LoadBalancer.BooleanValue");
-					afterParserOrEnumRuleCall();
+						"org.loadbalancer.dsl.LoadBalancer.BOOLEAN_VALUE");
 				}
 			)
 		)
@@ -576,20 +575,19 @@ ruleServer returns [EObject current=null]
 		}
 		(
 			(
+				lv_enabled_12_0=RULE_BOOLEAN_VALUE
 				{
-					newCompositeNode(grammarAccess.getServerAccess().getEnabledBooleanValueParserRuleCall_10_0());
+					newLeafNode(lv_enabled_12_0, grammarAccess.getServerAccess().getEnabledBOOLEAN_VALUETerminalRuleCall_10_0());
 				}
-				lv_enabled_12_0=ruleBooleanValue
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getServerRule());
+						$current = createModelElement(grammarAccess.getServerRule());
 					}
-					set(
+					setWithLastConsumed(
 						$current,
 						"enabled",
 						lv_enabled_12_0,
-						"org.loadbalancer.dsl.LoadBalancer.BooleanValue");
-					afterParserOrEnumRuleCall();
+						"org.loadbalancer.dsl.LoadBalancer.BOOLEAN_VALUE");
 				}
 			)
 		)
@@ -1257,50 +1255,6 @@ ruleAlert returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleBooleanValue
-entryRuleBooleanValue returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getBooleanValueRule()); }
-	iv_ruleBooleanValue=ruleBooleanValue
-	{ $current=$iv_ruleBooleanValue.current; }
-	EOF;
-
-// Rule BooleanValue
-ruleBooleanValue returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				lv_value_0_1='true'
-				{
-					newLeafNode(lv_value_0_1, grammarAccess.getBooleanValueAccess().getValueTrueKeyword_0_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getBooleanValueRule());
-					}
-					setWithLastConsumed($current, "value", lv_value_0_1, null);
-				}
-				    |
-				lv_value_0_2='false'
-				{
-					newLeafNode(lv_value_0_2, grammarAccess.getBooleanValueAccess().getValueFalseKeyword_0_1());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getBooleanValueRule());
-					}
-					setWithLastConsumed($current, "value", lv_value_0_2, null);
-				}
-			)
-		)
-	)
-;
-
 // Rule Algorithm
 ruleAlgorithm returns [Enumerator current=null]
 @init {
@@ -1472,6 +1426,8 @@ rulePersistenceType returns [Enumerator current=null]
 		)
 	)
 ;
+
+RULE_BOOLEAN_VALUE : ('true'|'false');
 
 RULE_DOUBLE : RULE_INT '.' RULE_INT;
 

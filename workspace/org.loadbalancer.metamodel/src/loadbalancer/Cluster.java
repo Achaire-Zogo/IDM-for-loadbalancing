@@ -2,6 +2,8 @@
  */
 package loadbalancer;
 
+import java.util.Map;
+import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -24,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  *
  * @see loadbalancer.LoadbalancerPackage#getCluster()
- * @model
+ * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='weightedRequiresWeights'"
  * @generated
  */
 public interface Cluster extends EObject {
@@ -57,7 +59,7 @@ public interface Cluster extends EObject {
 	 * @return the value of the '<em>Max Connections</em>' attribute.
 	 * @see #setMaxConnections(int)
 	 * @see loadbalancer.LoadbalancerPackage#getCluster_MaxConnections()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	int getMaxConnections();
@@ -149,5 +151,37 @@ public interface Cluster extends EObject {
 	 * @generated
 	 */
 	void setScalingRule(ScalingRule value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.servers-&gt;notEmpty()'"
+	 * @generated
+	 */
+	boolean nonEmptyCluster(DiagnosticChain diagnostics, Map<Object, Object> context);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.servers-&gt;exists(s | s.enabled = true)'"
+	 * @generated
+	 */
+	boolean atLeastOneEnabledServer(DiagnosticChain diagnostics, Map<Object, Object> context);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.servers-&gt;isUnique(s | s.name)'"
+	 * @generated
+	 */
+	boolean uniqueServerNames(DiagnosticChain diagnostics, Map<Object, Object> context);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot body='\n\t\t\tself.loadBalancer.algorithm = Algorithm::WEIGHTED_ROUND_ROBIN\n\t\t\t\timplies self.servers-&gt;forAll(s | s.weight &gt;= 1)'"
+	 * @generated
+	 */
+	boolean weightedRequiresWeights(DiagnosticChain diagnostics, Map<Object, Object> context);
 
 } // Cluster
